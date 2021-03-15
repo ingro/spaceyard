@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "clsx": "^1.1.1",

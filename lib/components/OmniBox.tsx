@@ -6,7 +6,7 @@ import { OmniBoxInput } from './OmniBoxInput';
 
 type OmniBoxProps = {
     isOpen: boolean;
-    onClose: Function;
+    onClose: () => void;
     actions: Array<any>;
 };
 

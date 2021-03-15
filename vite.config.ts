@@ -4,43 +4,49 @@ import typescript2 from "rollup-plugin-typescript2";
 const path = require("path");
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    reactRefresh(),
-    {
-      ...typescript2({
-        check: false,
-        tsconfigOverride: {
-          include: ["./lib"],
-          compilerOptions: {
-            declaration: true,
+export default ({ command, mode }) => {
+
+  return defineConfig({
+    esbuild: command === 'build' ? false : {},
+    plugins: [
+      reactRefresh(),
+      {
+        ...typescript2({
+          clean: true,
+          check: false,
+          tsconfigOverride: {
+            include: ["./lib"],
+            compilerOptions: {
+              declaration: true
+            },
           },
-        },
-      }),
-      apply: "build",
-    },
-  ],
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, "lib/main.ts"),
-      name: "SpaceYard",
-    },
-    rollupOptions: {
-      external: [
-        "downshift",
-        "react-dom",
-        "react-focus-lock",
-        "react-router",
-        "react",
-      ],
-      output: {
-        globals: {
-          // react: "React",
+        }),
+        apply: "build",
+      },
+    ],
+    build: {
+      lib: {
+        entry: path.resolve(__dirname, "lib/main.ts"),
+        name: "SpaceYard",
+      },
+      rollupOptions: {
+        external: [
+          "downshift",
+          "react-dom",
+          "react-focus-lock",
+          "react-router",
+          "react",
+          "zustand"
+        ],
+        output: {
+          globals: {
+            // react: "React",
+          },
         },
       },
     },
-  },
-  server: {
-    port: 3004,
-  },
-});
+    server: {
+      port: 3004,
+    },
+  });
+}
