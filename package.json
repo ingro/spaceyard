@@ -1,6 +1,14 @@
 {
   "name": "@ingruz/spaceyard",
+  "description": "",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": "<ingro85@gmail.com>",
+  "private": false,
+  "repository": "",
+  "homepage": "",
+  "module": "dist/spaceyard.es.js",
+  "sideEffects": true,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
