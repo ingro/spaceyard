@@ -1,12 +1,13 @@
 {
   "name": "@ingruz/spaceyard",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "author": "<ingro85@gmail.com>",
   "private": false,
   "repository": "",
   "homepage": "",
+  "types": "dist/main.d.ts",
   "module": "dist/spaceyard.es.js",
   "sideEffects": true,
   "scripts": {
