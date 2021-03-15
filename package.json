@@ -12,7 +12,8 @@
   "sideEffects": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && yarn declarations",
+    "declarations": "tsc lib/main.ts --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
     "serve": "vite preview",
     "prepublishOnly": "yarn build"
   },
