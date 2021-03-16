@@ -1,6 +1,20 @@
 import React, { useState } from 'react'
+import { FiCheck } from 'react-icons/fi';
+
 import logo from './logo.svg'
 import './App.css'
+
+import { OmniBox } from '../lib/components/OmniBox';
+import { OmniBoxAction } from '../lib/types';
+
+const actions: Array<OmniBoxAction> = [
+  {
+    value: 'foo',
+    label: 'Foo',
+    Icon: FiCheck,
+    key: ''
+  }
+];
 
 function App() {
   const [count, setCount] = useState(0)
@@ -10,6 +24,11 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p className="text-red-500">Hello Vite + React!</p>
+        <OmniBox 
+          isOpen={true}
+          onClose={() => {}}
+          actions={actions}
+        />
         <p>
           <button onClick={() => setCount((count) => count + 1)}>
             count is: {count}

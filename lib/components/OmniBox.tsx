@@ -3,11 +3,12 @@ import { useLocalHotkey } from '../hooks/hotkeyHooks';
 import FocusLock from 'react-focus-lock';
 
 import { OmniBoxInput } from './OmniBoxInput';
+import { OmniBoxAction } from '../types';
 
 type OmniBoxProps = {
     isOpen: boolean;
     onClose: () => void;
-    actions: Array<any>;
+    actions: Array<OmniBoxAction>;
 };
 
 export function OmniBox({ isOpen, onClose, actions }: OmniBoxProps) {

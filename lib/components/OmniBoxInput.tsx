@@ -5,17 +5,18 @@ import { useHistory } from 'react-router';
 import clsx from 'clsx';
 
 import { highlightString } from '../utilities/formatters';
+import { OmniBoxAction } from '../types';
 
 const itemToString = (item: any) => item ? item.label : '';
 
 type OmniBoxInputProps = {
-    onSelect: Function;
-    onIsOpenChange: Function;
-    options: Array<any>;
+    onSelect: () => void;
+    onIsOpenChange: (isOpen: boolean) => void;
+    options: Array<OmniBoxAction>;
 };
 
 export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect, onIsOpenChange, options }, forwardRef) => {
-    const [optionsToDisplay, setOptionsToDisplay] = useState<Array<any>>(options);
+    const [optionsToDisplay, setOptionsToDisplay] = useState<Array<OmniBoxAction>>(options);
 
     const history = useHistory();
 
@@ -32,9 +33,9 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
             items: optionsToDisplay,
             onInputValueChange: ({ inputValue }) => {
                 // @ts-ignore
-                let newOptionsToDisplay: Array<any> = options;
+                let newOptionsToDisplay: Array<OmniBoxAction> = options;
 
-                if (inputValue !== '') {
+                if (inputValue && inputValue !== '') {
                     newOptionsToDisplay = matchSorter(options, inputValue, { keys: ['label'] });
                 }
 
@@ -56,7 +57,11 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
                     onSelect();
                 }
             },
-            onIsOpenChange: ({ isOpen }) => onIsOpenChange(isOpen)
+            onIsOpenChange: ({ isOpen }) => {
+                if (typeof isOpen !== 'undefined') {
+                    onIsOpenChange(isOpen)
+                }
+            }
         }
     );
 

@@ -1,12 +1,14 @@
-export type OmniboxAction = {
+import React from "react";
+
+export type OmniBoxAction = {
     value: string | (() => void);
     label: string;
-    Icon: any;
+    Icon: React.ElementType;
     key: string;
 };
 
-export type OmniboxActionsState = {
-    actions: Array<OmniboxAction>;
-    addActions: (actions: Array<OmniboxAction> | OmniboxAction) => void;
+export type OmniBoxActionsState = {
+    actions: Array<OmniBoxAction>;
+    addActions: (actions: Array<OmniBoxAction> | OmniBoxAction) => void;
     removeActionsByKeys: (keys: Array<string>) => void;
 };
