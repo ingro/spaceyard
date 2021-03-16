@@ -1,0 +1,320 @@
+import React, { useState, useMemo, useRef } from 'react';
+import { matchSorter } from 'match-sorter';
+import { useCombobox, useMultipleSelection } from 'downshift';
+import { FiX } from 'react-icons/fi';
+import clsx from 'clsx';
+
+import { Dropdown, DropdownItem, ToggleBtn } from './shared/dropdown';
+import { highlightString } from '../utilities/formatters';
+
+const defaultItemToStringFn = (item: any) => item?.label;
+
+// function getItemFromValue(options: Array<any>, value: any) {
+//     return options.filter((option: any) => String(value) === String(option.value))[0];
+// }
+
+type ComboBoxMultipleProps = {
+    value?: Array<any>;
+    onChange?: Function;
+    // onIsOpenChange?: Function;
+    options: Array<any>;
+    initialIsOpen?: boolean;
+    defaultHighlightedIndex?: number;
+    placeholder?: string;
+    itemToString?: Function;
+    filterKeys?: Array<string|Object>;
+    dropdownPosition?: 'top' | 'bottom';
+    dropdownFixed?: boolean;
+};
+
+export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({ 
+    value, 
+    onChange = () => {}, 
+    // onIsOpenChange, 
+    options, 
+    initialIsOpen = false, 
+    defaultHighlightedIndex = 0,
+    placeholder = 'Cerca...',
+    itemToString = defaultItemToStringFn,
+    filterKeys = ['label'],
+    dropdownPosition = 'bottom', 
+    dropdownFixed = false
+}, forwardRef) => {
+    const [inputValue, setInputValue] = useState('');
+    const [optionsToDisplay, setOptionsToDisplay] = useState(options.filter((option: any) => {
+        if (!value || value.length === 0) {
+            return true;
+        }
+
+        const values = value.map((record: any) => record.value);
+
+        return ! values.includes(option.value);
+    }));
+
+    const selectedItems = useMemo(() => {
+        return value || [];
+        // return value ? getItemFromValue(optionsToDisplay, value) : null;
+        // eslint-disable-next-line
+    }, [value]);
+
+    function multiStateReducer(state: any, actionAndChanges: any) {
+        const {type, changes} = actionAndChanges;
+
+        // console.log(type);
+        // console.log(changes);
+
+        let selectedChanged: boolean|string = false;
+
+        switch (type) {
+            case useMultipleSelection.stateChangeTypes.FunctionAddSelectedItem:
+                selectedChanged = 'add';
+                break;
+            case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
+            case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
+                selectedChanged = 'remove';
+                break;
+        }
+
+        if (selectedChanged) {
+            let newOptionsToDisplay: Array<any> = options;
+
+            if (selectedChanged === 'remove' && inputValue !== '') {
+                newOptionsToDisplay = matchSorter(options, inputValue, { keys: filterKeys });
+            }
+
+            setOptionsToDisplay(newOptionsToDisplay.filter((option: any) => {
+                // @ts-ignore
+                const values = changes.selectedItems.map((record: any) => record.value);
+
+                return ! values.includes(option.value);
+            }));
+        }
+
+        return changes;
+    }
+
+    const {
+        getSelectedItemProps,
+        getDropdownProps,
+        addSelectedItem,
+        removeSelectedItem,
+        // selectedItems,
+    } = useMultipleSelection({ 
+        selectedItems,
+        // initialSelectedItems: value || [],
+        stateReducer: multiStateReducer,
+        onSelectedItemsChange: (changes: any) => {
+            onChange(changes.selectedItems);
+        }
+    });
+
+    const localInputRef = useRef(null);
+    const containerRef = useRef(null);
+    const dropdownRef = useRef(null);
+
+    const inputRef = forwardRef || localInputRef;
+    
+    // console.log(optionsToDisplay);
+
+    function stateReducer(state: any, actionAndChanges: any) {
+        const { type, changes } = actionAndChanges;
+
+        // console.log(type);
+        // console.log(changes);
+    
+        if (type === useCombobox.stateChangeTypes.InputKeyDownEnter && ! changes.selectedItem) {
+            return state;
+        }
+
+        switch (type) {
+            case useCombobox.stateChangeTypes.ItemClick:
+            case useCombobox.stateChangeTypes.InputKeyDownEnter:
+            case useCombobox.stateChangeTypes.FunctionSelectItem:
+            // case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem:
+                // internalSelectedItemRef.current = changes.selectedItem;
+
+                return {
+                    ...changes,
+                    inputValue: '',
+                    isOpen: true
+                };
+            case useCombobox.stateChangeTypes.InputBlur:
+                if (changes.selectedItem) {
+                    return {
+                        ...changes,
+                        inputValue: ''
+                    };
+                }
+                
+                return changes;
+            default:
+                return changes;
+        }
+    }
+
+    const comboboxOptions: any = {
+        selectedItem: null,
+        items: optionsToDisplay,
+        onInputValueChange: ({ inputValue }: any) => {
+            let newOptionsToDisplay: Array<any> = options;
+
+            if (inputValue !== '') {
+                newOptionsToDisplay = matchSorter(options, inputValue, { keys: filterKeys });
+            }
+
+            setOptionsToDisplay(newOptionsToDisplay.filter((option: any) => {
+                // // @ts-ignore
+                // return selectedItems.indexOf(option) < 0;
+                const values = selectedItems.map((record: any) => record.value);
+
+                return ! values.includes(option.value);
+            }));
+        },
+        inputValue,
+        initialIsOpen,
+        itemToString,
+        stateReducer,
+        onStateChange: ({ inputValue, type, selectedItem }: any) => {
+            // console.log(type);
+            switch (type) {
+                case useCombobox.stateChangeTypes.InputChange:
+                    setInputValue(inputValue)
+                    break
+                case useCombobox.stateChangeTypes.InputKeyDownEnter:
+                case useCombobox.stateChangeTypes.ItemClick:
+                case useCombobox.stateChangeTypes.InputBlur:
+                    if (selectedItem) {
+                        setInputValue('');
+                        // @ts-ignore
+                        addSelectedItem(selectedItem);
+                    }
+                    break
+                default:
+                break
+            }
+        }
+    };
+
+    if (defaultHighlightedIndex !== null) {
+        comboboxOptions.defaultHighlightedIndex = defaultHighlightedIndex;
+    }
+
+    const {
+        isOpen,
+        getToggleButtonProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+        // inputValue,
+        // selectedItem: internalSelectedItem
+        // setInputValue
+    } = useCombobox(comboboxOptions);
+
+    let showValue = selectedItems.length > 0;
+
+    const inputProps = getInputProps({
+        ...getDropdownProps({ preventKeyAction: isOpen }),
+        // ref: inputRef
+    });
+
+    return (
+        <div 
+            className="relative h-full w-full font-normal"
+            {...getComboboxProps()}
+            tabIndex={0}
+            onFocus={() => {
+                // @ts-ignore
+                inputRef.current.focus();
+            }}
+        >
+            <div 
+                // className="w-full flex items-center justify-between flex-wrap top-0 pt-0.5 pb-1.5 px-2 rounded-md border-gray-300 radius-md border bg-gray-200 dark:bg-gray-800 focus-within:bg-white focus-within:border-primary" //pointer-events-none
+                className="w-full flex items-center justify-between flex-wrap form-input focus-within:bg-white focus-within:border-primary"
+                ref={containerRef}
+            > 
+                <span 
+                    // className={clsx('flex combobox-value flex-wrap', { 'show-value': showValue })}
+                    className={clsx('flex flex-1 flex-wrap items-center overflow-hidden')}
+                >
+                    {showValue && selectedItems.map((selectedItem, index) => {
+                        // console.log(getSelectedItemProps({ selectedItem, index }));
+                        return (
+                            <span
+                                className="pl-2 pr-1 bg-primary-lighter hover:bg-primary text-white rounded-sm mr-1 inline-flex items-center text-sm focus:outline-none"
+                                key={index}
+                                data-selected-item={index}
+                                {...getSelectedItemProps({ selectedItem, index })}
+                                onFocus={(event) => {
+                                    event.stopPropagation();
+                                }}
+                            >
+                                {itemToString(selectedItem)}
+                                <FiX 
+                                    className="ml-2 cursor-pointer"
+                                    data-remove-item={index}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeSelectedItem(selectedItem);
+                                    }}
+                                />
+                            </span>
+                        )
+                    })}
+                    <input 
+                        // className="w-full bg-gray-100 border border-gray-200 focus:border-indigo-500 focus:outline-none rounded py-1 px-2 appearance-none leading-normal h-10"
+                        className="text-base m-0 p-0 appearance-none border-none bg-transparent focus:ring-0 focus:outline-none"
+                        placeholder={selectedItems.length > 0 ? null : placeholder}
+                        type="text"
+                        {...inputProps}
+                        style={{ width: showValue ? 2 + (inputValue.length * 9) + 'px' : 'auto'}}
+                        ref={(node: any) => {
+                            inputProps.ref(node);
+
+                            // @ts-ignore
+                            inputRef.current = node;
+                        }}
+                        // FIXME: di default Downshift per il Combobox al blur dell'input seleziona l'oggetto correntemente evidenziato,
+                        // non ho trovato soluzione migliore se non fare l'override dell'onBlur fornito da Downshift,
+                        // verificare se si può trovare soluzione meno invasiva (magari modificando lo stateReducer)
+                        onBlur={() => {}}
+                    />
+                </span>
+                <ToggleBtn 
+                    className="self-stretch flex-shrink-0"
+                    isOpen={isOpen} 
+                    {...getToggleButtonProps()} 
+                />
+            </div>
+            <Dropdown 
+                {...getMenuProps()} 
+                elementRef={containerRef} 
+                dropdownRef={dropdownRef} 
+                isOpen={isOpen}
+                position={dropdownPosition}
+                fixed={dropdownFixed}
+            >
+                {(isOpen && optionsToDisplay.length > 0) && optionsToDisplay.map((item, index) => (
+                    <DropdownItem
+                        isHighlighted={highlightedIndex === index}
+                        key={`${item}${index}`}
+                        {...getItemProps({ item, index })}
+                    >
+                        <span
+                            className="flex highlighted-text cursor-default"
+                            dangerouslySetInnerHTML={{ __html: highlightString(inputValue, itemToString(item)) || '' }}   
+                        />
+                    </DropdownItem>
+                ))}
+                {(isOpen && optionsToDisplay.length === 0) && (
+                    <DropdownItem 
+                        isHighlighted={false}
+                    >
+                        <span>Nessun risultato</span>
+                    </DropdownItem>
+                )}
+            </Dropdown>
+        </div>
+    );
+});

@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 import { Drawer } from './Drawer';
 
-const pause = (ms: number) => new Promise((resolve) => {
-    setTimeout(() => resolve(true), ms);
-});
+export const pause = (ms: number) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 test('basic Drawer tests', async () => {
     render(

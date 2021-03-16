@@ -37,6 +37,7 @@ export default ({ command, mode }) => {
           "react-error-boundary",
           "react-focus-lock",
           "react-icons",
+          "react-popper",
           "react-router",
           "react-spring",
           "react",
