@@ -1,8 +1,5 @@
-import React, { useState } from 'react'
-import { FiCheck } from 'react-icons/fi';
-
-import logo from './logo.svg'
-import './App.css'
+import React from 'react'
+import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
 
 import { OmniBox } from '../lib/components/OmniBox';
 import { OmniBoxAction } from '../lib/types';
@@ -12,51 +9,24 @@ const actions: Array<OmniBoxAction> = [
     value: 'foo',
     label: 'Foo',
     Icon: FiCheck,
-    key: ''
+    key: 'foo'
+  },
+  {
+    value: 'bar',
+    label: 'Bar',
+    Icon: FiAlertTriangle,
+    key: 'bar'
   }
 ];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="text-red-500">Hello Vite + React!</p>
-        <OmniBox 
-          isOpen={true}
-          onClose={() => {}}
-          actions={actions}
-        />
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div>
+      <OmniBox 
+        isOpen={true}
+        onClose={() => {}}
+        actions={actions}
+      />
     </div>
   )
 }
