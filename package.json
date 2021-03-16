@@ -1,7 +1,7 @@
 {
   "name": "@ingruz/spaceyard",
   "description": "",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "author": "<ingro85@gmail.com>",
   "private": false,
@@ -10,7 +10,10 @@
   "types": "dist/main.d.ts",
   "module": "dist/spaceyard.es.js",
   "main": "dist/spaceyard.umd.js",
-  "files": ["dist", "lib"],
+  "files": [
+    "dist",
+    "lib"
+  ],
   "exports": {
     ".": {
       "import": "./dist/spaceyard.es.js",
