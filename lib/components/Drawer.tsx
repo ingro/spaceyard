@@ -92,7 +92,7 @@ export function Drawer({
                             )}
                             style={props}
                             aria-labelledby={`drawer-${side}-${size}`}
-                            data-spaceyard-drawer-content={true}
+                            data-spaceyard-drawer-content
                         >
                             {dismissable && (
                                 <div className="cursor-pointer dark:text-white absolute top-2 right-2" onClick={onClose}>

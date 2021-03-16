@@ -12,7 +12,6 @@
     max-height: 90vh;
 }
 
-[data-spaceyard-drawer-content].drawer-dialog-filters {
-    @apply top-16;
-    max-height: calc(100vh - 4rem);
+[data-reach-dialog-content][data-spaceyard-drawer-content] {
+    @apply max-h-screen;
 }
