@@ -23,6 +23,7 @@
     "tinykeys": "^1.1.1"
   },
   "devDependencies": {
+    "@reach/dialog": "^0.13.2",
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/line-clamp": "^0.2.0",
@@ -38,6 +39,7 @@
     "postcss-nesting": "^7.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-error-boundary": "^3.1.1",
     "react-focus-lock": "^2.5.0",
     "react-icons": "^4.2.0",
     "react-router": "^5.2.0",
@@ -49,9 +51,11 @@
     "zustand": "^3.3.3"
   },
   "peerDependencies": {
+    "@reach/dialog": "^0.13.0",
     "downshift": "^6.1.0",
     "react": "^16.13.0 || 17.x",
     "react-focus-lock": "^2.5.0",
+    "react-icons": "^4.2.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "zustand": "^3.3.0"

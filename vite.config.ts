@@ -31,9 +31,12 @@ export default ({ command, mode }) => {
       },
       rollupOptions: {
         external: [
+          "@reach/dialog",
           "downshift",
           "react-dom",
+          "react-error-boundary",
           "react-focus-lock",
+          "react-icons",
           "react-router",
           "react",
           "zustand"
