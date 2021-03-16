@@ -2,6 +2,8 @@ import React from 'react'
 import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
 
 import { OmniBox } from '../lib/components/OmniBox';
+import { Drawer } from '../lib/components/Drawer';
+import { useDisclosure } from '../lib/hooks/useDisclosure';
 import { OmniBoxAction } from '../lib/types';
 
 const actions: Array<OmniBoxAction> = [
@@ -20,6 +22,8 @@ const actions: Array<OmniBoxAction> = [
 ];
 
 function App() {
+  const { toggle, isOpen } = useDisclosure();
+
   return (
     <div>
       <OmniBox 
@@ -27,6 +31,13 @@ function App() {
         onClose={() => {}}
         actions={actions}
       />
+      <button onClick={toggle}>Toggle Drawer</button>
+      <Drawer
+        isOpen={isOpen}
+        onClose={()=>{}}
+      >
+        <h1>I'm a Drawer!</h1>
+      </Drawer>
     </div>
   )
 }

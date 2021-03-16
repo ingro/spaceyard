@@ -9,7 +9,7 @@ import { FiX } from 'react-icons/fi';
 const AnimatedDialogContent = animated(DialogContent);
 const AnimatedDialogOverlay = animated(DialogOverlay);
 
-function DefaultErrorFallback({ error }) {
+function DefaultErrorFallback({ error }: any) {
     return (
         <div>
             {error.message}
@@ -29,7 +29,7 @@ type DrawerProps = {
     ErrorFallback?: any;
 };
 
-export default function Drawer({
+export function Drawer({
     isOpen = false,
     className,
     onClose, 
@@ -80,11 +80,11 @@ export default function Drawer({
                         <AnimatedDialogContent
                             as="div"
                             className={clsx(
-                                'fixed lg:top-0 top-16 h-screen max-h-screen p-2 dark:bg-gray-600 border border-gray-200 shadow-2xl rounded-md',
+                                'outline-none fixed lg:top-0 top-16 h-screen max-h-screen p-2 dark:bg-gray-600 border border-gray-200 shadow-2xl',
                                 className, 
                                 {
-                                    'left-0 rounded-tl-none rounded-bl-none': side === 'right',
-                                    'right-0 rounded-tr-none rounded-br-none': side === 'left',
+                                    'right-0 rounded-l-lg rounded-r-none': side === 'right',
+                                    'left-0 rounded-l-none rounded-r-lg': side === 'left',
                                     'w-11/12 md:w-1/3 lg:w-1/4 xl:w-1/6': size === 'small',
                                     'w-11/12 md:w-1/2 lg:w-1/3 xl:w-1/4': size === 'medium',
                                     'w-11/12 md:w-4/5 lg:w-2/4 xl:w-1/3': size === 'large',

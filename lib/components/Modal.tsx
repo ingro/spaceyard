@@ -6,7 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import '../styles/dialogs.css';
 
-function DefaultErrorFallback({ error }) {
+function DefaultErrorFallback({ error }: any) {
     return (
         <div>
             {error.message}
