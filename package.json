@@ -9,6 +9,14 @@
   "homepage": "",
   "types": "dist/main.d.ts",
   "module": "dist/spaceyard.es.js",
+  "main": "dist/spaceyard.umd.js",
+  "files": ["dist", "lib"],
+  "exports": {
+    ".": {
+      "import": "./dist/spaceyard.es.js",
+      "require": "./dist/spaceyard.umd.js"
+    }
+  },
   "sideEffects": true,
   "scripts": {
     "dev": "vite",
@@ -43,6 +51,7 @@
     "react-focus-lock": "^2.5.0",
     "react-icons": "^4.2.0",
     "react-router": "^5.2.0",
+    "react-spring": "^8.0.27",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended": "^4.0.0",
     "tailwindcss": "^2.0.3",
@@ -58,6 +67,7 @@
     "react-icons": "^4.2.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-spring": "^8.0.0",
     "zustand": "^3.3.0"
   }
 }

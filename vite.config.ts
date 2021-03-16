@@ -38,6 +38,7 @@ export default ({ command, mode }) => {
           "react-focus-lock",
           "react-icons",
           "react-router",
+          "react-spring",
           "react",
           "zustand"
         ],

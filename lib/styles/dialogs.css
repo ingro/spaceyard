@@ -1,0 +1,18 @@
+:root {
+    --reach-dialog: 1;
+}
+  
+[data-reach-dialog-overlay] {
+    @apply flex fixed inset-0 items-center justify-center;
+    background: hsla(0, 0%, 0%, 0.5);
+}
+  
+[data-reach-dialog-content] {
+    @apply flex flex-col m-auto bg-white outline-none rounded shadow-lg;
+    max-height: 90vh;
+}
+
+[data-spaceyard-drawer-content].drawer-dialog-filters {
+    @apply top-16;
+    max-height: calc(100vh - 4rem);
+}

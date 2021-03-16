@@ -1,8 +1,0 @@
-/.vscode
-/src
-index.html
-postcss.config.js
-stylelint.config.js
-tailwind.config.js
-tsconfig.json
-vite.config.ts

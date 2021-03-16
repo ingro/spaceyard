@@ -4,6 +4,8 @@ import { FiX } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import '../styles/dialogs.css';
+
 function DefaultErrorFallback({ error }) {
     return (
         <div>
