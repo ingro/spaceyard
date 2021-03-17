@@ -32,7 +32,9 @@ export default ({ command, mode }) => {
       rollupOptions: {
         external: [
           "@reach/dialog",
+          "date-fns",
           "downshift",
+          "i18next",
           "query-string",
           "react-dom",
           "react-error-boundary",
