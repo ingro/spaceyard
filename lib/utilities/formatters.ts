@@ -1,3 +1,5 @@
+import { LocalizedDateFormat } from "../types";
+
 export function highlightString(query: string, text: string, opts: any = { tag: 'b' }): string|null {
     if (!query || query.length === 0) {
         return text;
@@ -48,8 +50,6 @@ const timeOptions = {
     minute: 'numeric', 
     second: 'numeric'
 };
-
-export type LocalizedDateFormat = 'full' | 'dateOnly' | 'timeOnly' | 'long';
 
 export function formatLocalizedDate(isoDate: string | null | Date, language = 'default', format: LocalizedDateFormat = 'full') {
     if (isoDate === null)  {

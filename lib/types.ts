@@ -17,3 +17,5 @@ export type SelectOption = {
     value: string|number,
     label: string
 };
+
+export type LocalizedDateFormat = 'full' | 'dateOnly' | 'timeOnly' | 'long';
