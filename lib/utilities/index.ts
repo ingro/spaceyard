@@ -1,5 +1,7 @@
 export * from './formatters';
 
-export * from './stores';
+export * from './notifications';
 
 export * from './routes';
+
+export * from './stores';

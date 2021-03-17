@@ -41,6 +41,7 @@ export default ({ command, mode }) => {
           "react-popper",
           "react-router",
           "react-spring",
+          "react-toastify",
           "react",
           "zustand"
         ],

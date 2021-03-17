@@ -36,3 +36,57 @@ export function highlightString(query: string, text: string, opts: any = { tag: 
 
     return after === null ? null : `${before}${match}${after}`.replace(/\s/g, '&nbsp;');
 }
+
+const dateOptions = {
+    month: '2-digit', 
+    day: '2-digit', 
+    year: 'numeric'
+};
+
+const timeOptions = {
+    hour: 'numeric', 
+    minute: 'numeric', 
+    second: 'numeric'
+};
+
+export type LocalizedDateFormat = 'full' | 'dateOnly' | 'timeOnly' | 'long';
+
+export function formatLocalizedDate(isoDate: string | null | Date, language = 'default', format: LocalizedDateFormat = 'full') {
+    if (isoDate === null)  {
+        return '-';
+    }
+
+    const date = (isoDate instanceof Date) ? isoDate : new Date(isoDate);
+
+    let options = {};
+
+    if (format === 'timeOnly') {
+        options = timeOptions;
+    } else {
+        options = dateOptions;
+
+        if (format !== 'dateOnly') {
+            options = {
+                ...options,
+                ...timeOptions
+            };
+        }
+
+        if (format === 'long') {
+            options = {
+                ...options,
+                weekday: 'long'
+            };
+        }
+    }
+
+    return new Intl.DateTimeFormat(language, options).format(date);
+}
+
+export function capitalize(s: string) {
+    if (typeof s !== 'string') {
+        return '';
+    }
+
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}

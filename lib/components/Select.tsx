@@ -7,6 +7,9 @@ import clsx from 'clsx';
 
 import { Dropdown, DropdownItem, ClearBtn, ToggleBtn } from './shared/dropdown';
 import { SelectOption } from '../types';
+
+import '../styles/dropdowns.css';
+
 // import FieldWrapper, { FieldWrapperProps } from './FieldWrapper';
 
 type SelectProps = {

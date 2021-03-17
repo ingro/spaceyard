@@ -1,0 +1,12 @@
+.combobox-value {
+    @apply transition-opacity opacity-0 duration-100;
+    /* transition-timing-function: steps(3,end); */
+}
+
+.combobox-value.show-value {
+    @apply opacity-100;
+}
+
+.combobox-controls {
+    @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none;
+}

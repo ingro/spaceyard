@@ -1,7 +1,7 @@
 import { compile } from 'path-to-regexp';
 import qs from 'query-string';
 
-export function creteRouteHelper(routesList: Record<string, string>, homePath: string = '/') {
+export function createRouteHelper(routesList: Record<string, string>, homePath: string = '/') {
     return {
         getUrlForRoute(routeName: string, params: any = {}, query: any = {}): string {
             const compiler = compile(routesList[routeName]);
