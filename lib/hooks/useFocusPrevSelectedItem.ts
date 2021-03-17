@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-export default function useFocusPrevSelectedItem(isFetchedAfterMount: boolean) {
+export function useFocusPrevSelectedItem(isFetchedAfterMount: boolean) {
     const location = useLocation();
 
     useEffect(() => {

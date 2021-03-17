@@ -42,7 +42,7 @@ export default ({ command, mode }) => {
           "react-focus-lock",
           "react-hook-form",
           "react-i18next",
-          "react-icons",
+          "react-icons/fi",
           "react-popper",
           "react-router",
           "react-spring",

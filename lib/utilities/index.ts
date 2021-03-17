@@ -1,3 +1,5 @@
+export * from './dom';
+
 export * from './forms';
 
 export * from './formatters';

@@ -10,7 +10,7 @@ type useEditDrawerResult = {
     currentItemEditId: string | number | null;
 };
 
-export default function useEditDrawer(): useEditDrawerResult {
+export function useEditDrawer(): useEditDrawerResult {
     const [currentItemEditId, setCurrentItemEditId] = useState(null);
     const { isOpen, close, open } = useDisclosure(false);
 

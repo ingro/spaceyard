@@ -1,6 +1,4 @@
 export async function loadDateLocale(language: string, cb: (locale: any) => void, fallBackLng: string | null = 'it') {
-    console.log(fallBackLng);
-
     let languageToLoad = language === 'default' ? navigator.language : language;
 
     if (languageToLoad === 'en') {
