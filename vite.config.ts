@@ -35,6 +35,7 @@ export default ({ command, mode }) => {
           "date-fns",
           "downshift",
           "i18next",
+          "lodash/defaults",
           "query-string",
           "react-dom",
           "react-error-boundary",

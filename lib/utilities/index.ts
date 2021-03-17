@@ -1,3 +1,5 @@
+export * from './forms';
+
 export * from './formatters';
 
 export * from './localization';
