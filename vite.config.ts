@@ -33,6 +33,7 @@ export default ({ command, mode }) => {
         external: [
           "@reach/dialog",
           "downshift",
+          "query-string",
           "react-dom",
           "react-error-boundary",
           "react-focus-lock",

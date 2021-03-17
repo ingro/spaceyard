@@ -12,3 +12,8 @@ export type OmniBoxActionsState = {
     addActions: (actions: Array<OmniBoxAction> | OmniBoxAction) => void;
     removeActionsByKeys: (keys: Array<string>) => void;
 };
+
+export type SelectOption = {
+    value: string|number,
+    label: string
+};

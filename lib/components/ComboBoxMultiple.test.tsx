@@ -25,7 +25,7 @@ test('basic ComboBoxMultiple functionality', async () => {
     // Popper crea problemi altrimenti, vedi https://github.com/popperjs/react-popper/issues/350
     // e https://github.com/popperjs/react-popper/commit/76822a25ebb87592ad7faea7c3c407f5be1f2da0
     await act(async () => {
-        result = await render(
+        result = render(
             <ComboBoxMultiple
                 options={options}
                 onChange={onChange}
@@ -33,6 +33,7 @@ test('basic ComboBoxMultiple functionality', async () => {
         );
     });
 
+    // @ts-ignore
     const { container, rerender } = result;
 
     const cbToggle = container.querySelector('[data-combobox-toggle]');
@@ -43,13 +44,14 @@ test('basic ComboBoxMultiple functionality', async () => {
 
     expect(cbOptions.length).toEqual(8);
 
-    const firstOption = await screen.getByText('Foo').parentElement;
+    const firstOption = screen.getByText('Foo').parentElement;
 
     expect(firstOption).toHaveAttribute('role', 'option');
     expect(firstOption).toHaveAttribute('aria-selected', 'true');
 
+    // @ts-ignore
     fireEvent.click(firstOption);
-
+    
     await pause(100);
 
     cbOptions = screen.getAllByRole('option');
