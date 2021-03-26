@@ -23,6 +23,7 @@ type DrawerProps = {
     isOpen?: boolean;
     dismissable?: boolean;
     onClose: () => void;
+    onOpened?: () => void;
     size?: 'small' | 'medium' | 'large';
     showOverlay?: boolean;
     side?: 'left' | 'right';
@@ -33,6 +34,7 @@ export function Drawer({
     isOpen = false,
     className,
     onClose, 
+    onOpened,
     children, 
     size = 'medium',
     side = 'right',
@@ -42,33 +44,43 @@ export function Drawer({
 }: DrawerProps) {
     const handleDismiss = dismissable ? onClose : () => {};
 
-    const transitions = useTransition(isOpen, null, {
+    const item = React.useMemo(() => {
+        if (isOpen) {
+            return [1];
+        }
+
+        return [];
+    }, [isOpen]);
+
+    const transitions = useTransition(item, {
+        key: item => item,
         from: {
             opacity: 0,
-            transform: side === 'right' ? 'translateX(100%)' : 'translateX(-100%)'
+            translateX: side === 'right' ? '100%' : '-100%'
         },
         enter: {
             opacity: 1,
-            transform: 'translateX(0)'
+            translateX: '0%'
         },
         leave: {
-            opacity: 0,
-            transform: side === 'right' ? 'translateX(100%)' : 'translateX(-100%)',
+            opacity: 0, 
+            translateX: side === 'right' ? '100%' : '-100%'
         },
-        config: {
-            //...config.stiff,
-            // easing: easeBounceIn
-        }
+        onRest() {
+            if (item.length === 1 && onOpened) {
+                onOpened();
+            }
+        },
+        config: {}
     });
 
     const Wrapper = showOverlay ? AnimatedDialogOverlay : Portal;
 
     return (
         <>
-            {transitions.map(({ item, key, props }) =>
-                item && (
+            {transitions((props, item) => {
+                return (
                     <Wrapper
-                        key={key}
                         as="div"
                         style={{
                             opacity: props.opacity
@@ -105,7 +117,7 @@ export function Drawer({
                         </AnimatedDialogContent>
                     </Wrapper>
                 )
-            )}
+            })}
         </>
     );
 }

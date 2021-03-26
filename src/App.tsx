@@ -35,6 +35,7 @@ function App() {
       <Drawer
         isOpen={isOpen}
         onClose={()=>{}}
+        onOpened={() => console.warn('OPENED!')}
       >
         <h1>I'm a Drawer!</h1>
       </Drawer>
