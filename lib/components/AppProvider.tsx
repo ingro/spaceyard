@@ -4,7 +4,7 @@ import useEventListener from "@use-it/event-listener";
 
 import AppContext from "../contexts/AppContext";
 
-export default function AppProvider({ children, appStorage }: any) {
+export function AppProvider({ children, appStorage }: any) {
     const [isMinimized, setIsMinimized] = useState(true);
     const [user, setUser] = useState(appStorage.get('user'));
     const languageRef = useRef(appStorage.get('language'));
