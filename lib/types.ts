@@ -1,5 +1,13 @@
 import React from "react";
 
+export type AppContextType = {
+    user: any | null;
+    isMinimized: boolean;
+    setUser: (user: any) => void;
+    setIsMinimized: (isMinimized: boolean) => void;
+    setLanguage: (language: string) => void;
+};
+
 export type OmniBoxAction = {
     value: string | (() => void);
     label: string;

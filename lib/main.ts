@@ -1,3 +1,4 @@
+export * from './components/AppProvider';
 export * from './components/Buttons';
 export * from './components/ComboBox';
 export * from './components/ComboBoxMultiple';

@@ -11,3 +11,5 @@ export * from './notifications';
 export * from './routes';
 
 export * from './stores';
+
+export * from './storage';
