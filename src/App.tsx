@@ -1,27 +1,29 @@
 import React from 'react'
-import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
+// import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
 
 // import { OmniBox } from '../lib/components/OmniBox';
 import { Drawer } from '../lib/components/Drawer';
 import { Input } from '../lib/components/Input';
 import { Select } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
-import { OmniBoxAction } from '../lib/types';
+// import { OmniBoxAction } from '../lib/types';
 
-const actions: Array<OmniBoxAction> = [
-  {
-    value: 'foo',
-    label: 'Foo',
-    Icon: FiCheck,
-    key: 'foo'
-  },
-  {
-    value: 'bar',
-    label: 'Bar',
-    Icon: FiAlertTriangle,
-    key: 'bar'
-  }
-];
+import '../lib/styles/dialogs.css';
+
+// const actions: Array<OmniBoxAction> = [
+//   {
+//     value: 'foo',
+//     label: 'Foo',
+//     Icon: FiCheck,
+//     key: 'foo'
+//   },
+//   {
+//     value: 'bar',
+//     label: 'Bar',
+//     Icon: FiAlertTriangle,
+//     key: 'bar'
+//   }
+// ];
 
 function App() {
   const { toggle, isOpen } = useDisclosure();
@@ -61,9 +63,10 @@ function App() {
           ]}
         />
       </div>
-      {/* <button onClick={toggle}>Toggle Drawer</button> */}
+      <button onClick={toggle}>Toggle Drawer</button>
       <Drawer
         isOpen={isOpen}
+        showOverlay={false}
         onClose={()=>{}}
         onOpened={() => console.warn('OPENED!')}
       >

@@ -10,11 +10,12 @@ type FieldWrapperClassNames = {
     wrapper?: string;
 };
 
+type Layouts = 'inline' | 'stacked' | 'onlyInput';
+
 export type FieldWrapperProps = {
-    // className: string;
     error?: any;
     label?: string;
-    layout?: 'inline' | 'stacked' | 'onlyInput';
+    layout?: Layouts;
     name?: string;
     placeholder?: string;
     helper?: string;
@@ -23,7 +24,7 @@ export type FieldWrapperProps = {
     classNames?: FieldWrapperClassNames;
 };
 
-const DEFAULT_CLASSNAMES = {
+const DEFAULT_CLASSNAMES: Record<Layouts, FieldWrapperClassNames> = {
     inline: {
         helper: '',
         inputWrapper: 'w-3/5',
@@ -37,6 +38,13 @@ const DEFAULT_CLASSNAMES = {
         label: 'block text-gray-600 dark:text-gray-400 my-1',
         labelWrapper: '',
         wrapper: 'w-full'
+    },
+    onlyInput: {
+        helper: 'text-gray-500 text-xs italic',
+        inputWrapper: '',
+        label: '',
+        labelWrapper: '',
+        wrapper: ''
     }
 };
 
