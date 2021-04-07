@@ -156,14 +156,14 @@ export const SelectField = React.forwardRef<any, SelectFieldProps>((props: any, 
     );
 });
 
-interface SwitchFieldControllerProps extends SelectFieldProps {
+interface SelectFieldControllerProps extends SelectFieldProps {
     name: string;
     control: Control;
     defaultValue?: any;
     valueSelector?: (option: any) => string | number | null;
 };
 
-export function SelectFieldController({ name, control, defaultValue, valueSelector = option => option, ...rest}: SwitchFieldControllerProps) {
+export function SelectFieldController({ name, control, defaultValue, valueSelector = option => option, ...rest}: SelectFieldControllerProps) {
     const { field, fieldState } = useController({
         name,
         control,
