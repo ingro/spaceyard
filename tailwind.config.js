@@ -15,6 +15,7 @@ module.exports ={
                 'primary-stronger': 'var(--color-primary-stronger-theme)',
 
                 danger: colors.rose[600],
+                // danger: 'var(--color-danger-theme)',
                 success: colors.emerald[600],
                 warning: colors.amber[400]
             }

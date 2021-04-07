@@ -80,7 +80,7 @@ export function FieldWrapper({ name, classNames = {}, placeholder, error, label,
                     {label || placeholder || name}
                 </label>
                 {children}
-                <p className={clsx(classNames.helper)}>{error?.message || helper}</p>
+                <p className={clsx(classNames.helper)}>{error?.message || error || helper}</p>
             </div>
         );
     }
@@ -90,7 +90,7 @@ export function FieldWrapper({ name, classNames = {}, placeholder, error, label,
             'field-error': error
         })}>
             {children}
-            <p className={clsx(classNames.helper)}>{error?.message || helper}</p>
+            <p className={clsx(classNames.helper)}>{error?.message || error || helper}</p>
         </div>
     );
 }

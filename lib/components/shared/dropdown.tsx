@@ -31,7 +31,7 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
             {
                 name: 'offset',
                 options: {
-                    offset: [0, 1],
+                    offset: [0, 4],
                 }
             },
             {
@@ -60,8 +60,10 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
 
     return (
         <ul 
-            className={clsx('absolute bg-gray-100 dark:bg-gray-600 p-0 rounded-md overflow-y-auto z-10 outline-none max-h-80 text-base leading-6 shadow-lg', {
-                'py-1': isOpen
+            className={clsx('absolute bg-gray-100 dark:bg-gray-600 p-0 rounded-md overflow-y-auto z-10 outline-none max-h-80 text-base leading-6 shadow-lg border border-gray-300', {
+                'py-1.5': isOpen,
+                'hidden': !isOpen,
+                'border-r-0': children.length > 7
             })}
             {...rest}
             style={styles.popper}
@@ -103,7 +105,9 @@ export const DropdownItem = React.forwardRef<any, any>(({ children, isHighlighte
 export const ToggleBtn = React.forwardRef<any, any>(({ children, isOpen, ...rest }, forwardRef) => {
     return (
         <span 
-            className="combobox-controls"
+            className={clsx('combobox-controls', {
+                // '!text-gray-700': isOpen
+            })}
             {...rest}
             data-combobox-toggle
             ref={forwardRef}

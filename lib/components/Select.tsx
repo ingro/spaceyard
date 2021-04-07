@@ -12,8 +12,6 @@ import { SelectOption } from '../types';
 
 import '../styles/dropdowns.css';
 
-// import FieldWrapper, { FieldWrapperProps } from './FieldWrapper';
-
 type SelectProps = {
     options: Array<SelectOption>;
     onChange?: (item: any) => void;
@@ -24,8 +22,6 @@ type SelectProps = {
     dropdownPosition?: 'top' | 'bottom';
     dropdownFixed?: boolean;
 };
-
-// interface SelectFieldProps extends SelectProps, FieldWrapperProps {};
 
 const itemToString = (item: any) => item?.label || '';
 
@@ -80,8 +76,9 @@ export function Select({
         <div className="relative" ref={containerRef}>
             <div 
                 tabIndex={0}
-                className={clsx('form-select cursor-default flex w-full', {
-                    'form-select-open': isOpen
+                className={clsx('form-select cursor-default flex w-full group', {
+                    'form-select-open': isOpen,
+                    'form-select-selected': selectValue
                 })} 
                 {...toggleProps}
                 onKeyPress={e => {

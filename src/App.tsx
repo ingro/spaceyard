@@ -3,7 +3,7 @@ import React from 'react'
 
 // import { OmniBox } from '../lib/components/OmniBox';
 import { Drawer } from '../lib/components/Drawer';
-import { Input } from '../lib/components/Input';
+import { InputField } from '../lib/components/Input';
 import { Select } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
 // import { OmniBoxAction } from '../lib/types';
@@ -37,12 +37,17 @@ function App() {
         actions={actions}
       /> */}
       <div className="w-1/4 mb-2">
-        <Input 
+        <InputField 
+          name="name"
+          layout="stacked"
           placeholder="Name"
+          // error="Required"
         />
       </div>
       <div className="w-1/4 mb-2">
         <Select
+          showClearBtn={true}
+          // value={'12'}
           options={[
             { value: 'foo', label: 'Foo' },
             { value: 'bar', label: 'Bar' },

@@ -9,6 +9,9 @@
 
 .form-select {
     background-image: none;
+    &.form-select-selected {
+        @apply ring-1 ring-primary ring-opacity-10;
+    }
 }
 
 .field-error .form-input {
