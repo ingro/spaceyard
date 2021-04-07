@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
+import { Control, useController } from 'react-hook-form';
 import clsx from 'clsx';
 import pick from 'lodash/pick';
 import uniqueId from 'lodash/uniqueId';
 
 import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
-import { Control, useController } from 'react-hook-form';
 
 type InputProps = {
     className?: string;

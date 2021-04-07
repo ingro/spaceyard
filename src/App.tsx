@@ -9,6 +9,7 @@ import { useDisclosure } from '../lib/hooks/useDisclosure';
 // import { OmniBoxAction } from '../lib/types';
 
 import '../lib/styles/dialogs.css';
+import '../lib/styles/form.css';
 
 // const actions: Array<OmniBoxAction> = [
 //   {

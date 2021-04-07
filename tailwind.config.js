@@ -1,8 +1,10 @@
+const colors = require('tailwindcss/colors');
+
 module.exports ={
     mode: 'jit',
     darkMode: 'class',
     purge: {
-        enabled: process.env.NODE_ENV === 'production',
+        // enabled: process.env.NODE_ENV === 'production',
         content: ['./index.html', './src/**/*.tsx', './src/**/*.ts', './lib/**/*.{ts,tsx}']
     },
     theme: {
@@ -11,6 +13,10 @@ module.exports ={
                 primary: 'var(--color-primary-theme)',
                 'primary-lighter': 'var(--color-primary-lighter-theme)',
                 'primary-stronger': 'var(--color-primary-stronger-theme)',
+
+                danger: colors.rose[600],
+                success: colors.emerald[600],
+                warning: colors.amber[400]
             }
         }
     },
