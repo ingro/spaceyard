@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { SyntheticEvent, useMemo } from 'react';
 import { Control, useController } from 'react-hook-form';
 import clsx from 'clsx';
 import pick from 'lodash/pick';
@@ -12,9 +12,9 @@ type InputProps = {
     error?: any;
     id?: string;
     name?: string;
-    onChange?: any;
-    onInput?: any;
-    onKeyUp?: any;
+    onChange?: (value: any) => void;
+    onInput?: (e: SyntheticEvent) => void;
+    onKeyUp?: (e: SyntheticEvent) => void;
     placeholder?: string;
     type?: string;
     value?: string;

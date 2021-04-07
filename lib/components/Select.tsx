@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { useSelect } from 'downshift';
 // import find from 'lodash/find';
-// import pick from 'lodash/pick';
-// import uniqueId from 'lodash/uniqueId';
+import { Control, useController } from 'react-hook-form';
+import uniqueId from 'lodash/uniqueId';
+import pick from 'lodash/pick';
 import clsx from 'clsx';
 
 import { Dropdown, DropdownItem, ClearBtn, ToggleBtn } from './shared/dropdown';
+import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 import { SelectOption } from '../types';
 
 import '../styles/dropdowns.css';
@@ -130,5 +132,50 @@ export function Select({
                 )}
             </Dropdown>
         </div>
+    );
+}
+
+interface SelectFieldProps extends SelectProps, FieldWrapperProps {};
+
+export const SelectField = React.forwardRef<any, SelectFieldProps>((props: any, forwardRef) => {
+    const inputId = uniqueId(`form-${props.name}_`);
+
+    const inputPropsName = ['options', 'placeholder', 'value', 'showClearBtn', 'onChange', 'dropdownFixed'];
+
+    // @ts-ignore
+    const inputProps: SelectProps = pick(props, inputPropsName);
+
+    return (
+        <FieldWrapper {...props} inputId={inputId}>
+            <Select
+                {...inputProps}
+                id={inputId}
+                // ref={forwardRef} 
+            />
+        </FieldWrapper>
+    );
+});
+
+interface SwitchFieldControllerProps extends SelectFieldProps {
+    name: string;
+    control: Control;
+    defaultValue?: any;
+    valueSelector?: (option: any) => string | number | null;
+};
+
+export function SelectFieldController({ name, control, defaultValue, valueSelector = option => option, ...rest}: SwitchFieldControllerProps) {
+    const { field, fieldState } = useController({
+        name,
+        control,
+        defaultValue
+    });
+
+    return (
+        <SelectField 
+            {...field}
+            {...rest}
+            error={fieldState.error}
+            onChange={(option) => field.onChange(valueSelector(option))}
+        />
     );
 }

@@ -11,6 +11,7 @@ export * from './components/Modal';
 export * from './components/Notifications';
 export * from './components/OmniBox';
 export * from './components/Select';
+export * from './components/Switch';
 export * from './components/TimeAgo';
 
 export * from './hooks';
