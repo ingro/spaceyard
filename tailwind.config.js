@@ -1,7 +1,9 @@
 module.exports ={
+    mode: 'jit',
+    darkMode: 'class',
     purge: {
         enabled: process.env.NODE_ENV === 'production',
-        content: ['./index.html', './src/**/*.tsx', './src/**/*.ts']
+        content: ['./index.html', './src/**/*.tsx', './src/**/*.ts', './lib/**/*.{ts,tsx}']
     },
     theme: {
         extend: {

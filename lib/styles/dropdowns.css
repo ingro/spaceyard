@@ -10,3 +10,7 @@
 .combobox-controls {
     @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none;
 }
+
+.combobox-controls > svg {
+    @apply inline;
+}

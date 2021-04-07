@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelect } from 'downshift';
 // import find from 'lodash/find';
 // import pick from 'lodash/pick';
@@ -53,15 +53,15 @@ export function Select({
         selectedItem,
         selectItem,
         getToggleButtonProps,
-        getLabelProps,
+        // getLabelProps,
         getMenuProps,
         highlightedIndex,
         getItemProps,
-        // openMenu,
+        openMenu
         // toggleMenu
     } = useSelect({
         items: options,
-        defaultHighlightedIndex: selectValue ? undefined : 0,
+        initialHighlightedIndex: selectValue ? undefined : 0,
         itemToString,
         onSelectedItemChange: (changes) => {
             if (onChange) {
@@ -72,19 +72,28 @@ export function Select({
         id 
     });
 
+    const toggleProps = getToggleButtonProps();
+
     return (
         <div className="relative" ref={containerRef}>
             <div 
+                tabIndex={0}
                 className={clsx('form-select cursor-default flex w-full', {
                     'form-select-open': isOpen
                 })} 
-                {...getToggleButtonProps()}
+                {...toggleProps}
+                onKeyPress={e => {
+                    if (e.key === 'Enter' && isOpen === false) {
+                        openMenu();
+                        e.stopPropagation()
+                    }
+                }}
             >
                 <span 
                     className={clsx('flex-grow select-none text-left truncate', {
                         'text-gray-400': !selectedItem
                     })} 
-                    {...getLabelProps()}
+                    // {...getLabelProps()}
                 >
                     {itemToString(selectedItem) || placeholder}
                 </span>
@@ -120,7 +129,6 @@ export function Select({
                     }
                 )}
             </Dropdown>
-            <div tabIndex={0} />
         </div>
     );
 }
