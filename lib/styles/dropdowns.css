@@ -8,13 +8,14 @@
 }
 
 .combobox-controls {
-    @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none text-gray-400 group-focus:text-current hover:text-current;
+    @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none text-gray-400 group-focus:text-current hover:text-current select-none;
 }
 
 .combobox-controls > svg {
     @apply inline;
 }
 
-.form-select-open .combobox-controls {
+.form-select-open .combobox-controls,
+.form-select-has-focus .combobox-controls {
     @apply text-current
 }
