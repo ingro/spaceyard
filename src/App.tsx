@@ -8,6 +8,7 @@ import { InputFieldController } from '../lib/components/Input';
 import { SelectFieldController } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
 import { ComboBox } from '../lib/components/ComboBox';
+import { ComboBoxMultiple } from '../lib/components/ComboBoxMultiple';
 // import { OmniBoxAction } from '../lib/types';
 
 import '../lib/styles/dialogs.css';
@@ -57,6 +58,7 @@ function App() {
   const { toggle, isOpen } = useDisclosure();
 
   const [foo, setFoo] = useState<any>();
+  const [bar, setBar] = useState<Array<any>>([]);
 
   const { control, handleSubmit } = useForm();
 
@@ -90,6 +92,13 @@ function App() {
           onSelect={(option) => {
             setFoo(option);
           }}
+        />
+      </div>
+      <div className="w-1/4 mb-2">
+        <ComboBoxMultiple
+          options={options}
+          value={bar}
+          onChange={(values: any) => setBar(values)}
         />
       </div>
       <Drawer

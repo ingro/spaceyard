@@ -101,12 +101,10 @@ export const DropdownItem = React.forwardRef<any, any>(({ children, isHighlighte
     );
 });
 
-export const ToggleBtn = React.forwardRef<any, any>(({ children, isOpen, ...rest }, forwardRef) => {
+export const ToggleBtn = React.forwardRef<any, any>(({ children, isOpen, className, ...rest }, forwardRef) => {
     return (
         <span 
-            className={clsx('combobox-controls', {
-                // '!text-gray-700': isOpen
-            })}
+            className={clsx('combobox-controls', className)}
             {...rest}
             data-combobox-toggle
             ref={forwardRef}

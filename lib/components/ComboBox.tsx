@@ -257,6 +257,13 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                         />
                     </DropdownItem>
                 ))}
+                {(isOpen && optionsToDisplay.length === 0) && (
+                    <DropdownItem 
+                        isHighlighted={false}
+                    >
+                        <span>Nessun risultato</span>
+                    </DropdownItem>
+                )}
             </Dropdown>
         </div>
     );
