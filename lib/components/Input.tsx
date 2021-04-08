@@ -26,7 +26,8 @@ export const Input = React.forwardRef<any, InputProps>(({ name, className = 'for
             placeholder={placeholder || name}
             name={name}
             className={clsx(className, {
-                'border-danger': error
+                'border-danger': error,
+                'form-element-has-value': rest?.value && rest.value !== ''
             })}
             ref={forwardRef}
             type={type}
@@ -40,7 +41,7 @@ interface InputFieldProps extends InputProps, FieldWrapperProps {};
 export const InputField = React.forwardRef<any, InputFieldProps>((props: any, forwardRef) => {
     const inputId = uniqueId(`form-${props.name}_`);
 
-    const inputPropsName = ['name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur'];
+    const inputPropsName = ['name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];
 
     // @ts-ignore
     const inputProps: InputProps = pick(props, inputPropsName);

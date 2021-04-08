@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { SyntheticEvent, useRef, useState } from 'react';
 import { useSelect } from 'downshift';
 // import find from 'lodash/find';
 import { Control, useController } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { SelectOption } from '../types';
 import '../styles/dropdowns.css';
 
 type SelectProps = {
+    name?: string;
     options: Array<SelectOption>;
     onChange?: (item: any) => void;
     placeholder?: string;
@@ -26,6 +27,7 @@ type SelectProps = {
 const itemToString = (item: any) => item?.label || '';
 
 export function Select({ 
+    name,
     options, 
     placeholder = 'Seleziona', 
     onChange, 
@@ -78,7 +80,7 @@ export function Select({
                 tabIndex={0}
                 className={clsx('form-select cursor-default flex w-full group', {
                     'form-select-open': isOpen,
-                    'form-select-selected': selectValue
+                    'form-element-has-value': selectValue
                 })} 
                 {...toggleProps}
                 onKeyPress={e => {
@@ -97,7 +99,12 @@ export function Select({
                     {itemToString(selectedItem) || placeholder}
                 </span>
                 {selectedItem && showClearBtn && (
-                    <ClearBtn onClick={() => selectItem(null)} />
+                    <ClearBtn 
+                        onClick={(e: SyntheticEvent) => {
+                            e.stopPropagation();
+                            selectItem(null)
+                        }} 
+                    />
                 )}
                 <ToggleBtn isOpen={isOpen} />
             </div>

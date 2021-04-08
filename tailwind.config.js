@@ -14,8 +14,8 @@ module.exports ={
                 'primary-lighter': 'var(--color-primary-lighter-theme)',
                 'primary-stronger': 'var(--color-primary-stronger-theme)',
 
-                danger: colors.rose[600],
-                // danger: 'var(--color-danger-theme)',
+                // danger: colors.rose[600],
+                danger: 'var(--color-danger-theme)',
                 success: colors.emerald[600],
                 warning: colors.amber[400]
             }

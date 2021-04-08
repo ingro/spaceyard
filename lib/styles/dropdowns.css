@@ -8,7 +8,7 @@
 }
 
 .combobox-controls {
-    @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none text-gray-400 group-focus:text-current;
+    @apply flex-shrink-0 pointer-events-auto cursor-pointer outline-none text-gray-400 group-focus:text-current hover:text-current;
 }
 
 .combobox-controls > svg {

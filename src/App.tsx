@@ -1,10 +1,11 @@
 import React from 'react'
+import { useForm } from 'react-hook-form';
 // import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
 
 // import { OmniBox } from '../lib/components/OmniBox';
 import { Drawer } from '../lib/components/Drawer';
-import { InputField } from '../lib/components/Input';
-import { Select } from '../lib/components/Select';
+import { InputFieldController } from '../lib/components/Input';
+import { SelectFieldController } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
 // import { OmniBoxAction } from '../lib/types';
 
@@ -26,49 +27,57 @@ import '../lib/styles/form.css';
 //   }
 // ];
 
+type FormExample = {
+  name: string;
+  foo: string;
+};
+
 function App() {
   const { toggle, isOpen } = useDisclosure();
 
+  const { control, handleSubmit } = useForm();
+
   return (
     <div className="m-4">
-      {/* <OmniBox 
-        isOpen={true}
-        onClose={() => {}}
-        actions={actions}
-      /> */}
-      <div className="w-1/4 mb-2">
-        <InputField 
-          name="name"
-          layout="stacked"
-          placeholder="Name"
-          // error="Required"
-        />
-      </div>
-      <div className="w-1/4 mb-2">
-        <Select
-          showClearBtn={true}
-          // value={'12'}
-          options={[
-            { value: 'foo', label: 'Foo' },
-            { value: 'bar', label: 'Bar' },
-            { value: 'baz', label: 'Baz' },
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-            { value: '3', label: '3' },
-            { value: '4', label: '4' },
-            { value: '5', label: '5' },
-            { value: '6', label: '6' },
-            { value: '7', label: '7' },
-            { value: '8', label: '8' },
-            { value: '9', label: '9' },
-            { value: '10', label: '10' },
-            { value: '11', label: '11' },
-            { value: '12', label: '12' },
-            { value: '13', label: '13' },
-            { value: '14', label: '14' },
-          ]}
-        />
-      </div>
+      <form onSubmit={handleSubmit(data => console.warn(data))}>
+        <div className="w-1/4 mb-2">
+          <InputFieldController 
+            name="name"
+            layout="stacked"
+            placeholder="Name"
+            control={control}
+            // error="Required"
+          />
+        </div>
+        <div className="w-1/4 mb-2">
+          <SelectFieldController
+            name="foo"
+            layout="stacked"
+            showClearBtn={true}
+            control={control}
+            // value={'12'}
+            options={[
+              { value: 'foo', label: 'Foo' },
+              { value: 'bar', label: 'Bar' },
+              { value: 'baz', label: 'Baz' },
+              { value: '1', label: '1' },
+              { value: '2', label: '2' },
+              { value: '3', label: '3' },
+              { value: '4', label: '4' },
+              { value: '5', label: '5' },
+              { value: '6', label: '6' },
+              { value: '7', label: '7' },
+              { value: '8', label: '8' },
+              { value: '9', label: '9' },
+              { value: '10', label: '10' },
+              { value: '11', label: '11' },
+              { value: '12', label: '12' },
+              { value: '13', label: '13' },
+              { value: '14', label: '14' },
+            ]}
+          />
+        </div>
+      </form>
       <button onClick={toggle}>Toggle Drawer</button>
       <Drawer
         isOpen={isOpen}
@@ -78,6 +87,11 @@ function App() {
       >
         <h1>I'm a Drawer!</h1>
       </Drawer>
+      {/* <OmniBox 
+        isOpen={true}
+        onClose={() => {}}
+        actions={actions}
+      /> */}
     </div>
   )
 }

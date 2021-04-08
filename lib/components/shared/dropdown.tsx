@@ -60,7 +60,7 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
 
     return (
         <ul 
-            className={clsx('absolute bg-gray-100 dark:bg-gray-600 p-0 rounded-md overflow-y-auto z-10 outline-none max-h-80 text-base leading-6 shadow-lg border border-gray-300', {
+            className={clsx('absolute bg-gray-50 dark:bg-gray-600 p-0 rounded-md overflow-y-auto z-10 outline-none max-h-80 text-base leading-6 shadow-lg border border-gray-300', {
                 'py-1.5': isOpen,
                 'hidden': !isOpen,
                 'border-r-0': children.length > 7
