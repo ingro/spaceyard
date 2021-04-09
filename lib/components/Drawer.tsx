@@ -53,7 +53,7 @@ export function Drawer({
     }, [isOpen]);
 
     const transitions = useTransition(item, {
-        key: item => item,
+        key: (item: any) => item,
         from: {
             opacity: 0,
             translateX: side === 'right' ? '100%' : '-100%'

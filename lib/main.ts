@@ -7,6 +7,7 @@ export * from './components/DisplayDate';
 export * from './components/Drawer';
 export * from './components/FieldWrapper';
 export * from './components/Input';
+export * from './components/InputSearch';
 export * from './components/Modal';
 export * from './components/Notifications';
 export * from './components/OmniBox';

@@ -26,3 +26,8 @@
 .field-error p {
     @apply text-danger;
 }
+
+.form-input input::-webkit-search-cancel-button,
+.form-input input::-webkit-search-decoration {
+  -webkit-appearance: none;
+}

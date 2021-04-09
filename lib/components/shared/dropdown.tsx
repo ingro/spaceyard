@@ -114,11 +114,12 @@ export const ToggleBtn = React.forwardRef<any, any>(({ children, isOpen, classNa
     );
 });
 
-export function ClearBtn({ onClick }: any) {
+export function ClearBtn({ onClick, ...rest }: any) {
     return (
         <span 
-            className="combobox-controls mr-1"
+            className="combobox-controls"
             onClick={onClick}
+            {...rest}
         >
             <FiX />
         </span>

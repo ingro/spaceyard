@@ -7,3 +7,7 @@
 - Quando seleziono un oggetto sbagliato focusare l'index 0, potrebbe provocare dello scroll, sarebbe piu appropriato focusare l'elemento prima quello appena selezionato?
 - Ha senso rimuovere gli oggetti selezionati dalla lista delle opzioni? Non si potrebbero mostrare con uno stile che faccia capire che sono già selezionati, e cliccando posso de-selezionarli?
 - Aggiungere tasto per rimuovere tutti gli elementi selezionati in un colpo solo?
+
+## Select
+
+- Per come funziona `downshift` non è possibile usare il `<FieldWrapper>` per renderizzare label e combobox associate, bisognerebbe implementare la cosa in maniera diversa?

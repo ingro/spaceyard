@@ -7,6 +7,7 @@ import uniqueId from 'lodash/uniqueId';
 import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 
 type InputProps = {
+    autoComplete?: string;
     className?: string;
     defaultValue?: string;
     error?: any;
@@ -41,7 +42,7 @@ interface InputFieldProps extends InputProps, FieldWrapperProps {};
 export const InputField = React.forwardRef<any, InputFieldProps>((props: any, forwardRef) => {
     const inputId = uniqueId(`form-${props.name}_`);
 
-    const inputPropsName = ['name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];
+    const inputPropsName = ['autocomplete', 'name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];
 
     // @ts-ignore
     const inputProps: InputProps = pick(props, inputPropsName);
