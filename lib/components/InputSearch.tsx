@@ -10,12 +10,13 @@ type InputSearchProps = {
     value?: any;
     placeholder?: string;
     onSubmit: (value: string) => void;
-    focusKey?: string | boolean;
+    onClear?: () => void;
+    focusKey?: string | boolean; // 'Control+K'
     name?: string;
     showIcon?: boolean;
 };
 
-export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, value = '', focusKey = 'Control+K', name, showIcon = true }, forwardedRef) => {
+export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, onClear, value = '', focusKey = false, name, showIcon = true }, forwardedRef) => {
     const [inputValue, setInputValue] = useState(value ? String(value) : '');
     const [hasFocus, setHasFocus] = useState(false);
 
@@ -27,6 +28,8 @@ export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholde
     }, [value]);
 
     useInputFocusKey(focusKey ? ref : null, typeof focusKey === 'boolean' ? 'none' : focusKey);
+
+    const clearValue = (typeof onClear === 'function') ? onClear : () => onSubmit('');
 
     const style = useSpring({
         width: hasFocus ? 2 : 32,
@@ -66,14 +69,14 @@ export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholde
 
                     if (e.key === 'Escape') {
                         setInputValue('');
-                        onSubmit('');
+                        clearValue();
                     }
                 }}
                 role="searchbox"
             />
             {value && value !== '' &&
                 <ClearBtn
-                    onClick={() => onSubmit('')}
+                    onClick={() => clearValue()}
                 />
             }
         </div>
