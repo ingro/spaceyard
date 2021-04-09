@@ -6,8 +6,8 @@ import { useSearchField } from '@react-aria/searchfield';
 import { useButton } from '@react-aria/button';
 import clsx from 'clsx';
 
-import { useInputFocusKey } from '../hooks/hotkeyHooks';
-import { ClearBtn } from './shared/dropdown';
+import { useInputFocusKey } from '../lib/hooks/hotkeyHooks';
+import { ClearBtn } from '../lib/components/shared/dropdown';
 
 type InputSearchProps = {
     value?: any;

@@ -1,7 +1,7 @@
 {
   "name": "@ingruz/spaceyard",
   "description": "",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "license": "MIT",
   "author": "<ingro85@gmail.com>",
   "private": false,
@@ -32,9 +32,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@react-aria/button": "^3.3.1",
-    "@react-aria/searchfield": "^3.1.2",
-    "@react-stately/searchfield": "^3.1.1",
     "@use-it/event-listener": "^0.1.6",
     "basil.js": "^0.4.11",
     "clsx": "^1.1.1",
@@ -50,6 +47,9 @@
     "@babel/preset-typescript": "^7.13.0",
     "@popperjs/core": "^2.9.2",
     "@reach/dialog": "^0.15.0",
+    "@react-aria/button": "^3.3.1",
+    "@react-aria/searchfield": "^3.1.2",
+    "@react-stately/searchfield": "^3.1.1",
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/line-clamp": "^0.2.0",
@@ -94,10 +94,10 @@
     "zustand": "^3.4.1"
   },
   "peerDependencies": {
-    "@reach/dialog": "^0.13.0",
+    "@reach/dialog": "^0.15.0",
     "date-fns": "^2.0.0",
     "downshift": "^6.1.0",
-    "query-string": "^6.14.0",
+    "query-string": "^7.0.0",
     "react": "^16.13.0 || 17.x",
     "react-focus-lock": "^2.5.0",
     "react-hook-form": "^7.0.0",
