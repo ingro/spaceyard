@@ -138,6 +138,7 @@ function App() {
       </Drawer>
       <div className="w-1/4 mb-2">
         <InputSearch 
+          showIcon={false}
           value={search}
           onSubmit={(q: string) => {
             alert(q);
