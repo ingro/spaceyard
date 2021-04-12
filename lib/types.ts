@@ -1,6 +1,11 @@
 import React from "react";
 
+type AppRouteNames = 'login' | 'logout' | 'home';
+
+export type AppRoutes = Record<AppRouteNames, string>;
+
 export type AppContextType = {
+    appRoutes: AppRoutes;
     user: any | null;
     isMinimized: boolean;
     setUser: (user: any) => void;

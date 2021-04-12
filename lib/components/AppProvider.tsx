@@ -1,20 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useEventListener from "@use-it/event-listener";
 
 import AppContext from "../contexts/AppContext";
+import { AppContextType, AppRoutes } from "../types";
 
-export function AppProvider({ children, appStorage }: any) {
+type AppProviderProps = {
+    children: any;
+    appStorage: any;
+    appRoutes: AppRoutes
+};
+
+export function AppProvider({ children, appStorage, appRoutes }: AppProviderProps) {
     const [isMinimized, setIsMinimized] = useState(true);
     const [user, setUser] = useState(appStorage.get('user'));
     const languageRef = useRef(appStorage.get('language'));
 
     const { i18n } = useTranslation();
 
-    const AppContextValue = {
+    const AppContextValue: AppContextType = {
         isMinimized, 
         setIsMinimized,
         user,
+        appRoutes,
         setUser: (userValue: any) => {
             setUser(userValue);
             appStorage.set('user', userValue);

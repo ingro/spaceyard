@@ -45,6 +45,7 @@ export default ({ command, mode }) => {
           "react-icons/fi",
           "react-popper",
           "react-router",
+          "react-router-dom",
           "react-spring",
           "react-toastify",
           "react",

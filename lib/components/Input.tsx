@@ -42,7 +42,7 @@ interface InputFieldProps extends InputProps, FieldWrapperProps {};
 export const InputField = React.forwardRef<any, InputFieldProps>((props: any, forwardRef) => {
     const inputId = uniqueId(`form-${props.name}_`);
 
-    const inputPropsName = ['autocomplete', 'name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];
+    const inputPropsName = ['autoComplete', 'name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];
 
     // @ts-ignore
     const inputProps: InputProps = pick(props, inputPropsName);
