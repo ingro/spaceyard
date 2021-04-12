@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+
 import { useAppContext } from '../hooks/useAppContext';
 
 export const MatchWhenGuest = (WrappedComponent: any) => {

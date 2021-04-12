@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
+
 import { useAppContext } from '../hooks/useAppContext';
 
 export const MatchWhenAuth = (WrappedComponent: any) => {

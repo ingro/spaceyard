@@ -1,3 +1,5 @@
+export * from './authHooks';
+
 export * from './hotkeyHooks';
 
 export * from './useAppContext';
