@@ -10,7 +10,7 @@ type SwitchProps = {
     checked?: boolean;
     error?: any;
     label?: string;
-    labelPosition?: string;
+    labelPosition?: 'none' | 'left' | 'right';
     onBlur?: () => void;
     onChange?: (checked: boolean) => void;
     value?: boolean;
