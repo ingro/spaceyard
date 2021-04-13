@@ -12,11 +12,18 @@ export async function loadDateLocale(language: string, cb: (locale: any) => void
     let loadedLocale = null;
     
     try {
-        loadedLocale = await import(`date-fns/locale/${languageToLoad}`);
+        loadedLocale = await import(/* @vite-ignore */ `date-fns/locale/${languageToLoad}/index.js`);
     } catch (err) {
         console.error(`Unable to load translations for locale "${languageToLoad}", falling back to "${fallBackLng}"`);
 
-        loadedLocale = await import(`date-fns/locale/${fallBackLng}`);
+        try {
+            loadedLocale = await import(/* @vite-ignore */ `date-fns/locale/${fallBackLng}/index.js`);
+        } catch (err) {
+            // @ts-ignore
+            if (import.meta.env.DEV) {
+                loadedLocale = await import('date-fns/locale/it/index.js');
+            }
+        }
     }
 
     cb(loadedLocale);

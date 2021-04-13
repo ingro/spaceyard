@@ -15,6 +15,7 @@ import { SwitchFieldController } from '../lib/components/Switch';
 
 import '../lib/styles/dialogs.css';
 import '../lib/styles/form.css';
+import { TimeAgo } from '../lib/components/TimeAgo';
 
 // const actions: Array<OmniBoxAction> = [
 //   {
@@ -67,6 +68,7 @@ function App() {
 
   return (
     <div className="m-4">
+      <TimeAgo date={new Date()}/>
       <form onSubmit={handleSubmit(data => console.warn(data))}>
         <div className="w-1/4 mb-2">
           <InputFieldController 
