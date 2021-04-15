@@ -32,21 +32,21 @@ const DEFAULT_CLASSNAMES: Record<Layouts, FieldWrapperClassNames> = {
         inputWrapper: 'w-3/5',
         label: 'block text-gray-600 dark:text-gray-400 text-right mb-0 pr-4',
         labelWrapper: 'w-2/5',
-        wrapper: 'flex items-center mb-4'
+        wrapper: 'flex items-center mb-2'
     },
     stacked: {
         helper: 'text-gray-500 text-xs italic',
         inputWrapper: '',
         label: 'block text-gray-600 dark:text-gray-400 my-1',
         labelWrapper: '',
-        wrapper: 'w-full'
+        wrapper: 'w-full mb-2'
     },
     onlyInput: {
         helper: 'text-gray-500 text-xs italic',
         inputWrapper: '',
         label: '',
         labelWrapper: '',
-        wrapper: ''
+        wrapper: 'mb-2'
     }
 };
 

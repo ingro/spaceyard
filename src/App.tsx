@@ -8,6 +8,7 @@ import { InputFieldController } from '../lib/components/Input';
 import { SelectFieldController } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
 import { ComboBox } from '../lib/components/ComboBox';
+import { CheckboxFieldController } from '../lib/components/Checkbox';
 import { ComboBoxMultiple } from '../lib/components/ComboBoxMultiple';
 import { InputSearch } from '../lib/components/InputSearch';
 import { SwitchFieldController } from '../lib/components/Switch';
@@ -112,6 +113,13 @@ function App() {
             name="confirm"
             label="Conferma"
             control={control}
+            labelPosition="none"
+          />
+          <CheckboxFieldController
+            name="privacy"
+            label="GDPR"
+            control={control}
+            labelPosition="none"
           />
         </div>
       </form>
