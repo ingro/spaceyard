@@ -64,7 +64,7 @@ type ModalTitleProps = {
 
 export function ModalTitle({ showCloseButton = true, onClose, labelId, children }: ModalTitleProps) {
     return (
-        <div className="pt-2 pb-3 px-3 lg:px-6 flex justify-between items-center">
+        <div className="pt-2 pb-3 pl-3 pr-2.5 lg:pl-6 lg:pr-5 flex justify-between items-center">
             <p className="text-2xl font-bold dark:text-white" id={labelId}>{children}</p>
             {showCloseButton && <CloseModalButton onClose={onClose} />}
         </div>

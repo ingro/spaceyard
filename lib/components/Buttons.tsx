@@ -33,7 +33,7 @@ type CloseModalButtonProps = {
 export function CloseModalButton({ onClose }: CloseModalButtonProps) {
     return (
         <div 
-            className="inline-block cursor-pointer dark:text-white place-self-start -mr-1 hover:bg-gray-200 dark:hover:text-gray-300" 
+            className="inline-block cursor-pointer dark:text-white content-center p-0.5 -mr-1 hover:bg-gray-200 dark:hover:text-gray-300" 
             onClick={onClose}
         >
             <FiX className="w-6 h-6"/>

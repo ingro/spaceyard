@@ -151,7 +151,7 @@ function App() {
         />
       </div>
       <button onClick={toggle}>Toggle Drawer</button>
-      {/* {isOpen && <AppModal onClose={toggle} />} */}
+      {isOpen && <AppModal onClose={toggle} />}
       {/* <OmniBox 
         isOpen={true}
         onClose={() => {}}
