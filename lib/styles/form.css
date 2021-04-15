@@ -31,7 +31,3 @@
 .form-input input::-webkit-search-decoration {
   -webkit-appearance: none;
 }
-
-/* [type='checkbox'], [type='radio'] {
-    @apply !text-primary;
-} */

@@ -17,8 +17,8 @@ import { CancelModalButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 // import { OmniBoxAction } from '../lib/types';
 
-import '../lib/styles/dialogs.css';
-import '../lib/styles/form.css';
+// import '../lib/styles/dialogs.css';
+// import '../lib/styles/form.css';
 
 // const actions: Array<OmniBoxAction> = [
 //   {
@@ -150,7 +150,7 @@ function App() {
       </Drawer>
       <div className="w-1/4 mb-2">
         <InputSearch 
-          showIcon={false}
+          // showIcon={false}
           value={search}
           onSubmit={(q: string) => {
             alert(q);

@@ -1,17 +1,4 @@
-:root {
-    --color-primary-theme: theme('colors.indigo.500');
-    --color-primary-lighter-theme: theme('colors.indigo.400');
-    --color-primary-stronger-theme: theme('colors.indigo.600');
-    --color-danger-theme: theme('colors.red.600');
-    --color-success-theme: theme('colors.green.600');
-    --color-warning-theme: theme('colors.yellow.400');
-}
+@import 'tailwind.css';
 
-/* purgecss start ignore */
-
-@tailwind base;
-@tailwind components;
-
-/* purgecss end ignore */
-
-@tailwind utilities;
+@import '../lib/styles/dialogs.css';
+@import '../lib/styles/form.css';
