@@ -4,7 +4,8 @@ import Portal from "@reach/portal";
 import { animated, useTransition } from 'react-spring';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
-import { FiX } from 'react-icons/fi';
+
+import { CloseModalButton } from './Buttons';
 
 const AnimatedDialogContent = animated(DialogContent);
 const AnimatedDialogOverlay = animated(DialogOverlay);
@@ -107,8 +108,8 @@ export function Drawer({
                             data-spaceyard-drawer-content
                         >
                             {dismissable && (
-                                <div className="cursor-pointer dark:text-white absolute top-2 right-2" onClick={onClose}>
-                                    <FiX className="w-6 h-6"/>
+                                <div className="absolute top-2 right-2">
+                                    <CloseModalButton onClose={onClose} />
                                 </div>
                             )}
                             <ErrorBoundary FallbackComponent={ErrorFallback}>

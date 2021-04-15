@@ -11,11 +11,13 @@ import { ComboBox } from '../lib/components/ComboBox';
 import { ComboBoxMultiple } from '../lib/components/ComboBoxMultiple';
 import { InputSearch } from '../lib/components/InputSearch';
 import { SwitchFieldController } from '../lib/components/Switch';
+import { TimeAgo } from '../lib/components/TimeAgo';
+import { CancelModalButton } from '../lib/components/Buttons';
+import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 // import { OmniBoxAction } from '../lib/types';
 
 import '../lib/styles/dialogs.css';
 import '../lib/styles/form.css';
-import { TimeAgo } from '../lib/components/TimeAgo';
 
 // const actions: Array<OmniBoxAction> = [
 //   {
@@ -56,6 +58,24 @@ const options = [
   { value: '13', label: '13' },
   { value: '14', label: '14' },
 ];
+
+function AppModal({ onClose }: any) {
+  return (
+    <Modal 
+        labelId="foo"
+        onClose={onClose} 
+        size="small"
+    >
+        <ModalTitle labelId="foo" onClose={onClose}>Modale</ModalTitle>
+        <ModalBody>
+            Hello World!
+        </ModalBody>
+        <ModalFooter>
+            <CancelModalButton onClose={onClose} />
+        </ModalFooter>
+    </Modal>
+  );
+}
 
 function App() {
   const { toggle, isOpen } = useDisclosure();
@@ -114,8 +134,9 @@ function App() {
       <Drawer
         isOpen={isOpen}
         showOverlay={false}
-        onClose={()=>{}}
+        onClose={toggle}
         onOpened={() => console.warn('OPENED!')}
+        dismissable={true}
       >
         <h1>I'm a Drawer!</h1>
       </Drawer>
@@ -130,6 +151,7 @@ function App() {
         />
       </div>
       <button onClick={toggle}>Toggle Drawer</button>
+      {/* {isOpen && <AppModal onClose={toggle} />} */}
       {/* <OmniBox 
         isOpen={true}
         onClose={() => {}}

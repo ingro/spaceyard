@@ -2,7 +2,7 @@ import React from 'react';
 import { FiCheck } from 'react-icons/fi';
 
 import { Modal, ModalTitle, ModalBody, ModalFooter } from './Modal';
-import { CloseModalButton } from './Buttons';
+import { CancelModalButton } from './Buttons';
 
 type ConfirmDialogProps = {
     title: string;
@@ -20,7 +20,7 @@ export function ConfirmDialog({ title, onCancel, onConfirm, children, Icon = FiC
                 {children}
             </ModalBody>
             <ModalFooter>
-                <CloseModalButton onClose={onCancel} label="Annulla" />
+                <CancelModalButton onClose={onCancel} label="Annulla" />
                 <button onClick={onConfirm} className="btn btn-lg btn-primary ml-2 --modal-dialog-confirm-btn">
                     {Icon && (
                         <><Icon />{' '}</>

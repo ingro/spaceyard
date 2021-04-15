@@ -1,10 +1,10 @@
 import React from 'react';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import { FiX } from 'react-icons/fi';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import '../styles/dialogs.css';
+import { CloseModalButton } from './Buttons';
 
 function DefaultErrorFallback({ error }: any) {
     return (
@@ -66,11 +66,7 @@ export function ModalTitle({ showCloseButton = true, onClose, labelId, children 
     return (
         <div className="pt-2 pb-3 px-3 lg:px-6 flex justify-between items-center">
             <p className="text-2xl font-bold dark:text-white" id={labelId}>{children}</p>
-            {showCloseButton && (
-                <div className="cursor-pointer dark:text-white place-self-start -mr-1 hover:text-gray-500 dark:hover:text-gray-300" onClick={onClose}>
-                    <FiX className="w-6 h-6"/>
-                </div>
-            )}
+            {showCloseButton && <CloseModalButton onClose={onClose} />}
         </div>
     );
 }
