@@ -36,7 +36,7 @@ export function CloseModalButton({ onClose }: CloseModalButtonProps) {
             className="inline-block cursor-pointer dark:text-white content-center p-0.5 -mr-1 hover:bg-gray-200 dark:hover:text-gray-300" 
             onClick={onClose}
         >
-            <FiX className="w-6 h-6"/>
+            <FiX className="w-6 h-6" style={{ display: 'block' }}/>
         </div>
     );
 }
