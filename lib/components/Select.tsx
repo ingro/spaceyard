@@ -10,7 +10,7 @@ import { Dropdown, DropdownItem, ClearBtn, ToggleBtn } from './shared/dropdown';
 import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 import { SelectOption } from '../types';
 
-import '../styles/dropdowns.css';
+// import '../styles/dropdowns.css';
 
 type SelectProps = {
     name?: string;
@@ -37,8 +37,9 @@ export function Select({
     dropdownPosition = 'bottom', 
     dropdownFixed = false 
 }: SelectProps) {
-    const containerRef = useRef(null);
-    const dropdownRef = useRef(null);
+    let [referenceElement, setReferenceElement] = useState();
+    // const containerRef = useRef(null);
+    // const dropdownRef = useRef(null);
 
     let selectValue = null;
 
@@ -75,7 +76,11 @@ export function Select({
     const toggleProps = getToggleButtonProps();
 
     return (
-        <div className="relative" ref={containerRef}>
+        <div 
+            className="relative" 
+            // @ts-ignore
+            ref={setReferenceElement}
+        >
             <div 
                 tabIndex={0}
                 className={clsx('form-select cursor-default flex w-full group', {
@@ -110,8 +115,8 @@ export function Select({
             </div>
             <Dropdown 
                 {...getMenuProps()} 
-                elementRef={containerRef} 
-                dropdownRef={dropdownRef} 
+                elementRef={referenceElement} 
+                // dropdownRef={dropdownRef} 
                 isOpen={isOpen}
                 position={dropdownPosition}
                 fixed={dropdownFixed}

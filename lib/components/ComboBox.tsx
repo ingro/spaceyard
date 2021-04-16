@@ -47,8 +47,10 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
     dropdownFixed = false
 }, forwardRef) => {
     const localInputRef = useRef(null);
-    const containerRef = useRef(null);
-    const dropdownRef = useRef(null);
+    // const containerRef = useRef(null);
+    // const dropdownRef = useRef(null);
+
+    let [referenceElement, setReferenceElement] = useState();
 
     const inputRef = forwardRef || localInputRef;
 
@@ -193,8 +195,6 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
     const inputProps = getInputProps({
         ref: inputRef
     });
-    
-    // console.log(inputProps);
 
     return (
         <div 
@@ -203,6 +203,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 'form-select-has-focus': hasFocus
             })}
             {...getComboboxProps()}
+            // ref={containerRef}
         >
             <input 
                 className={clsx('form-select', {
@@ -217,7 +218,11 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 onBlur={() => setHasFocus(false)}
                 onFocus={() => setHasFocus(true)}
             />
-            <div className="w-full h-full flex items-center absolute top-0 px-2 pointer-events-none" ref={containerRef}>
+            <div 
+                className="w-full h-full flex items-center absolute top-0 px-2 pointer-events-none" 
+                // @ts-ignore
+                ref={setReferenceElement}
+            >
                 <span className={clsx('combobox-value flex-grow', { 'show-value': showValue })}>
                     {showValue && itemToString(internalSelectedItemRef.current)}
                 </span>
@@ -237,8 +242,8 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
             </div>
             <Dropdown 
                 {...getMenuProps()} 
-                elementRef={containerRef} 
-                dropdownRef={dropdownRef} 
+                elementRef={referenceElement} 
+                // dropdownRef={dropdownRef} 
                 isOpen={isOpen}
                 position={dropdownPosition}
                 fixed={dropdownFixed}

@@ -111,8 +111,9 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
     });
 
     const localInputRef = useRef(null);
-    const containerRef = useRef(null);
-    const dropdownRef = useRef(null);
+    let [referenceElement, setReferenceElement] = useState();
+    // const containerRef = useRef(null);
+    // const dropdownRef = useRef(null);
 
     const inputRef = forwardRef || localInputRef;
     
@@ -237,7 +238,8 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
                     'form-select-has-focus': hasFocus,
                     'form-element-has-value': selectedItems.length > 0
                 })}
-                ref={containerRef}
+                // @ts-ignore
+                ref={setReferenceElement}
             > 
                 <span 
                     className={clsx('flex flex-1 flex-wrap items-center overflow-hidden')}
@@ -294,8 +296,8 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
             </div>
             <Dropdown 
                 {...getMenuProps()} 
-                elementRef={containerRef} 
-                dropdownRef={dropdownRef} 
+                elementRef={referenceElement} 
+                // dropdownRef={dropdownRef} 
                 isOpen={isOpen}
                 position={dropdownPosition}
                 fixed={dropdownFixed}

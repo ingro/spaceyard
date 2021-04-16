@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import { createPopper } from '@popperjs/core';
 import { usePopper } from 'react-popper';
 import clsx from 'clsx';
@@ -9,7 +9,7 @@ import { popperSameWidthModifier } from '../../utilities/dom';
 type DropdownProps = {
     children: any;
     elementRef: any;
-    dropdownRef: any;
+    dropdownRef?: any;
     isOpen: boolean;
     fixed?: boolean;
     position?: 'top' | 'bottom';
@@ -24,7 +24,12 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
     position = 'bottom',
     ...rest 
 }, forwardRef) => {
-    const { styles, attributes } = usePopper(elementRef.current, dropdownRef.current, {
+    // console.log(dropdownRef);
+    console.log(elementRef?.offsetWidth);
+
+    let [popperElement, setPopperElement] = useState();
+
+    const { styles, attributes } = usePopper(isOpen ? elementRef : null, isOpen ? popperElement : null, {
         placement: position === 'bottom' ? 'bottom-start' : 'top-start',
         strategy: fixed ? 'fixed' : 'absolute',
         modifiers: [
@@ -74,9 +79,11 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
                 // @ts-ignore
                 forwardRef(node);
 
-                if (dropdownRef) {
-                    dropdownRef.current = node;
-                }
+                setPopperElement(node);
+
+                // if (dropdownRef) {
+                //     dropdownRef.current = node;
+                // }
             }}
         >
             {children}

@@ -3,7 +3,7 @@ import { DialogOverlay, DialogContent } from '@reach/dialog';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import '../styles/dialogs.css';
+// import '../styles/dialogs.css';
 import { CloseModalButton } from './Buttons';
 
 function DefaultErrorFallback({ error }: any) {

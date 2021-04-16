@@ -1,4 +1,5 @@
 @import 'tailwind.css';
 
-@import '../lib/styles/dialogs.css';
 @import '../lib/styles/form.css';
+@import '../lib/styles/dropdowns.css';
+@import '../lib/styles/dialogs.css';
