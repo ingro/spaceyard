@@ -25,7 +25,7 @@ export const Dropdown = React.forwardRef<any, DropdownProps>(({
     ...rest 
 }, forwardRef) => {
     // console.log(dropdownRef);
-    console.log(elementRef?.offsetWidth);
+    // console.log(elementRef?.offsetWidth);
 
     let [popperElement, setPopperElement] = useState();
 
