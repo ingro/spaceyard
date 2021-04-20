@@ -7,16 +7,17 @@ import { useInputFocusKey } from '../hooks/hotkeyHooks';
 import { ClearBtn } from './shared/dropdown';
 
 type InputSearchProps = {
-    value?: any;
-    placeholder?: string;
-    onSubmit: (value: string) => void;
-    onClear?: () => void;
+    autoComplete?: string;
     focusKey?: string | boolean; // 'Control+K'
     name?: string;
+    onClear?: () => void;
+    onSubmit: (value: string) => void;
+    placeholder?: string;
     showIcon?: boolean;
+    value?: any;
 };
 
-export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, onClear, value = '', focusKey = false, name, showIcon = true }, forwardedRef) => {
+export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, onClear, value = '', focusKey = false, name, showIcon = true, ...rest }, forwardedRef) => {
     const [inputValue, setInputValue] = useState(value ? String(value) : '');
     const [hasFocus, setHasFocus] = useState(false);
 
@@ -73,6 +74,7 @@ export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholde
                     }
                 }}
                 role="searchbox"
+                {...rest}
             />
             {value && value !== '' &&
                 <ClearBtn

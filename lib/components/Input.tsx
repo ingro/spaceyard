@@ -18,7 +18,7 @@ type InputProps = {
     onKeyUp?: (e: SyntheticEvent) => void;
     placeholder?: string;
     type?: string;
-    value?: string;
+    value?: string | number;
 };
 
 export const Input = React.forwardRef<any, InputProps>(({ name, className = 'form-input', placeholder, error, type = 'text', children, ...rest }, forwardRef) => {

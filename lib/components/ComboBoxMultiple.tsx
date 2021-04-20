@@ -235,7 +235,7 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
             <div 
                 // className="w-full flex items-center justify-between flex-wrap top-0 pt-0.5 pb-1.5 px-2 rounded-md border-gray-300 radius-md border bg-gray-200 dark:bg-gray-800 focus-within:bg-white focus-within:border-primary" //pointer-events-none
                 className={clsx('w-full flex items-center justify-between flex-wrap form-input focus-within:!bg-gray-100 focus-within:!border-primary', {
-                    'form-select-has-focus': hasFocus,
+                    'form-element-has-focus': hasFocus,
                     'form-element-has-value': selectedItems.length > 0
                 })}
                 // @ts-ignore

@@ -16,6 +16,6 @@
 }
 
 .form-select-open .combobox-controls,
-.form-select-has-focus .combobox-controls {
+.form-element-has-focus .combobox-controls {
     @apply text-current
 }

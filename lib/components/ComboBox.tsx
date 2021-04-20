@@ -200,7 +200,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
         <div 
             className={clsx('relative w-full font-normal', {
                 'form-select-open': isOpen,
-                'form-select-has-focus': hasFocus
+                'form-element-has-focus': hasFocus
             })}
             {...getComboboxProps()}
             // ref={containerRef}

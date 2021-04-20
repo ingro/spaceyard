@@ -10,7 +10,8 @@
     @apply border-primary bg-gray-100;
 }
 
-.form-select-has-focus .form-select {
+.form-element-has-focus .form-select,
+.form-element-has-focus .form-input {
     @apply bg-gray-100;
 }
 
