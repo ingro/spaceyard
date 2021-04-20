@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 // import typescript2 from "rollup-plugin-typescript2";
+// import keysTransformer from 'ts-transformer-keys/transformer';
 const path = require("path");
 
 // https://vitejs.dev/config/
@@ -10,6 +11,13 @@ export default ({ command, mode }) => {
     // esbuild: command === 'build' ? false : {},
     plugins: [
       reactRefresh(),
+      // {...typescript2({ 
+      //   check: false,
+      //   transformers: [service => ({
+      //     before: [ keysTransformer(service.getProgram()) ],
+      //     after: []
+      //   })] 
+      // })}
       // {
       //   ...typescript2({
       //     clean: true,
@@ -36,6 +44,9 @@ export default ({ command, mode }) => {
           "downshift",
           "i18next",
           "lodash/defaults",
+          "lodash/omit",
+          "lodash/pick",
+          "lodash/uniqueId",
           "query-string",
           "react-dom",
           "react-error-boundary",

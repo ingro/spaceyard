@@ -17,7 +17,7 @@ type InputSearchProps = {
     name?: string;
 };
 
-export const InputSearch = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, value = '', focusKey = 'Control+K', name }, forwardedRef) => {
+export const InputSearchReactAria = React.forwardRef<any, InputSearchProps>(({ placeholder = 'Cerca...', onSubmit, value = '', focusKey = 'Control+K', name }, forwardedRef) => {
     const [hasFocus, setHasFocus] = useState(false);
     const state = useSearchFieldState({
         defaultValue: value

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
+import { DevTool } from "@hookform/devtools";
 // import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
 
 // import { OmniBox } from '../lib/components/OmniBox';
@@ -15,6 +16,8 @@ import { SwitchFieldController } from '../lib/components/Switch';
 import { TimeAgo } from '../lib/components/TimeAgo';
 import { CancelModalButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
+import { NumberInputFieldController } from '../lib/components/NumberInput';
+// import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
 
 // import '../lib/styles/dialogs.css';
@@ -85,7 +88,11 @@ function App() {
   const [bar, setBar] = useState<Array<any>>([]);
   const [search, setSearch] = useState('');
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm({
+    // defaultValues: {
+    //   qty: 5
+    // }
+  });
 
   return (
     <div className="m-4">
@@ -121,7 +128,32 @@ function App() {
             control={control}
             labelPosition="none"
           />
+          <NumberInputFieldController
+            name="qty"
+            label="Quantity" 
+            control={control}
+            maxValue={10}
+            minValue={0}
+            step={2}
+            formatOptions={{
+              // style: 'percent',
+
+              // style: 'currency',
+              // currency: 'EUR',
+              // currencyDisplay: 'code',
+              // currencySign: 'accounting',
+
+              style: 'unit',
+              unit: 'centimeter',
+              unitDisplay: 'long',
+
+              // signDisplay: 'exceptZero',
+              // minimumFractionDigits: 1,
+              // maximumFractionDigits: 2
+            }}
+          />
         </div>
+        <DevTool control={control} />
       </form>
       <div className="w-1/4 mb-2">
         <ComboBox
@@ -157,6 +189,13 @@ function App() {
             setSearch(q);
           }}
         />
+        {/* <InputSearchReactAria 
+          value={search}
+          onSubmit={(q: string) => {
+            alert(q);
+            setSearch(q);
+          }}
+        /> */}
       </div>
       <button onClick={toggle}>Toggle Drawer</button>
       {isOpen && <AppModal onClose={toggle} />}

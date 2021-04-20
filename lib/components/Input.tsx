@@ -9,7 +9,7 @@ import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 type InputProps = {
     autoComplete?: string;
     className?: string;
-    defaultValue?: string;
+    defaultValue?: string | number;
     error?: any;
     id?: string;
     name?: string;
@@ -39,7 +39,7 @@ export const Input = React.forwardRef<any, InputProps>(({ name, className = 'for
 
 interface InputFieldProps extends InputProps, FieldWrapperProps {};
 
-export const InputField = React.forwardRef<any, InputFieldProps>((props: any, forwardRef) => {
+export const InputField = React.forwardRef<any, InputFieldProps>((props: InputFieldProps, forwardRef) => {
     const inputId = uniqueId(`form-${props.name}_`);
 
     const inputPropsName = ['autoComplete', 'name', 'className', 'placeholder', 'error', 'type', 'defaultValue', 'onChange', 'onBlur', 'value'];

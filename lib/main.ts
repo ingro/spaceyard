@@ -13,6 +13,7 @@ export * from './components/MatchWhenAuth';
 export * from './components/MatchWhenGuest';
 export * from './components/Modal';
 export * from './components/Notifications';
+export * from './components/NumberInput';
 export * from './components/OmniBox';
 export * from './components/RouteLeavingGuard';
 export * from './components/Select';
