@@ -33,9 +33,14 @@ class NumberInputClass {
 
 interface NumberInputProps extends NumberInputClass {};
 
-function NumberInputButton({ children, ...rest }: any) {
+function NumberInputButton({ children, setIsHover, ...rest }: any) {
     return (
-        <button {...rest} className="hover:text-gray-600 hover:bg-gray-200 leading-none px-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-current">
+        <button 
+            className="hover:text-gray-600 hover:bg-gray-200 leading-none px-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-current"
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
+            {...rest} 
+        >
             {children}
         </button>
     )
@@ -53,12 +58,15 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
         // FIXME: se l'onChange del Controller di RHF viene eseguito insieme a quello di useNumberFieldState
         // React tira un errore di un componente che mentre si sta renderizzando qualcuno cambia il suo stato interno
         // aggiungendo un timeout di 0 si evita il problema
-        ...omit(props, ['onChange', 'value']),
+        ...omit(props, ['onChange']),
         onChange: number => {
             setTimeout(() => {
                 onChange(number)
             }, 0);
         },
+        // FIXME: per qualche motivo se il valore iniziale é undefined poi quando cambio il valore viene mostrato un warning
+        // per il fatto che l'input passi da controlled a uncontrolled. Se provo a forzare il valore iniziale a '' capitano altri
+        // quirks, al blur dell'input o dei bottoni. Attendere release piu matura di useNumberField
         // value: props.value || '',
         locale 
     });
@@ -98,6 +106,9 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
     const {buttonProps: decrementProps} = useButton(decrementButtonProps);
 
     const hasValue = inputProps.value && inputProps.value !== '';
+
+    // console.log(incrementProps);
+    // console.log(inputProps);
     
     return (
         <div className={clsx('group relative', {
@@ -110,19 +121,18 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
                 className={clsx('form-input', {
                     '!border-gray-400': isHover && !inputHasFocus
                 })}
-                ref={finalRef} 
+                ref={finalRef}
                 {...inputProps} 
+                placeholder={props.placeholder}
             />
             <div 
                 className="absolute right-0 flex flex-col text-gray-400" 
                 style={{ top: '1px', right: '1px' }}
-                onMouseEnter={() => setIsHover(true)}
-                onMouseLeave={() => setIsHover(false)}
             >
-                <NumberInputButton {...incrementProps}>
+                <NumberInputButton {...incrementProps} setIsHover={setIsHover}>
                     <FiChevronUp style={{ display: 'inline' }}/>
                 </NumberInputButton>
-                <NumberInputButton {...decrementProps}>
+                <NumberInputButton {...decrementProps} setIsHover={setIsHover}>
                     <FiChevronDown style={{ display: 'inline' }}/>
                 </NumberInputButton>
             </div>
@@ -162,6 +172,8 @@ export function NumberInputFieldController({ name, control, defaultValue, ...res
         control,
         defaultValue
     });
+
+    // console.log(field);
 
     return (
         <NumberInputField 

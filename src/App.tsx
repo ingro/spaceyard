@@ -90,7 +90,7 @@ function App() {
 
   const { control, handleSubmit } = useForm({
     // defaultValues: {
-    //   qty: 5
+    //   qty: 6
     // }
   });
 
@@ -131,6 +131,7 @@ function App() {
           <NumberInputFieldController
             name="qty"
             label="Quantity" 
+            placeholder="Quantity"
             control={control}
             maxValue={10}
             minValue={0}
