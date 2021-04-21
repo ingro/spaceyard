@@ -9,7 +9,7 @@ import { InputFieldController } from '../lib/components/Input';
 import { SelectFieldController } from '../lib/components/Select';
 import { useDisclosure } from '../lib/hooks/useDisclosure';
 import { ComboBox } from '../lib/components/ComboBox';
-import { CheckboxFieldController } from '../lib/components/Checkbox';
+import { Checkbox, CheckboxFieldController } from '../lib/components/Checkbox';
 import { ComboBoxMultiple } from '../lib/components/ComboBoxMultiple';
 import { InputSearch } from '../lib/components/InputSearch';
 import { SwitchFieldController } from '../lib/components/Switch';
@@ -89,6 +89,7 @@ function App() {
   const [bar, setBar] = useState<Array<any>>([]);
   const [search, setSearch] = useState('');
   const [date, setDate] = useState<Date | string | null>(new Date());
+  const [selected, setSelected] = useState(false);
 
   const { control, handleSubmit } = useForm({
     // defaultValues: {
@@ -200,6 +201,13 @@ function App() {
             setDate(d);
           }}
           dateFormat="dd/MM/yyyy"
+        />
+        <Checkbox
+          checked={selected}
+          label="Attivo"
+          onChange={(e: any) => {
+            setSelected(e);
+          }}
         />
         {/* <InputSearchReactAria 
           value={search}

@@ -24,7 +24,12 @@ export const Checkbox = React.forwardRef<any, CheckboxProps>(({ checked, label, 
             className="flex items-center focus:outline-none justify-start select-none"
             onBlur={onBlur}
         >
-            <input className="!text-primary !ring-primary" type="checkbox" checked={checked}/>
+            <input 
+                className="!text-primary !ring-primary cursor-pointer" 
+                type="checkbox" 
+                checked={checked}
+                onChange={() => onChange(!checked)} 
+            />
             {labelPosition !== 'none' && 
                 <label
                     onClick={() => onChange(!checked)} 

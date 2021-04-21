@@ -11,3 +11,7 @@
 ## Select
 
 - Per come funziona `downshift` non è possibile usare il `<FieldWrapper>` per renderizzare label e combobox associate, bisognerebbe implementare la cosa in maniera diversa?
+
+## NumberInput
+
+- Stesso discorso che per `Select`, per come funziona `useNumberInput` di react-aria non posso renderizzare label e input in due componenti diversi (per lo me no per come sono strutturate adesso le cose)
