@@ -17,7 +17,7 @@ import { TimeAgo } from '../lib/components/TimeAgo';
 import { CancelModalButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 import { NumberInputFieldController } from '../lib/components/NumberInput';
-import { DatePickerInput } from '../lib/components/DatePickerInput';
+import { DatePickerInputField, DatePickerInputFieldController } from '../lib/components/DatePickerInput';
 // import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
 
@@ -156,6 +156,19 @@ function App() {
               // maximumFractionDigits: 2
             }}
           />
+          <DatePickerInputFieldController 
+            name="start_date"
+            value={date}
+            asString={true}
+            label="Data di nascita"
+            placeholder="Foo"
+            onChange={d => {
+              console.log(d);
+              setDate(d);
+            }}
+            dateFormat="dd/MM/yyyy"
+            control={control}
+          />
         </div>
         <DevTool control={control} />
       </form>
@@ -193,9 +206,11 @@ function App() {
             setSearch(q);
           }}
         />
-        <DatePickerInput 
+        <DatePickerInputField 
           value={date}
           asString={true}
+          label="Data di nascita"
+          placeholder="Foo"
           onChange={d => {
             console.log(d);
             setDate(d);
@@ -206,7 +221,7 @@ function App() {
           checked={selected}
           label="Attivo"
           onChange={(e: any) => {
-            setSelected(e);
+            setSelected(e); 
           }}
         />
         {/* <InputSearchReactAria 

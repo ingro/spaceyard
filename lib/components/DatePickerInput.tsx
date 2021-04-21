@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Calendar from 'react-calendar';
+import { Control, useController } from "react-hook-form";
 import parse from "date-fns/parse";
 import format from "date-fns/format";
 import { useTranslation } from "react-i18next";
 import { FiX, FiCalendar } from "react-icons/fi";
+import pick from "lodash/pick";
+import uniqueId from "lodash/uniqueId";
 import clsx from "clsx";
 
 import { useDisclosure } from "../hooks/useDisclosure";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
+import { FieldWrapper, FieldWrapperProps } from "./FieldWrapper";
 
 function hasGivenParent(element: any, parentEl: any): boolean {
     if (element === parentEl) {
@@ -25,19 +29,25 @@ function getDate(inputDate: string | Date, dateFormat: string): Date {
     return parse(inputDate, dateFormat, new Date());
 }
 
-type DatePickerInputProps = {
-    asString?: boolean;
-    closeOnSelect?: boolean;
-    dateFormat?: string;
-    maxDate?: Date;
-    minDate?: Date;
-    onChange: (date: string | Date | null) => void;
-    placeholder?: string;
-    value: string | Date | null;
+class DatePickerInputClass {
+    constructor(
+        public value: string | Date | null,
+        public onChange: (date: string | Date | null) => void,
+        public asString?: boolean,
+        public closeOnSelect?: boolean,
+        public dateFormat?: string,
+        public id?: string,
+        public maxDate?: Date,
+        public minDate?: Date,
+        public placeholder?: string,
+    ) {}
 };
 
-export function DatePickerInput({
+interface DatePickerInputProps extends DatePickerInputClass {};
+
+export const DatePickerInput = React.forwardRef<any, DatePickerInputProps>(({
     asString = false,
+    id,
     value,
     onChange = () => {},
     dateFormat = 'yyyy-MM-dd',
@@ -45,7 +55,7 @@ export function DatePickerInput({
     placeholder = 'Seleziona una data',
     maxDate,
     minDate
-}: DatePickerInputProps) {
+}, forwardRef) => {
     const { open, close, /*toggle,*/ isOpen } = useDisclosure();
     const [date, setDate] = useState(value ? getDate(value, dateFormat) : null);
 
@@ -60,6 +70,19 @@ export function DatePickerInput({
     }, [value, dateFormat]);
 
     useOnClickOutside(wrapperRef, close);
+
+    let finalInputRef = inputRef;
+
+    if (forwardRef) {
+        // @ts-ignore
+        finalInputRef = useMemo(() => {
+            return (e: any) => {
+                // @ts-ignore
+                forwardRef(e);
+                inputRef.current = e;
+            }
+        }, [inputRef, forwardRef])
+    }
 
     // Se dopo aver fatto il blur sull'input in un qualcosa fuori dal wrapper chiudo il calendario
     function handleBlur(e: any) {
@@ -78,7 +101,7 @@ export function DatePickerInput({
     return (
         <div className="relative group w-full" ref={wrapperRef}>
             <input
-                ref={inputRef}
+                ref={finalInputRef}
                 className={clsx('form-input cursor-default', {
                     'group-hover:border-gray-400': !isOpen
                 })}
@@ -88,6 +111,7 @@ export function DatePickerInput({
                 onBlur={handleBlur}
                 onFocus={open}
                 placeholder={placeholder}
+                id={id}
                 style={{ // Trick per non mostrare il cursore
                     color: 'transparent',
                     textShadow: '0 0 0 #000'
@@ -117,7 +141,7 @@ export function DatePickerInput({
                 </span>
             </span>
             {isOpen && (
-                <div className="absolute">
+                <div className="absolute z-10">
                     <Calendar
                         locale={i18n.language}
                         maxDate={maxDate}
@@ -138,5 +162,47 @@ export function DatePickerInput({
                 </div>
             )}
         </div>
+    );
+});
+
+interface DatePickerInputFieldProps extends DatePickerInputProps, FieldWrapperProps {};
+
+export const DatePickerInputField = React.forwardRef<any, DatePickerInputFieldProps>((props, forwardRef) => {
+    const inputId = uniqueId(`form-${props.name}_`);
+
+    const inputPropsName = Object.keys(new DatePickerInputClass('', () => {}));
+
+    // @ts-ignore
+    const inputProps: DatePickerInputProps = pick(props, inputPropsName);
+
+    return (
+        <FieldWrapper {...props} inputId={inputId}>
+            <DatePickerInput
+                {...inputProps}
+                ref={forwardRef} 
+            />
+        </FieldWrapper>
+    );
+});
+
+interface DatePickerInputFieldControllerProps extends DatePickerInputFieldProps {
+    name: string;
+    control: Control;
+    defaultValue?: any;
+};
+
+export function DatePickerInputFieldController({ name, control, defaultValue, ...rest}: DatePickerInputFieldControllerProps) {
+    const { field, fieldState } = useController({
+        name,
+        control,
+        defaultValue
+    });
+
+    return (
+        <DatePickerInputField 
+            {...field}
+            {...rest}
+            error={fieldState.error}
+        />
     );
 }
