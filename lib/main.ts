@@ -4,6 +4,7 @@ export * from './components/Checkbox';
 export * from './components/ComboBox';
 export * from './components/ComboBoxMultiple';
 export * from './components/ConfirmDialog';
+export * from './components/DatePickerInput';
 export * from './components/DisplayDate';
 export * from './components/Drawer';
 export * from './components/FieldWrapper';

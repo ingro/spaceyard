@@ -17,7 +17,7 @@ import { TimeAgo } from '../lib/components/TimeAgo';
 import { CancelModalButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 import { NumberInputFieldController } from '../lib/components/NumberInput';
-import DatePickerInput from '../lib/components/DatePickerInput';
+import { DatePickerInput } from '../lib/components/DatePickerInput';
 // import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
 
@@ -88,7 +88,7 @@ function App() {
   const [foo, setFoo] = useState<any>();
   const [bar, setBar] = useState<Array<any>>([]);
   const [search, setSearch] = useState('');
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date | string | null>(new Date());
 
   const { control, handleSubmit } = useForm({
     // defaultValues: {

@@ -4,10 +4,10 @@ import parse from "date-fns/parse";
 import format from "date-fns/format";
 import { useTranslation } from "react-i18next";
 import { FiX, FiCalendar } from "react-icons/fi";
+import clsx from "clsx";
 
 import { useDisclosure } from "../hooks/useDisclosure";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
-import clsx from "clsx";
 
 function hasGivenParent(element: any, parentEl: any): boolean {
     if (element === parentEl) {
@@ -31,12 +31,12 @@ type DatePickerInputProps = {
     dateFormat?: string;
     maxDate?: Date;
     minDate?: Date;
-    onChange: (date: string | null) => void;
+    onChange: (date: string | Date | null) => void;
     placeholder?: string;
     value: string | Date | null;
 };
 
-export default function DatePickerInput({
+export function DatePickerInput({
     asString = false,
     value,
     onChange = () => {},
