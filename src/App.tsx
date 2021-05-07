@@ -136,9 +136,9 @@ function App() {
             label="Quantity" 
             placeholder="Quantity"
             control={control}
-            maxValue={10}
-            minValue={0}
-            step={2}
+            // maxValue={10}
+            // minValue={0}
+            // step={2}
             formatOptions={{
               // style: 'percent',
 
@@ -147,9 +147,9 @@ function App() {
               // currencyDisplay: 'code',
               // currencySign: 'accounting',
 
-              style: 'unit',
-              unit: 'centimeter',
-              unitDisplay: 'long',
+              // style: 'unit',
+              // unit: 'centimeter',
+              // unitDisplay: 'long',
 
               // signDisplay: 'exceptZero',
               // minimumFractionDigits: 1,
