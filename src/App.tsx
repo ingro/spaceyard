@@ -83,7 +83,8 @@ function AppModal({ onClose }: any) {
 }
 
 function App() {
-  const { toggle, isOpen } = useDisclosure();
+  const { toggle: toggleDrawer, isOpen: isOpenDrawer } = useDisclosure();
+  const { toggle: toggleModal, isOpen: isOpenModal } = useDisclosure();
 
   const [foo, setFoo] = useState<any>();
   const [bar, setBar] = useState<Array<any>>([]);
@@ -170,7 +171,7 @@ function App() {
             control={control}
           />
         </div>
-        <DevTool control={control} />
+        <DevTool control={control} placement="top-right" />
       </form>
       <div className="w-1/4 mb-2">
         <ComboBox
@@ -189,9 +190,9 @@ function App() {
         />
       </div>
       <Drawer
-        isOpen={isOpen}
+        isOpen={isOpenDrawer}
         showOverlay={false}
-        onClose={toggle}
+        onClose={toggleDrawer}
         onOpened={() => console.warn('OPENED!')}
         dismissable={true}
       >
@@ -206,6 +207,7 @@ function App() {
             setSearch(q);
           }}
         />
+        <br />
         <DatePickerInputField 
           value={date}
           asString={true}
@@ -232,8 +234,10 @@ function App() {
           }}
         /> */}
       </div>
-      <button onClick={toggle}>Toggle Drawer</button>
-      {isOpen && <AppModal onClose={toggle} />}
+      <button onClick={toggleDrawer}>Toggle Drawer</button>
+      <br />
+      <button onClick={toggleModal}>Show Modal</button>
+      {isOpenModal && <AppModal onClose={toggleModal} />}
       {/* <OmniBox 
         isOpen={true}
         onClose={() => {}}
