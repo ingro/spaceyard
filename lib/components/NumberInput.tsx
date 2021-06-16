@@ -24,6 +24,7 @@ class NumberInputClass {
         public maxValue?: number,
         public minValue?: number,
         public name?: string,
+        public onBlur?: () => void,
         public onChange?: (value: any) => void,
         public placeholder?: string,
         public step?: number,
@@ -58,13 +59,14 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
         // FIXME: se l'onChange del Controller di RHF viene eseguito insieme a quello di useNumberFieldState
         // React tira un errore di un componente che mentre si sta renderizzando qualcuno cambia il suo stato interno
         // aggiungendo un timeout di 0 si evita il problema
-        //...omit(props, ['onChange']),
-        onChange: number => {
-            setTimeout(() => {
-                onChange(number)
-            }, 0);
-        },
-        // onChange,
+        // ...omit(props, ['onChange']),
+        // onChange: number => {
+        //     console.log('ON CHANGE');
+        //     setTimeout(() => {
+        //         onChange(number)
+        //     }, 0);
+        // },
+        onChange,
         // FIXME: per qualche motivo se il valore iniziale é undefined poi quando cambio il valore viene mostrato un warning
         // per il fatto che l'input passi da controlled a uncontrolled. Se provo a forzare il valore iniziale a '' capitano altri
         // quirks, al blur dell'input o dei bottoni. Attendere release piu matura di useNumberField
@@ -98,6 +100,7 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
         decrementButtonProps
         // @ts-ignore
     } = useNumberField({
+        'aria-label': 'number input',
         ...props,
         onFocusChange: isFocused => setInputHasFocus(isFocused) 
         // @ts-ignore
@@ -175,8 +178,6 @@ export function NumberInputFieldController({ name, control, defaultValue, ...res
         control,
         defaultValue
     });
-
-    // console.log(field);
 
     return (
         <NumberInputField 

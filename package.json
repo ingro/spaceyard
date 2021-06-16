@@ -28,8 +28,8 @@
     "serve": "vite preview",
     "clean": "rimraf dist/**/*",
     "prepublishOnly": "yarn build",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch --runInBand"
   },
   "dependencies": {
     "@use-it/event-listener": "^0.1.6",
