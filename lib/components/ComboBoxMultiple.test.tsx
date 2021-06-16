@@ -39,6 +39,8 @@ test('basic ComboBoxMultiple functionality', async () => {
     const cbToggle = container.querySelector('[data-combobox-toggle]');
 
     fireEvent.click(cbToggle);
+    // @ts-ignore
+    await act(async () => await null); // Workaround bug Popper -> https://github.com/exercism/website/pull/531
 
     let cbOptions = screen.getAllByRole('option');
 
@@ -51,6 +53,8 @@ test('basic ComboBoxMultiple functionality', async () => {
 
     // @ts-ignore
     fireEvent.click(firstOption);
+    // @ts-ignore
+    await act(async () => await null);
     
     await pause(100);
 
@@ -60,13 +64,15 @@ test('basic ComboBoxMultiple functionality', async () => {
 
     expect(onChange).toHaveBeenCalledWith([{ value: 'foo', label: 'Foo'}]);
 
-    rerender(
-        <ComboBoxMultiple
-            value={[{ value: 'foo', label: 'Foo'}]}
-            options={options}
-            onChange={onChange}
-        /> 
-    );
+    await act(async () => {
+        rerender(
+            <ComboBoxMultiple
+                value={[{ value: 'foo', label: 'Foo'}]}
+                options={options}
+                onChange={onChange}
+            /> 
+        );
+    });
 
     const selectedItem = container.querySelector('[data-selected-item="0"]');
 
@@ -76,20 +82,26 @@ test('basic ComboBoxMultiple functionality', async () => {
     const removeItemBtn = container.querySelector('[data-remove-item="0"]');
 
     fireEvent.click(removeItemBtn);
+    // @ts-ignore
+    await act(async () => await null);
 
     expect(onChange).toHaveBeenCalledWith([]);
 
-    rerender(
-        <ComboBoxMultiple
-            value={[]}
-            options={options}
-            onChange={onChange}
-        /> 
-    );
+    await act(async () => {
+        rerender(
+            <ComboBoxMultiple
+                value={[]}
+                options={options}
+                onChange={onChange}
+            /> 
+        );
+    });
 
     const input = container.querySelector('input[type="text"]');
 
     user.type(input, 'a');
+    // @ts-ignore
+    await act(async () => await null);
 
     // console.log(prettyDOM(container));
 
