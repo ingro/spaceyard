@@ -9,7 +9,7 @@ import { Select } from './Select';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
 import { CancelModalButton } from './Buttons';
 import { Checkbox } from './Checkbox';
-import { DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
+import { DashboardWidgedSizes, DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
 
 function DefaultErrorFallback({ error }: any) {
     return (

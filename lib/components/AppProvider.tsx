@@ -22,6 +22,7 @@ export function AppProvider({ children, appStorage, appRoutes }: AppProviderProp
         isMinimized, 
         setIsMinimized,
         user,
+        appStorage,
         appRoutes,
         setUser: (userValue: any) => {
             setUser(userValue);

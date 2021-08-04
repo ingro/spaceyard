@@ -5,6 +5,7 @@ import { AppContextType } from '../types';
 const AppContext = React.createContext<AppContextType>({ 
     isMinimized: false, 
     user: null,
+    appStorage: null,
     appRoutes: {
         login: '/login',
         logout: '/logout',
