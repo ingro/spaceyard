@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export function useLocalStorage(key: string, initialValue: any) {
+    // process.env is evaluated at build time so it won't work
     const finalKey = `${process.env.REACT_APP_NAME_SHORT}::${key}`;
 
     // State to store our value

@@ -152,7 +152,7 @@ const WidgetList = React.memo(({ widgets, updateWidgetActive, updateWidgetSize, 
     ));
 });
 
-export default function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
+export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
     const [items, setItems] = useState(getInitialState(widgetConfig, widgetsList));
 
     const onDragEnd = useCallback((result: any) => {

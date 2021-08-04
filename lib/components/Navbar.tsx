@@ -3,7 +3,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 
 import { useAppContext } from "../hooks/useAppContext";
 
-export function Navbar() {
+export function Navbar({ appName }: any) {
     const { isMinimized, setIsMinimized } = useAppContext();
 
     return (
@@ -15,7 +15,7 @@ export function Navbar() {
                     </button>
                 </div>
                 <div>
-                    <span className="text-3xl text-gray-200 ml-2">{process.env.REACT_APP_NAME}</span>
+                    <span className="text-3xl text-gray-200 ml-2">{appName}</span>
                 </div>
             </div>
         </div>

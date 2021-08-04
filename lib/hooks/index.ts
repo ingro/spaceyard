@@ -12,6 +12,7 @@ export * from './useEditDrawer';
 
 export * from './useFocusPrevSelectedItem';
 
-export * from './useLocalStorage';
+// Not used anymore
+// export * from './useLocalStorage';
 
 export * from './useOnClickOutside';
