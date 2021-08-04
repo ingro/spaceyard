@@ -9,7 +9,7 @@ import { Select } from './Select';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
 import { CancelModalButton } from './Buttons';
 import { Checkbox } from './Checkbox';
-import { SelectOption } from '../types';
+import { DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
 
 function DefaultErrorFallback({ error }: any) {
     return (
@@ -18,27 +18,6 @@ function DefaultErrorFallback({ error }: any) {
         </div>
     );
 }
-
-type DashboardWidgedSizes = 'sm' | 'md' | 'lg' | 'xl';
-
-export type DashboardWidgetExtraConfig = {
-    name: string;
-    label: string;
-    type: 'choice' | 'bool';
-    choices: Array<SelectOption>,
-    value: any
-};
-
-type DashboardWidgetConfigStatic = {
-    name: string;
-    extras: Array<DashboardWidgetExtraConfig>
-};
-
-export interface DashboardWidgetConfig extends DashboardWidgetConfigStatic {
-    code: string;
-    size: DashboardWidgedSizes;
-    active: boolean;
-};
 
 const sizes = {
     sm: 'Small',

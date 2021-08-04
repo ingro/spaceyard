@@ -32,3 +32,24 @@ export type SelectOption = {
 };
 
 export type LocalizedDateFormat = 'full' | 'dateOnly' | 'timeOnly' | 'long';
+
+export type DashboardWidgedSizes = 'sm' | 'md' | 'lg' | 'xl';
+
+export type DashboardWidgetExtraConfig = {
+    name: string;
+    label: string;
+    type: 'choice' | 'bool';
+    choices: Array<SelectOption>,
+    value: any
+};
+
+export type DashboardWidgetConfigStatic = {
+    name: string;
+    extras: Array<DashboardWidgetExtraConfig>
+};
+
+export interface DashboardWidgetConfig extends DashboardWidgetConfigStatic {
+    code: string;
+    size: DashboardWidgedSizes;
+    active: boolean;
+};

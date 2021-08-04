@@ -6,6 +6,7 @@ export * from './components/ComboBoxMultiple';
 export * from './components/ConfirmDialog';
 export * from './components/DatePickerInput';
 export * from './components/DashboardConfigModal';
+export * from './components/DashboardPanel';
 export * from './components/DisplayDate';
 export * from './components/Drawer';
 export * from './components/FieldWrapper';
