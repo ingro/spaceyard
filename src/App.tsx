@@ -245,7 +245,7 @@ function App() {
         <br />
         <button onClick={() => toast.success(<BasicNotification text="Hurray!"/>)}>Show Notification</button>
         <br />
-        <button onClick={() => toast.info(<BasicNotification title="Foo" text="Hurray!"/>)}>Show Notification with Title</button>
+        <button onClick={() => toast(<BasicNotification title="Foo" text="Hurray!"/>)}>Show Notification with Title</button>
         <br />
         <button onClick={() => toast.info(<NotificationWithConfirm title="Action needed" text="Do you agree?" onClick={res => console.log(res)} />)}>Show Confirm</button>
         <br />

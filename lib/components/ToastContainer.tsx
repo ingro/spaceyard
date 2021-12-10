@@ -15,7 +15,7 @@ function getTypeClass(type: string, typeClasses: any) {
 
     switch (type) {
         case toast.TYPE.INFO:
-            return 'bg-slate-600';
+            return 'bg-info';
         case toast.TYPE.SUCCESS:
             return 'bg-success';
         case toast.TYPE.WARNING:

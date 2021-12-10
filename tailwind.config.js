@@ -14,7 +14,8 @@ module.exports ={
                 // danger: colors.rose[600],
                 danger: 'var(--color-danger-theme)',
                 success: colors.emerald[600],
-                warning: colors.amber[400]
+                warning: colors.amber[400],
+                info: colors.slate[600]
             }
         }
     },

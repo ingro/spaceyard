@@ -93,7 +93,7 @@
 }
 
 .Toastify__toast-icon {
-    @apply shrink-0 flex text-white mt-1;
+    @apply shrink-0 flex mt-1;
     margin-inline-end: 10px;
     width: 20px;
 }
