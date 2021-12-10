@@ -92,7 +92,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-spring": "^9.3.2",
-    "react-toastify": "^7.0.4",
+    "react-toastify": "^8.1.0",
     "rimraf": "^3.0.2",
     "rollup-plugin-typescript2": "^0.31.1",
     "stylelint": "^14.1.0",

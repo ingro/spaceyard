@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { DevTool } from "@hookform/devtools";
-// import { FiCheck, FiAlertTriangle } from 'react-icons/fi';
+import { DevTool } from '@hookform/devtools';
+import { toast } from 'react-toastify';
+// import { FiCheckCircle } from 'react-icons/fi';
 
 // import { OmniBox } from '../lib/components/OmniBox';
 import { Drawer } from '../lib/components/Drawer';
@@ -18,6 +19,8 @@ import { CancelModalButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 import { NumberInputFieldController } from '../lib/components/NumberInput';
 import { DatePickerInputField, DatePickerInputFieldController } from '../lib/components/DatePickerInput';
+import { ToastContainer } from '../lib/components/ToastContainer';
+import { BasicNotification, NotificationWithConfirm, loadingNotification } from '../lib/components/Notifications';
 // import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
 
@@ -99,66 +102,118 @@ function App() {
   });
 
   return (
-    <div className="m-4">
-      <TimeAgo date={new Date()}/>
-      <form onSubmit={handleSubmit(data => console.warn(data))}>
+    <>
+      <ToastContainer />
+      <div className="m-4">
+        <TimeAgo date={new Date()}/>
+        <form onSubmit={handleSubmit(data => console.warn(data))}>
+          <div className="w-1/4 mb-2">
+            <InputFieldController 
+              name="name"
+              layout="stacked"
+              placeholder="Name"
+              control={control}
+              // error="Required"
+            />
+          </div>
+          <div className="w-1/4 mb-2">
+            <SelectFieldController
+              name="foo"
+              layout="stacked"
+              showClearBtn={true}
+              control={control}
+              // value={'12'}
+              options={options}
+            />
+            <SwitchFieldController
+              name="confirm"
+              label="Conferma"
+              control={control}
+              labelPosition="none"
+            />
+            <CheckboxFieldController
+              name="privacy"
+              label="GDPR"
+              control={control}
+              labelPosition="none"
+            />
+            <NumberInputFieldController
+              name="qty"
+              label="Quantity" 
+              placeholder="Quantity"
+              control={control}
+              // maxValue={10}
+              // minValue={0}
+              // step={2}
+              formatOptions={{
+                // style: 'percent',
+
+                // style: 'currency',
+                // currency: 'EUR',
+                // currencyDisplay: 'code',
+                // currencySign: 'accounting',
+
+                // style: 'unit',
+                // unit: 'centimeter',
+                // unitDisplay: 'long',
+
+                // signDisplay: 'exceptZero',
+                // minimumFractionDigits: 1,
+                // maximumFractionDigits: 2
+              }}
+            />
+            <DatePickerInputFieldController 
+              name="start_date"
+              value={date}
+              asString={true}
+              label="Data di nascita"
+              placeholder="Foo"
+              onChange={d => {
+                console.log(d);
+                setDate(d);
+              }}
+              dateFormat="dd/MM/yyyy"
+              control={control}
+            />
+          </div>
+          <DevTool control={control} placement="top-right" />
+        </form>
         <div className="w-1/4 mb-2">
-          <InputFieldController 
-            name="name"
-            layout="stacked"
-            placeholder="Name"
-            control={control}
-            // error="Required"
+          <ComboBox
+            value={foo}
+            options={options}
+            onSelect={(option) => {
+              setFoo(option);
+            }}
           />
         </div>
         <div className="w-1/4 mb-2">
-          <SelectFieldController
-            name="foo"
-            layout="stacked"
-            showClearBtn={true}
-            control={control}
-            // value={'12'}
+          <ComboBoxMultiple
             options={options}
+            value={bar}
+            onChange={(values: any) => setBar(values)}
           />
-          <SwitchFieldController
-            name="confirm"
-            label="Conferma"
-            control={control}
-            labelPosition="none"
-          />
-          <CheckboxFieldController
-            name="privacy"
-            label="GDPR"
-            control={control}
-            labelPosition="none"
-          />
-          <NumberInputFieldController
-            name="qty"
-            label="Quantity" 
-            placeholder="Quantity"
-            control={control}
-            // maxValue={10}
-            // minValue={0}
-            // step={2}
-            formatOptions={{
-              // style: 'percent',
-
-              // style: 'currency',
-              // currency: 'EUR',
-              // currencyDisplay: 'code',
-              // currencySign: 'accounting',
-
-              // style: 'unit',
-              // unit: 'centimeter',
-              // unitDisplay: 'long',
-
-              // signDisplay: 'exceptZero',
-              // minimumFractionDigits: 1,
-              // maximumFractionDigits: 2
+        </div>
+        <Drawer
+          isOpen={isOpenDrawer}
+          showOverlay={false}
+          onClose={toggleDrawer}
+          onOpened={() => console.warn('OPENED!')}
+          dismissable={true}
+        >
+          <h1>I'm a Drawer!</h1>
+        </Drawer>
+        <div className="w-1/4 mb-2">
+          <InputSearch 
+            // showIcon={false}
+            value={search}
+            onSubmit={(q: string) => {
+              alert(q);
+              setSearch(q);
             }}
           />
-          <DatePickerInputFieldController 
-            name="start_date"
+          <br />
+          <DatePickerInputField 
             value={date}
             asString={true}
             label="Data di nascita"
@@ -168,82 +223,51 @@ function App() {
               setDate(d);
             }}
             dateFormat="dd/MM/yyyy"
-            control={control}
           />
+          <Checkbox
+            checked={selected}
+            label="Attivo"
+            onChange={(e: any) => {
+              setSelected(e); 
+            }}
+          />
+          {/* <InputSearchReactAria 
+            value={search}
+            onSubmit={(q: string) => {
+              alert(q);
+              setSearch(q);
+            }}
+          /> */}
         </div>
-        <DevTool control={control} placement="top-right" />
-      </form>
-      <div className="w-1/4 mb-2">
-        <ComboBox
-          value={foo}
-          options={options}
-          onSelect={(option) => {
-            setFoo(option);
-          }}
-        />
-      </div>
-      <div className="w-1/4 mb-2">
-        <ComboBoxMultiple
-          options={options}
-          value={bar}
-          onChange={(values: any) => setBar(values)}
-        />
-      </div>
-      <Drawer
-        isOpen={isOpenDrawer}
-        showOverlay={false}
-        onClose={toggleDrawer}
-        onOpened={() => console.warn('OPENED!')}
-        dismissable={true}
-      >
-        <h1>I'm a Drawer!</h1>
-      </Drawer>
-      <div className="w-1/4 mb-2">
-        <InputSearch 
-          // showIcon={false}
-          value={search}
-          onSubmit={(q: string) => {
-            alert(q);
-            setSearch(q);
-          }}
-        />
+        <button onClick={toggleDrawer}>Toggle Drawer</button>
         <br />
-        <DatePickerInputField 
-          value={date}
-          asString={true}
-          label="Data di nascita"
-          placeholder="Foo"
-          onChange={d => {
-            console.log(d);
-            setDate(d);
-          }}
-          dateFormat="dd/MM/yyyy"
-        />
-        <Checkbox
-          checked={selected}
-          label="Attivo"
-          onChange={(e: any) => {
-            setSelected(e); 
-          }}
-        />
-        {/* <InputSearchReactAria 
-          value={search}
-          onSubmit={(q: string) => {
-            alert(q);
-            setSearch(q);
-          }}
+        <button onClick={toggleModal}>Show Modal</button>
+        <br />
+        <button onClick={() => toast.success(<BasicNotification text="Hurray!"/>)}>Show Notification</button>
+        <br />
+        <button onClick={() => toast.info(<BasicNotification title="Foo" text="Hurray!"/>)}>Show Notification with Title</button>
+        <br />
+        <button onClick={() => toast.info(<NotificationWithConfirm title="Action needed" text="Do you agree?" onClick={res => console.log(res)} />)}>Show Confirm</button>
+        <br />
+        <button onClick={() => {
+          const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
+
+          loadingNotification({
+            promise: resolveAfter3Sec,
+            resolveMessage: 'Hurray :)',
+            rejectMessage: 'Oh noes :('
+          });
+        }}>
+          Show Loading notification
+        </button>
+        {isOpenModal && <AppModal onClose={toggleModal} />}
+        {/* <OmniBox 
+          isOpen={true}
+          onClose={() => {}}
+          actions={actions}
         /> */}
       </div>
-      <button onClick={toggleDrawer}>Toggle Drawer</button>
-      <br />
-      <button onClick={toggleModal}>Show Modal</button>
-      {isOpenModal && <AppModal onClose={toggleModal} />}
-      {/* <OmniBox 
-        isOpen={true}
-        onClose={() => {}}
-        actions={actions}
-      /> */}
-    </div>
+    </>
   )
 }
 

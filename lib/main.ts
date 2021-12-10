@@ -25,6 +25,7 @@ export * from './components/Select';
 export * from './components/SpaceyardStyleProvider';
 export * from './components/Switch';
 export * from './components/TimeAgo';
+export * from './components/ToastContainer';
 
 export * from './hooks';
 
