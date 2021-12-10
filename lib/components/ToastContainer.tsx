@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToastContainer as RcToastContainer, cssTransition, toast, ToastContainerProps } from "react-toastify";
+import { ToastContainer as RcToastContainer, cssTransition, toast } from "react-toastify";
 import clsx from 'clsx';
 
 const slideTransition = cssTransition({
@@ -32,7 +32,7 @@ type ToastContainerProps ={
     autoClose?: number;
     closeOnClick?: boolean;
     closeButton?: boolean;
-    typeClasses: any
+    typeClasses?: any
 };
 
 export function ToastContainer({ autoClose = 10000, closeOnClick = true, closeButton = false, typeClasses = {}}: ToastContainerProps) {
