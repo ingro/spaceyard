@@ -223,7 +223,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 // @ts-ignore
                 ref={setReferenceElement}
             >
-                <span className={clsx('combobox-value flex-grow', { 'show-value': showValue })}>
+                <span className={clsx('combobox-value grow', { 'show-value': showValue })}>
                     {showValue && itemToString(internalSelectedItemRef.current)}
                 </span>
                 {selectedItem && (

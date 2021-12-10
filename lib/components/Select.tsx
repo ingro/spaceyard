@@ -96,7 +96,7 @@ export function Select({
                 }}
             >
                 <span 
-                    className={clsx('flex-grow select-none text-left truncate', {
+                    className={clsx('grow select-none text-left truncate', {
                         'text-gray-400': !selectedItem
                     })} 
                     // {...getLabelProps()}

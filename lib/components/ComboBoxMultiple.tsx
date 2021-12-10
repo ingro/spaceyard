@@ -289,7 +289,7 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
                     />
                 </span>
                 <ToggleBtn 
-                    className="self-stretch flex-shrink-0"
+                    className="self-stretch shrink-0"
                     isOpen={isOpen} 
                     {...getToggleButtonProps()} 
                 />

@@ -96,7 +96,7 @@ export function CheckboxFieldController({ name, control, defaultValue, ...rest}:
             "bg-primary": checked,
             "bg-gray-200": !checked
         },
-        'relative inline-flex flex-shrink-0 h-5 transition-colors duration-300 border-2 border-transparent rounded-full cursor-pointer w-10 focus:outline-none focus:ring'
+        'relative inline-flex shrink-0 h-5 transition-colors duration-300 border-2 border-transparent rounded-full cursor-pointer w-10 focus:outline-none focus:ring'
     )}
     ref={forwardRef}
 >

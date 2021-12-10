@@ -89,7 +89,7 @@ function WidgetElement({ widget, index, updateWidgetActive, updateWidgetSize, is
                     >
                         <FiMenu />
                     </span>
-                    <span className="flex-grow">
+                    <span className="grow">
                         {widget.name}
                     </span>
                     <Checkbox 

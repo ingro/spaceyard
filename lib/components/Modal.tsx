@@ -73,7 +73,7 @@ export function ModalTitle({ showCloseButton = true, onClose, labelId, children 
 
 export function ModalBody({ children }: any) {
     return (
-        <div className="flex-grow py-2 px-3 lg:px-6 text-left overflow-y-auto">
+        <div className="grow py-2 px-3 lg:px-6 text-left overflow-y-auto">
             {children}
         </div>
     );

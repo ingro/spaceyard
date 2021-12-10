@@ -18,10 +18,10 @@ export function NotificationWithConfirm({ onClick, title, text, cancelLabel = 'A
                 returnFocus={true}
             >
                 <div className="flex">
-                    <div className="flex-shrink-0 mr-2">
+                    <div className="shrink-0 mr-2">
                         <FiAlertCircle className="w-5 h-5" />
                     </div>
-                    <div className="flex-grow">
+                    <div className="grow">
                         <span className="font-bold block">{title}</span>
                         <span className="font-normal">{text}</span>
                     </div>
@@ -62,10 +62,10 @@ export function NotificationWithTitle({ title, text, type }: NotificationWithTit
 
     return (
         <div className="flex">
-            <div className="flex-shrink-0 mr-2">
+            <div className="shrink-0 mr-2">
                 <Icon className="w-5 h-5" />
             </div>
-            <div className="flex-grow">
+            <div className="grow">
                 <span className="font-bold block">{title}</span>
                 <span className="font-normal">{text}</span>
             </div>
