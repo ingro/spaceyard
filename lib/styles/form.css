@@ -4,6 +4,9 @@
     &.form-element-has-value {
         @apply bg-gray-100;
     }
+    &:disabled {
+        @apply cursor-not-allowed;
+    }
 }
 
 .form-select.form-select-open {

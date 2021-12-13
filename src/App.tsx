@@ -113,6 +113,7 @@ function App() {
               layout="stacked"
               placeholder="Name"
               control={control}
+              disabled={true}
               // error="Required"
             />
           </div>

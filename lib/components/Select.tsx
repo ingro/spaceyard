@@ -13,15 +13,16 @@ import { SelectOption } from '../types';
 // import '../styles/dropdowns.css';
 
 type SelectProps = {
-    name?: string;
-    options: Array<SelectOption>;
-    onChange?: (item: any) => void;
-    placeholder?: string;
-    value?: any;
-    showClearBtn?: boolean;
-    id?: string;
-    dropdownPosition?: 'top' | 'bottom';
+    disabled?: boolean;
     dropdownFixed?: boolean;
+    dropdownPosition?: 'top' | 'bottom';
+    id?: string;
+    name?: string;
+    onChange?: (item: any) => void;
+    options: Array<SelectOption>;
+    placeholder?: string;
+    showClearBtn?: boolean;
+    value?: any;
 };
 
 const itemToString = (item: any) => item?.label || '';
@@ -149,7 +150,7 @@ interface SelectFieldProps extends SelectProps, FieldWrapperProps {};
 export const SelectField = React.forwardRef<any, SelectFieldProps>((props: any, forwardRef) => {
     const inputId = uniqueId(`form-${props.name}_`);
 
-    const inputPropsName = ['options', 'placeholder', 'value', 'showClearBtn', 'onChange', 'dropdownFixed'];
+    const inputPropsName = ['options', 'placeholder', 'value', 'showClearBtn', 'onChange', 'dropdownFixed', 'disabled'];
 
     // @ts-ignore
     const inputProps: SelectProps = pick(props, inputPropsName);
