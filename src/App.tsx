@@ -240,6 +240,9 @@ function App() {
             }}
           /> */}
         </div>
+        <button onClick={handleSubmit(data => console.warn(data))}>SUBMIT FORM</button>
+        <br/>
+        <br/>
         <button onClick={toggleDrawer}>Toggle Drawer</button>
         <br />
         <button onClick={toggleModal}>Show Modal</button>
