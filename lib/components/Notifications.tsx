@@ -9,7 +9,7 @@ type NotificationWithConfirmProps = {
     text: string;
     cancelLabel?: string;
     confirmLabel?: string;
-}
+};
 
 export function NotificationWithConfirm({ onClick, title, text, cancelLabel = 'Annulla', confirmLabel = 'Conferma' }: NotificationWithConfirmProps) {
     return (
@@ -94,8 +94,7 @@ type showConfirmNotificationProps = {
     onClick: (res: boolean) => void;
 };
 
-export function showConfirmNotification({ title, text, onClick }: showConfirmNotificationProps)
-{
+export function showConfirmNotification({ title, text, onClick }: showConfirmNotificationProps) {
     return toast.info(<NotificationWithConfirm title={title} text={text} onClick={res => onClick(res)} />, { 
         closeButton: false,
         autoClose: false,
