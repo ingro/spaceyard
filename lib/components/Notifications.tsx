@@ -95,7 +95,10 @@ type showConfirmNotificationProps = {
 };
 
 export function showConfirmNotification({ title, text, onClick }: showConfirmNotificationProps) {
-    return toast.info(<NotificationWithConfirm title={title} text={text} onClick={res => onClick(res)} />, { 
+    const toastId = toast.info(<NotificationWithConfirm title={title} text={text} onClick={res => {
+        onClick(res);
+        toast.dismiss(toastId);
+    }} />, { 
         closeButton: false,
         autoClose: false,
         closeOnClick: false 
