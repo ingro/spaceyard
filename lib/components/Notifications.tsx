@@ -87,3 +87,14 @@ export async function loadingNotification({ promise, loadingMessage = 'Attendere
 
     return promise;
 }
+
+type showConfirmNotificationProps = {
+    title: string;
+    text: string;
+    onClick: (res: boolean) => void;
+};
+
+export function showConfirmNotification({ title, text, onClick }: showConfirmNotificationProps)
+{
+    return toast.info(<NotificationWithConfirm title={title} text={text} onClick={res => onClick(res)} />, { autoClose: false });
+}

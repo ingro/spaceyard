@@ -46,7 +46,7 @@ export function ToastContainer({ autoClose = 10000, closeOnClick = true, closeBu
             toastClassName={({ type }: any) => {
                 return clsx('flex relative mb-0 md:mb-4 p-3 justify-between overflow-hidden cursor-pointer md:rounded-md w-full text-gray-200 font-semibold min-h-20 md:shadow-lg', getTypeClass(type, typeClasses));
             }}
-            bodyClassName="my-auto mx-0 flex-1"
+            // bodyClassName=""
             position="bottom-center"
             hideProgressBar={true}
             transition={slideTransition}
