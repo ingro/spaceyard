@@ -41,7 +41,7 @@ export function DashboardPanel({ appStorage, children, widgetsList, getComponent
                     {children}
                     <div className="absolute top-0 right-0 mt-3 mr-5">
                         <button 
-                            className="btn btn-link z-10 bg-white py-2" 
+                            className="btn btn-link btn-icon z-10 bg-white py-2" 
                             onClick={open}
                             data-tooltip="Configurazione dashboard"
                             data-tooltip-location="left"
