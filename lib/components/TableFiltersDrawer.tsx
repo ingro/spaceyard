@@ -9,7 +9,7 @@ type TableFiltersDrawerProps = {
     children: any;
 };
 
-export default function TableFiltersDrawer({ children, onClose, isOpen }: TableFiltersDrawerProps) {
+export function TableFiltersDrawer({ children, onClose, isOpen }: TableFiltersDrawerProps) {
     return (
         <Drawer
             isOpen={isOpen}
