@@ -6,17 +6,10 @@ import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { CloseModalButton } from './Buttons';
+import DefaultErrorFallback from './DefaultErrorFallback';
 
 const AnimatedDialogContent = animated(DialogContent);
 const AnimatedDialogOverlay = animated(DialogOverlay);
-
-function DefaultErrorFallback({ error }: any) {
-    return (
-        <div>
-            {error.message}
-        </div>
-    );
-}
 
 type DrawerProps = {
     children: any;

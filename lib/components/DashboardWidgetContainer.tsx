@@ -10,6 +10,7 @@ import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
 import { SwitchFieldController } from './Switch';
 import { SelectFieldController } from './Select';
 import { CancelModalButton } from './Buttons';
+import DefaultErrorFallback from './DefaultErrorFallback';
 import { DashboardWidgetConfig } from '../types';
 
 type DashboardWidgetContainerProps = {
@@ -22,14 +23,6 @@ type DashboardWidgetConfigModalProps = {
     widgetConfig: DashboardWidgetConfig,
     ErrorFallback?: React.ElementType
 };
-
-function DefaultErrorFallback({ error }: any) {
-    return (
-        <div>
-            {error.message}
-        </div>
-    );
-}
 
 const sizes = {
     sm: 'Small',

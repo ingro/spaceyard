@@ -24,6 +24,8 @@ export * from './components/RouteLeavingGuard';
 export * from './components/Select';
 export * from './components/SpaceyardStyleProvider';
 export * from './components/Switch';
+export * from './components/TableConfigModal';
+export * from './components/TableFiltersDrawer';
 export * from './components/TimeAgo';
 export * from './components/ToastContainer';
 

@@ -5,14 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 // import '../styles/dialogs.css';
 import { CloseModalButton } from './Buttons';
-
-function DefaultErrorFallback({ error }: any) {
-    return (
-        <div>
-            {error.message}
-        </div>
-    );
-}
+import DefaultErrorFallback from './DefaultErrorFallback';
 
 type ModalProps = {
     children: any;

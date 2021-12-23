@@ -39,7 +39,7 @@ export function DashboardPanel({ appStorage, children, widgetsList, getComponent
             <main className="mt-2 lg:mt-">
                 <div className="text-center">
                     {children}
-                    <div className="absolute top-0 right-0 mt-3 mr-5">
+                    <div className="absolute top-0 right-0 mt-3 mr-8">
                         <button 
                             className="btn btn-link btn-icon z-10 bg-white py-2" 
                             onClick={open}
