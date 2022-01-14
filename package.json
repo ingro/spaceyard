@@ -104,7 +104,7 @@
     "zustand": "^3.6.9"
   },
   "peerDependencies": {
-    "@reach/dialog": "^0.15.0",
+    "@reach/dialog": "^0.16.0",
     "date-fns": "^2.0.0",
     "downshift": "^6.1.0",
     "query-string": "^7.0.0",
@@ -118,7 +118,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-spring": "^9.0.0",
-    "react-toastify": "^7.0.0",
+    "react-toastify": "^8.0.0",
     "zustand": "^3.3.0"
   }
 }
