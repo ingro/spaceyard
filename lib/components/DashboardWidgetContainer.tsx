@@ -170,7 +170,7 @@ export const DashboardWidgetContainer = React.forwardRef<any, DashboardWidgetCon
                     'lg:col-span-8': size === 'lg',
                     'lg:col-span-12': size === 'xl',
                 })} 
-                style={{ minHeight: '600px' }}
+                style={{ minHeight: `${widgetConfig.minHeight}px` }}
                 ref={forwardRef}
             >
                 <div className="absolute top-0 right-1 hover:text-primary">

@@ -46,7 +46,8 @@ export type DashboardWidgetExtraConfig = {
 
 export type DashboardWidgetConfigStatic = {
     name: string;
-    extras: Array<DashboardWidgetExtraConfig>
+    minHeight?: number;
+    extras: Array<DashboardWidgetExtraConfig>;
 };
 
 export interface DashboardWidgetConfig extends DashboardWidgetConfigStatic {

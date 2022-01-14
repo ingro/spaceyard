@@ -9,20 +9,27 @@ type DashboardPanelProps = {
     appStorage: any,
     children: any,
     widgetsList: Record<string, DashboardWidgetConfigStatic>,
+    defaultWidgetMinHeight: number,
     getComponentFn: (code: string) => any
 };
 
-export function DashboardPanel({ appStorage, children, widgetsList, getComponentFn }: DashboardPanelProps) {
+export function DashboardPanel({ appStorage, children, widgetsList, defaultWidgetMinHeight, getComponentFn }: DashboardPanelProps) {
     const { open, close, isOpen } = useDisclosure();
 
     const [widgetConfig, setWidgetConfig] = appStorage.useLocalStorage('dashboardConfig', [], true);
 
     const widgets = useMemo(() => {
         return widgetConfig.map((config: any) => {
-            return {
+            let base = {
                 ...config,
                 Component: getComponentFn(config.code)
             };
+
+            if (typeof base.minHeight === 'undefined') {
+                base.minHeight = defaultWidgetMinHeight;
+            }
+
+            return base;
         });
     }, [widgetConfig]);
 
