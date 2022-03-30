@@ -93,17 +93,17 @@ function WidgetElement({ widget, index, updateWidgetActive, updateWidgetSize, is
                         }}
                     />
                     <span className="ml-2 w-32">
-                        {isDragging ? (
+                        {/* {isDragging ? (
                             // Necessario ri-renderizzare il Select in maniera che popper aggiorni la posizione...
                             // @ts-ignore
                             <div className="bg-white py-1.5 px-2 w-full">{sizes[widget.size]}</div>
-                        ) : (
-                            <Select
-                                options={getSizeOptions()}
-                                onChange={(item: any) => updateWidgetSize(widget.code, item ? item.value : null)}
-                                value={widget.size}
-                            />
-                        )}
+                        ) : ( */}
+                        <Select
+                            options={getSizeOptions()}
+                            onChange={(item: any) => updateWidgetSize(widget.code, item ? item.value : null)}
+                            value={widget.size}
+                        />
+                        {/* )} */}
                     </span>
                 </div>
             )}

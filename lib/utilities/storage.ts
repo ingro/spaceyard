@@ -64,7 +64,6 @@ export function createAppStorage(appName: string) {
                 }
             });
             
-            
             return [storedValue, setValue];
         }
     };
