@@ -21,6 +21,7 @@ import { NumberInputFieldController } from '../lib/components/NumberInput';
 import { DatePickerInputField, DatePickerInputFieldController } from '../lib/components/DatePickerInput';
 import { ToastContainer } from '../lib/components/ToastContainer';
 import { BasicNotification, showConfirmNotification, loadingNotification } from '../lib/components/Notifications';
+import { ConfirmDialog } from '../lib/components/ConfirmDialog';
 // import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
 
@@ -42,10 +43,10 @@ import { BasicNotification, showConfirmNotification, loadingNotification } from 
 //   }
 // ];
 
-type FormExample = {
-  name: string;
-  foo: string;
-};
+// type FormExample = {
+//   name: string;
+//   foo: string;
+// };
 
 const options = [
   { value: 'foo', label: 'Foo' },
@@ -88,6 +89,7 @@ function AppModal({ onClose }: any) {
 function App() {
   const { toggle: toggleDrawer, isOpen: isOpenDrawer } = useDisclosure();
   const { toggle: toggleModal, isOpen: isOpenModal } = useDisclosure();
+  const { toggle: toggleConfirm, isOpen: isOpenConfirm } = useDisclosure();
 
   const [foo, setFoo] = useState<any>();
   const [bar, setBar] = useState<Array<any>>([]);
@@ -243,10 +245,10 @@ function App() {
         <button className="btn" onClick={handleSubmit(data => console.warn(data))}>SUBMIT FORM</button>
         <div className="flex flex-col space-y-1 mt-4 w-64">
           <button className="btn" onClick={toggleDrawer}>Toggle Drawer</button>
-          <button className="btn" onClick={toggleModal}>Show Modal</button>
+          <button className="btn" onClick={toggleConfirm}>Show Confirm Dialog</button>
           <button className="btn" onClick={() => toast.success(<BasicNotification text="Hurray!"/>)}>Show Notification</button>
           <button className="btn" onClick={() => toast(<BasicNotification title="Foo" text="Hurray!"/>)}>Show Notification with Title</button>
-          <button className="btn" onClick={() => showConfirmNotification({ title: 'Action needed', text: 'Do you agree?', onClick: res => console.log(res)})}>Show Confirm</button>
+          <button className="btn" onClick={() => showConfirmNotification({ title: 'Action needed', text: 'Do you agree?', onClick: res => console.log(res)})}>Show Confirm Notification</button>
           <button className="btn" onClick={() => {
             const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -260,6 +262,7 @@ function App() {
           </button>
         </div>
         {isOpenModal && <AppModal onClose={toggleModal} />}
+        {isOpenConfirm && <ConfirmDialog onCancel={toggleConfirm} title="Test" onConfirm={() => alert('action confirmed!')}>Are you sure?</ConfirmDialog>}
         {/* <OmniBox 
           isOpen={true}
           onClose={() => {}}

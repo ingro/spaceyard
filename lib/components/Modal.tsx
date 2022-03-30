@@ -1,7 +1,7 @@
 import React from 'react';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
+import clsx from 'clsx';
 
 // import '../styles/dialogs.css';
 import { CloseModalButton } from './Buttons';
