@@ -8,10 +8,12 @@
 @import '../lib/styles/loaders.css';
 
 .btn {
-    border: 1px solid black;
-    padding: 5px 20px;
-    border-radius: 5px;
+    @apply py-1 px-5 text-center border border-slate-500 rounded;
     &.btn-primary {
         background-color: var(--color-primary-theme);
+        color: #fff;
+    }
+    &.btn-link {
+        @apply border-0 text-blue-400 text-left underline;
     }
 }

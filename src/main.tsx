@@ -1,10 +1,9 @@
 import React, { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-// import ReactDOM from 'react-dom';
 
 import './index.css';
 import './i18n';
-import App from './App';
+import Root from './Root';
 
 if (typeof (window as any).global === 'undefined') {
     (window as any).global = window;
@@ -15,6 +14,6 @@ const root = createRoot(document.getElementById('root'));
 
 root.render(
     <Suspense fallback={null}>
-        <App />
+        <Root />
     </Suspense>
 );
