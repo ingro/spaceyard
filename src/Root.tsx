@@ -19,17 +19,18 @@ export default function Root() {
         <div className="px-2 pt-2">
             <Suspense fallback={<span>Loading...</span>}>
                 <BrowserRouter>
-                    <div className='flex'>
-                        <div className='mr-2'>SPACEYARD</div>
-                        <div><NavLink to='/'>Ritorna alla home</NavLink></div>
+                    <div className='fixed w-full flex h-10 top-0 left-0 bg-slate-600 text-white items-center'>
+                        <div className='text-bold text-xl ml-2'><NavLink to="/">SPACEYARD</NavLink></div>
                     </div>
-                    <Switch>
-                        <Route path="/" exact><App /></Route>
-                        <Route path="/dashboard"><Dashboard /></Route>
-                        <Route path="/forms"><Forms /></Route>
-                        <Route path="/notifications"><Notifications /></Route>
-                        <Route path="/overlays"><Overlays /></Route>
-                    </Switch>
+                    <div className='mt-12'>
+                        <Switch>
+                            <Route path="/" exact><App /></Route>
+                            <Route path="/dashboard"><Dashboard /></Route>
+                            <Route path="/forms"><Forms /></Route>
+                            <Route path="/notifications"><Notifications /></Route>
+                            <Route path="/overlays"><Overlays /></Route>
+                        </Switch>
+                    </div>
                     <ToastContainer />
                 </BrowserRouter>
             </Suspense>
