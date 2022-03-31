@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormState } from 'react-hook-form';
 import { FiCheck, FiX } from 'react-icons/fi';
+import clsx from 'clsx';
 
 export function CancelModalButton({ onClose, label = 'Chiudi' }: any) {
     return (
@@ -38,5 +39,39 @@ export function CloseModalButton({ onClose }: CloseModalButtonProps) {
         >
             <FiX className="w-6 h-6" style={{ display: 'block' }}/>
         </div>
+    );
+}
+
+const LoadingAnimation = () => (
+    <div className="lds-ellipsis pointer-events-none">
+        <div />
+        <div />
+        <div />
+        <div />
+    </div>
+);
+
+type LoadingButtonProps = {
+    children: any;
+    className?: string;
+    disabled?: boolean;
+    isLoading: boolean;
+    onClick: () => void;
+    type?: 'button' | 'reset' | 'submit';
+}
+
+export function LoadingButton({ children, className, disabled, isLoading, onClick, type = 'button' }: LoadingButtonProps) {
+    return (
+        <button
+            type={type}
+            disabled={disabled || isLoading}
+            className={clsx('btn', className)}
+            onClick={onClick}
+        >
+            {isLoading 
+                ? <LoadingAnimation /> 
+                : children
+            }
+        </button>
     );
 }

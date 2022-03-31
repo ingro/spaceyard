@@ -5,6 +5,7 @@
 @import '../lib/styles/dialogs.css';
 @import '../lib/styles/datepicker.css';
 @import '../lib/styles/toast.css';
+@import '../lib/styles/loaders.css';
 
 .btn {
     border: 1px solid black;

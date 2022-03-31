@@ -15,7 +15,7 @@ import { ComboBoxMultiple } from '../lib/components/ComboBoxMultiple';
 import { InputSearch } from '../lib/components/InputSearch';
 import { SwitchFieldController } from '../lib/components/Switch';
 import { TimeAgo } from '../lib/components/TimeAgo';
-import { CancelModalButton } from '../lib/components/Buttons';
+import { CancelModalButton, LoadingButton } from '../lib/components/Buttons';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from '../lib/components/Modal';
 import { NumberInputFieldController } from '../lib/components/NumberInput';
 import { DatePickerInputField, DatePickerInputFieldController } from '../lib/components/DatePickerInput';
@@ -162,12 +162,21 @@ function App() {
   const [search, setSearch] = useState('');
   const [date, setDate] = useState<Date | string | null>(new Date());
   const [selected, setSelected] = useState(false);
+  const [isDoingAsyncAction, setIsDoingAsyncAction] = useState(false);
 
   const { control, handleSubmit } = useForm({
     // defaultValues: {
     //   qty: 6
     // }
   });
+
+  function doAsyncAction() {
+    setIsDoingAsyncAction(true);
+
+    setTimeout(() => {
+      setIsDoingAsyncAction(false);
+    }, 2000);
+  }
 
   return (
     <>
@@ -335,6 +344,7 @@ function App() {
           }}>
             Show Loading notification
           </button>
+          <LoadingButton className='btn-primary' onClick={doAsyncAction} isLoading={isDoingAsyncAction}>Async action</LoadingButton>
         </div>
         {isOpenModal && <AppModal onClose={toggleModal} />}
         {isOpenConfirm && <ConfirmDialog onCancel={toggleConfirm} title="Test" onConfirm={() => alert('action confirmed!')}>Are you sure?</ConfirmDialog>}
