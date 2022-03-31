@@ -6,7 +6,7 @@ import {useNumberField} from '@react-aria/numberfield';
 import {useButton} from '@react-aria/button';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import pick from 'lodash/pick';
-import omit from 'lodash/omit';
+// import omit from 'lodash/omit';
 import uniqueId from 'lodash/uniqueId';
 import clsx from 'clsx';
 
@@ -63,6 +63,7 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
         // onChange: number => {
         //     console.log('ON CHANGE');
         //     setTimeout(() => {
+        //         console.log('CHANGE TO ' + number);
         //         onChange(number)
         //     }, 0);
         // },

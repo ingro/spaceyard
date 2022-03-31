@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, prettyDOM } from '@testing-library/react';
 import user from '@testing-library/user-event';
 
 import { ComboBoxMultiple } from './ComboBoxMultiple';
@@ -102,6 +102,8 @@ test('basic ComboBoxMultiple functionality', async () => {
     user.type(input, 'a');
     // @ts-ignore
     await act(async () => await null);
+
+    await pause(100);
 
     // console.log(prettyDOM(container));
 
