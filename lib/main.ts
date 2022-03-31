@@ -26,6 +26,7 @@ export * from './components/SpaceyardStyleProvider';
 export * from './components/Switch';
 export * from './components/TableConfigModal';
 export * from './components/TableFiltersDrawer';
+export * from './components/TableFilterDropdown';
 export * from './components/TimeAgo';
 export * from './components/ToastContainer';
 

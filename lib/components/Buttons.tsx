@@ -56,7 +56,7 @@ type LoadingButtonProps = {
     className?: string;
     disabled?: boolean;
     isLoading: boolean;
-    onClick: () => void;
+    onClick?: () => void;
     type?: 'button' | 'reset' | 'submit';
 }
 
