@@ -2,10 +2,15 @@ import React, { useState, useMemo, useRef } from 'react';
 import { matchSorter } from 'match-sorter';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import { FiX } from 'react-icons/fi';
+import uniqueId from 'lodash/uniqueId';
+import pick from 'lodash/pick';
 import clsx from 'clsx';
 
 import { Dropdown, DropdownItem, ToggleBtn } from './shared/dropdown';
 import { highlightString } from '../utilities/formatters';
+import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
+import { SelectOption } from '../types';
+import { Control, useController } from 'react-hook-form';
 
 const defaultItemToStringFn = (item: any) => item?.label;
 
@@ -13,23 +18,28 @@ const defaultItemToStringFn = (item: any) => item?.label;
 //     return options.filter((option: any) => String(value) === String(option.value))[0];
 // }
 
-type ComboBoxMultipleProps = {
-    value?: Array<any>;
-    onChange?: Function;
-    // onIsOpenChange?: Function;
-    options: Array<any>;
-    initialIsOpen?: boolean;
-    defaultHighlightedIndex?: number;
-    placeholder?: string;
-    itemToString?: Function;
-    filterKeys?: Array<string|Object>;
-    dropdownPosition?: 'top' | 'bottom';
-    dropdownFixed?: boolean;
+class ComboBoxMultipleClass {
+    constructor(
+        public options: Array<SelectOption>,
+        public value?: Array<SelectOption>,
+        public onBlur?: () => void,
+        public onChange?: Function,
+        public initialIsOpen?: boolean,
+        public defaultHighlightedIndex?: number,
+        public placeholder?: string,
+        public itemToString?: Function,
+        public filterKeys?: Array<string|Object>,
+        public dropdownPosition?: 'top' | 'bottom',
+        public dropdownFixed?: boolean
+    ) {}
 };
+
+interface ComboBoxMultipleProps extends ComboBoxMultipleClass{};
 
 export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({ 
     value, 
-    onChange = () => {}, 
+    onBlur = () => {},
+    onChange = () => {},
     // onIsOpenChange, 
     options, 
     initialIsOpen = false, 
@@ -284,7 +294,10 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
                         // FIXME: di default Downshift per il Combobox al blur dell'input seleziona l'oggetto correntemente evidenziato,
                         // non ho trovato soluzione migliore se non fare l'override dell'onBlur fornito da Downshift,
                         // verificare se si può trovare soluzione meno invasiva (magari modificando lo stateReducer)
-                        onBlur={() => setHasFocus(false)}
+                        onBlur={() => {
+                            onBlur();
+                            setHasFocus(false);
+                        }}
                         onFocus={() => setHasFocus(true)}
                     />
                 </span>
@@ -325,3 +338,46 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
         </div>
     );
 });
+
+interface ComboBoxMultipleFieldProps extends ComboBoxMultipleProps, FieldWrapperProps {};
+
+export const ComboBoxMultipleField = React.forwardRef<any, ComboBoxMultipleFieldProps>((props: ComboBoxMultipleFieldProps, forwardRef) => {
+    const inputId = uniqueId(`form-${props.name}_`);
+
+    const comboBoxPropsName = Object.keys(new ComboBoxMultipleClass([]));
+
+    // @ts-ignore
+    const comboBoxProps: ComboBoxProps = pick(props, comboBoxPropsName);
+
+    return (
+        <FieldWrapper {...props} inputId={inputId}>
+            <ComboBoxMultiple
+                {...comboBoxProps}
+                id={inputId}
+                ref={forwardRef} 
+            />
+        </FieldWrapper>
+    );
+});
+
+interface ComboBoxMultipleFieldControllerProps extends ComboBoxMultipleFieldProps {
+    name: string;
+    control: Control;
+    defaultValue?: any;
+};
+
+export function ComboBoxMultipleFieldController({ name, control, defaultValue, ...rest}: ComboBoxMultipleFieldControllerProps) {
+    const { field, fieldState } = useController({
+        name,
+        control,
+        defaultValue
+    });
+
+    return (
+        <ComboBoxMultipleField 
+            {...field}
+            {...rest}
+            error={fieldState.error}
+        />
+    );
+}

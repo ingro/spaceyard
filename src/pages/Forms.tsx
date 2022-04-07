@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
-import { Checkbox, CheckboxFieldController } from '../../lib/components/Checkbox';
-import { ComboBox } from '../../lib/components/ComboBox';
-import { ComboBoxMultiple } from '../../lib/components/ComboBoxMultiple';
-import { DatePickerInputField, DatePickerInputFieldController } from '../../lib/components/DatePickerInput';
+import { CheckboxFieldController } from '../../lib/components/Checkbox';
+import { ComboBoxFieldController } from '../../lib/components/ComboBox';
+import { ComboBoxMultipleFieldController } from '../../lib/components/ComboBoxMultiple';
+import { DatePickerInputFieldController } from '../../lib/components/DatePickerInput';
 import { InputFieldController } from '../../lib/components/Input';
 import { InputSearch } from '../../lib/components/InputSearch';
 import { LoadingButton } from '../../lib/components/Buttons';
@@ -33,29 +33,25 @@ const options = [
     { value: '14', label: '14' },
 ];
 
+const pause = (ms: number) =>  new Promise(resolve => setTimeout(resolve, ms));
+
 export default function Forms() {
-    const { control, handleSubmit } = useForm({});
+    const { control, handleSubmit, formState } = useForm({});
 
     const [search, setSearch] = useState('');
     const [date, setDate] = useState<Date | string | null>(new Date());
-    const [selected, setSelected] = useState(false);
-    const [foo, setFoo] = useState<any>();
     const [bar, setBar] = useState<Array<any>>([]);
 
-    const [isDoingAsyncAction, setIsDoingAsyncAction] = useState(false);
+    const onSubmit = handleSubmit(async (data) => {
+        console.log(data);
 
-    function doAsyncAction() {
-      setIsDoingAsyncAction(true);
-  
-      setTimeout(() => {
-        setIsDoingAsyncAction(false);
-      }, 2000);
-    }
+        await pause(2000);
+    });
 
     return (
         <div>
+            <div className="text text-purple-500 text-xl">Input liberi</div>
             <div className="w-1/4 mb-2">
-                <LoadingButton className='btn-primary w-full mb-2' onClick={doAsyncAction} isLoading={isDoingAsyncAction}>Async action</LoadingButton>
                 <InputSearch 
                     // showIcon={false}
                     value={search}
@@ -65,7 +61,7 @@ export default function Forms() {
                     }}
                 />
                 <br />
-                <DatePickerInputField 
+                {/* <DatePickerInputField 
                     value={date}
                     asString={true}
                     label="Data di nascita"
@@ -75,14 +71,14 @@ export default function Forms() {
                         setDate(d);
                     }}
                     dateFormat="dd/MM/yyyy"
-                />
-                <Checkbox
+                /> */}
+                {/* <Checkbox
                     checked={selected}
                     label="Attivo"
                     onChange={(e: any) => {
                         setSelected(e); 
                     }}
-                />
+                /> */}
                 {/* <InputSearchReactAria 
                     value={search}
                     onSubmit={(q: string) => {
@@ -91,96 +87,91 @@ export default function Forms() {
                     }}
                 /> */}
             </div>
+            <div className="text text-purple-500 text-xl">Form</div>
             <form onSubmit={handleSubmit(data => console.warn(data))}>
-            <div className="w-1/4 mb-2">
-                <InputFieldController 
-                    name="name"
-                    layout="stacked"
-                    placeholder="Name"
-                    control={control}
-                    disabled={true}
-                    // error="Required"
-                />
-            </div>
-            <div className="w-1/4 mb-2">
-                <SelectFieldController
-                    name="foo"
-                    layout="stacked"
-                    showClearBtn={true}
-                    control={control}
-                    // value={'12'}
-                    options={options}
-                />
-                <SwitchFieldController
-                    name="confirm"
-                    label="Conferma"
-                    control={control}
-                    labelPosition="none"
-                />
-                <CheckboxFieldController
-                    name="privacy"
-                    label="GDPR"
-                    control={control}
-                    labelPosition="none"
-                />
-                <NumberInputFieldController
-                    name="qty"
-                    label="Quantity" 
-                    placeholder="Quantity"
-                    control={control}
-                    // maxValue={10}
-                    // minValue={0}
-                    // step={2}
-                    formatOptions={{
-                        // style: 'percent',
+                <div className="w-1/4 mb-2">
+                    <InputFieldController 
+                        name="name"
+                        layout="stacked"
+                        placeholder="Name"
+                        control={control}
+                        disabled={true}
+                        // error="Required"
+                    />
+                </div>
+                <div className="w-1/4 mb-2">
+                    <SelectFieldController
+                        name="foo"
+                        layout="stacked"
+                        showClearBtn={true}
+                        control={control}
+                        // value={'12'}
+                        options={options}
+                    />
+                    <ComboBoxFieldController
+                        name="combo"
+                        control={control}
+                        options={options}
+                    />
+                    <ComboBoxMultipleFieldController
+                        name="multiple"
+                        options={options}
+                        control={control}
+                    />
+                    <SwitchFieldController
+                        name="confirm"
+                        label="Conferma"
+                        control={control}
+                        labelPosition="none"
+                    />
+                    <CheckboxFieldController
+                        name="privacy"
+                        label="GDPR"
+                        control={control}
+                        labelPosition="none"
+                    />
+                    <NumberInputFieldController
+                        name="qty"
+                        label="Quantity" 
+                        placeholder="Quantity"
+                        control={control}
+                        // maxValue={10}
+                        // minValue={0}
+                        // step={2}
+                        formatOptions={{
+                            // style: 'percent',
 
-                        // style: 'currency',
-                        // currency: 'EUR',
-                        // currencyDisplay: 'code',
-                        // currencySign: 'accounting',
+                            // style: 'currency',
+                            // currency: 'EUR',
+                            // currencyDisplay: 'code',
+                            // currencySign: 'accounting',
 
-                        // style: 'unit',
-                        // unit: 'centimeter',
-                        // unitDisplay: 'long',
+                            // style: 'unit',
+                            // unit: 'centimeter',
+                            // unitDisplay: 'long',
 
-                        // signDisplay: 'exceptZero',
-                        // minimumFractionDigits: 1,
-                        // maximumFractionDigits: 2
-                    }}
-                />
-                <DatePickerInputFieldController 
-                    name="start_date"
-                    value={date}
-                    asString={true}
-                    label="Data di nascita"
-                    placeholder="Foo"
-                    onChange={d => {
-                        console.log(d);
-                        setDate(d);
-                    }}
-                    dateFormat="dd/MM/yyyy"
-                    control={control}
-                />
-            </div>
-            <DevTool control={control} placement="top-right" />
+                            // signDisplay: 'exceptZero',
+                            // minimumFractionDigits: 1,
+                            // maximumFractionDigits: 2
+                        }}
+                    />
+                    <DatePickerInputFieldController 
+                        name="start_date"
+                        value={date}
+                        asString={true}
+                        label="Data di nascita"
+                        placeholder="Foo"
+                        onChange={d => {
+                            console.log(d);
+                            setDate(d);
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        control={control}
+                    />
+                </div>
+                <DevTool control={control} placement="top-right" />
             </form>
-            <div className="w-1/4 mb-2">
-                <ComboBox
-                    value={foo}
-                    options={options}
-                    onSelect={(option) => {
-                        setFoo(option);
-                    }}
-                />
-            </div>
-            <div className="w-1/4 mb-2">
-                <ComboBoxMultiple
-                    options={options}
-                    value={bar}
-                    onChange={(values: any) => setBar(values)}
-                />
-            </div>
-            <button className="btn btn-primary" onClick={handleSubmit(data => console.warn(data))}>SUBMIT FORM</button>
+            <LoadingButton className='btn-primary mb-2 w-32' onClick={onSubmit} isLoading={formState.isSubmitting}>SUBMIT</LoadingButton>
         </div>
     );
 }

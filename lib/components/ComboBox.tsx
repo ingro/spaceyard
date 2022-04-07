@@ -1,25 +1,34 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { matchSorter } from 'match-sorter';
 import { useCombobox } from 'downshift';
+import { Control, useController } from 'react-hook-form';
+import uniqueId from 'lodash/uniqueId';
+import pick from 'lodash/pick';
 import clsx from 'clsx';
 
 import { Dropdown, DropdownItem, ClearBtn, ToggleBtn } from './shared/dropdown';
 import { highlightString } from '../utilities/formatters';
+import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 import { SelectOption } from '../types';
 
-type ComboBoxProps = {
-    value?: any;
-    onSelect?: (option: SelectOption) => void;
-    onIsOpenChange?: (isOpen: boolean) => void;
-    options: Array<SelectOption>;
-    initialIsOpen?: boolean;
-    // defaultHighlightedIndex?: number;
-    placeholder?: string;
-    itemToString?: (item: any) => string;
-    filterKeys?: Array<string|Object>;
-    dropdownPosition?: 'top' | 'bottom';
-    dropdownFixed?: boolean;
+class ComboBoxClass {
+    constructor(
+        public options: Array<SelectOption>,
+        public id?: string,
+        public value?: any,
+        public onSelect?: (option: SelectOption) => void,
+        public onIsOpenChange?: (isOpen: boolean) => void,
+        public onBlur?: () => void,
+        public initialIsOpen?: boolean,
+        public placeholder?: string,
+        public itemToString?: (item: any) => string,
+        public filterKeys?: Array<string|Object>,
+        public dropdownPosition?: 'top' | 'bottom',
+        public dropdownFixed?: boolean
+    ) {}
 };
+
+interface ComboBoxProps extends ComboBoxClass {};
 
 const defaultItemToStringFn = (item: any) => item?.label;
 
@@ -36,9 +45,11 @@ function getItemFromValue(options: Array<any>, value: any) {
 export const ComboBox = React.forwardRef<any, ComboBoxProps>(({ 
     value, 
     onSelect, 
-    onIsOpenChange, 
+    onIsOpenChange,
+    onBlur = () => {},
     options, 
-    initialIsOpen = false, 
+    initialIsOpen = false,
+    id = null,
     // defaultHighlightedIndex = 0,
     placeholder = 'Cerca...',
     itemToString = defaultItemToStringFn,
@@ -215,8 +226,12 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 // FIXME: di default Downshift per il Combobox al blur dell'input seleziona l'oggetto correntemente evidenziato,
                 // non ho trovato soluzione migliore se non fare l'override dell'onBlur fornito da Downshift,
                 // verificare se si può trovare soluzione meno invasiva (magari modificando lo stateReducer)
-                onBlur={() => setHasFocus(false)}
+                onBlur={() => {
+                    setHasFocus(false);
+                    onBlur();
+                }}
                 onFocus={() => setHasFocus(true)}
+                id={id}
             />
             <div 
                 className="w-full h-full flex items-center absolute top-0 px-2 pointer-events-none" 
@@ -273,3 +288,47 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
         </div>
     );
 });
+
+interface ComboBoxFieldProps extends ComboBoxProps, FieldWrapperProps {};
+
+export const ComboBoxField = React.forwardRef<any, ComboBoxFieldProps>((props: ComboBoxFieldProps, forwardRef) => {
+    const inputId = uniqueId(`form-${props.name}_`);
+
+    const comboBoxPropsName = Object.keys(new ComboBoxClass([]));
+
+    // @ts-ignore
+    const comboBoxProps: ComboBoxProps = pick(props, comboBoxPropsName);
+
+    return (
+        <FieldWrapper {...props} inputId={inputId}>
+            <ComboBox
+                {...comboBoxProps}
+                id={inputId}
+                ref={forwardRef} 
+            />
+        </FieldWrapper>
+    );
+});
+
+interface ComboBoxFieldControllerProps extends ComboBoxFieldProps {
+    name: string;
+    control: Control;
+    defaultValue?: any;
+};
+
+export function ComboBoxFieldController({ name, control, defaultValue, ...rest}: ComboBoxFieldControllerProps) {
+    const { field, fieldState } = useController({
+        name,
+        control,
+        defaultValue
+    });
+
+    return (
+        <ComboBoxField 
+            {...field}
+            onSelect={field.onChange}
+            {...rest}
+            error={fieldState.error}
+        />
+    );
+}
