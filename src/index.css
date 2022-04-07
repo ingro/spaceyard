@@ -7,6 +7,8 @@
 @import '../lib/styles/toast.css';
 @import '../lib/styles/loaders.css';
 
+@import '@ingruz/tabulisk/lib/minimal.css';
+
 .btn {
     @apply py-1 px-5 text-center border border-slate-500 rounded;
     &.btn-primary {
@@ -16,4 +18,9 @@
     &.btn-link {
         @apply border-0 text-blue-400 text-left underline;
     }
+}
+
+.--tabulisk-paginator-pageSizeSelector {
+    height: 3rem;
+    width: 8rem;
 }

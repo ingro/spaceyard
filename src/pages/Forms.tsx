@@ -39,13 +39,13 @@ export default function Forms() {
     const { control, handleSubmit, formState } = useForm({});
 
     const [search, setSearch] = useState('');
-    const [date, setDate] = useState<Date | string | null>(new Date());
-    const [bar, setBar] = useState<Array<any>>([]);
 
     const onSubmit = handleSubmit(async (data) => {
         console.log(data);
 
         await pause(2000);
+
+        alert('Data sent!');
     });
 
     return (
@@ -157,14 +157,14 @@ export default function Forms() {
                     />
                     <DatePickerInputFieldController 
                         name="start_date"
-                        value={date}
+                        // value={date}
                         asString={true}
                         label="Data di nascita"
-                        placeholder="Foo"
-                        onChange={d => {
-                            console.log(d);
-                            setDate(d);
-                        }}
+                        placeholder="Inserisci data"
+                        // onChange={d => {
+                        //     console.log(d);
+                        //     setDate(d);
+                        // }}
                         dateFormat="dd/MM/yyyy"
                         control={control}
                     />

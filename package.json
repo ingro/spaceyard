@@ -47,6 +47,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@hookform/devtools": "^4.1.0",
+    "@ingruz/tabulisk": "^0.17.2",
     "@popperjs/core": "^2.11.5",
     "@reach/dialog": "^0.16.2",
     "@react-aria/button": "^3.4.3",
@@ -92,6 +93,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-spring": "^9.4.4",
+    "react-table": "^7.7.0",
     "react-toastify": "^8.2.0",
     "rimraf": "^3.0.2",
     "rollup-plugin-typescript2": "^0.31.2",
@@ -101,7 +103,7 @@
     "ts-transformer-keys": "^0.4.3",
     "typescript": "^4.6.3",
     "vite": "^2.9.1",
-    "zustand": "^3.7.1"
+    "zustand": "^3.7.2"
   },
   "peerDependencies": {
     "@reach/dialog": "^0.16.0",

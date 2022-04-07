@@ -32,6 +32,7 @@ function App() {
           <NavLink className="btn btn-link" to="/forms">Forms</NavLink>
           <NavLink className="btn btn-link" to="/notifications">Notifications</NavLink>
           <NavLink className="btn btn-link" to="/overlays">Overlays</NavLink>
+          <NavLink className="btn btn-link" to="/datatable">DataTable</NavLink>
         </div>
         {/* <OmniBox 
           isOpen={true}

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import clsx from 'clsx';
 import difference from 'lodash/difference';
@@ -82,15 +82,29 @@ function getHiddenColumnKeys(available: any) {
 }
 
 type TableConfigModalProps = {
-    availableColumns: any;
+    columnConfig: any;
     currentColumns: Array<any>;
     name: string;
     onClose: () => void;
     updateSelectedColumns: (columns: Array<any>) => void;
-    ErrorFallback: React.ComponentType;
+    ErrorFallback?: React.ComponentType;
 };
 
-export function TableConfigModal({ onClose, name, availableColumns, currentColumns, updateSelectedColumns, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
+export function TableConfigModal({ onClose, name, columnConfig, currentColumns, updateSelectedColumns, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
+    const availableColumns = useMemo(() => {
+        return columnConfig.reduce((config: any, column: any) => {
+            const id = column.id || column.accessor;
+
+            config[id] = {
+                id,
+                label: column.Header || id,
+                ...column.columnConfig
+            };
+
+            return config;
+        }, {});
+    }, [columnConfig]);
+
     const [available, setAvailable] = useState(getInitialAvailableColumns(availableColumns, currentColumns));
     const [selected, setSelected] = useState(getInitialSelectedColumns(availableColumns, currentColumns));
 

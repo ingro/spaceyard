@@ -31,8 +31,9 @@ function getDate(inputDate: string | Date, dateFormat: string): Date {
 
 class DatePickerInputClass {
     constructor(
-        public value: string | Date | null,
-        public onChange: (date: string | Date | null) => void,
+        public value?: string | Date | null,
+        public onChange?: (date: string | Date | null) => void,
+        public onBlur?: () => void,
         public asString?: boolean,
         public closeOnSelect?: boolean,
         public dateFormat?: string,
@@ -50,6 +51,7 @@ export const DatePickerInput = React.forwardRef<any, DatePickerInputProps>(({
     id,
     value,
     onChange = () => {},
+    onBlur = () => {},
     dateFormat = 'yyyy-MM-dd',
     closeOnSelect = true,
     placeholder = 'Seleziona una data',
@@ -94,6 +96,7 @@ export const DatePickerInput = React.forwardRef<any, DatePickerInputProps>(({
             }
 
             close();
+            onBlur();
         }, 0);
     }
 

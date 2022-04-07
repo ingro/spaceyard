@@ -10,6 +10,7 @@ import { ToastContainer } from '../lib/components/ToastContainer';
 
 import App from './App';
 import Dashboard from './pages/Dashboard';
+import DataGrid from './pages/DataGrid';
 import Forms from './pages/Forms';
 import Notifications from './pages/Notifications';
 import Overlays from './pages/Overlays';
@@ -29,6 +30,7 @@ export default function Root() {
                             <Route path="/forms"><Forms /></Route>
                             <Route path="/notifications"><Notifications /></Route>
                             <Route path="/overlays"><Overlays /></Route>
+                            <Route path="/datatable"><DataGrid /></Route>
                         </Switch>
                     </div>
                     <ToastContainer />

@@ -16,3 +16,5 @@ export * from './useFocusPrevSelectedItem';
 // export * from './useLocalStorage';
 
 export * from './useOnClickOutside';
+
+export * from './useColumnsSelector';
