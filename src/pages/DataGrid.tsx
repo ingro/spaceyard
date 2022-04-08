@@ -60,7 +60,7 @@ export default function DataGrid() {
             useReducer: reducer,
             hiddenColumns
         };
-    }, [selectedColumns, reducer]);
+    }, [hiddenColumns, reducer]);
 
     return (
         <>
