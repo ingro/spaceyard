@@ -6,7 +6,7 @@ export default i18n
     .use(i18nextHttpBackend)
     .use(initReactI18next)
     .init({
-        lng: 'en' || 'it',
+        lng: 'en' || 'it' || 'de',
         fallbackLng: 'it',
         // debug: true,
         interpolation: {

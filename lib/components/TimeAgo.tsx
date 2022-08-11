@@ -3,11 +3,13 @@ import { formatDistanceToNow } from 'date-fns';
 import { differenceInMilliseconds } from 'date-fns';
 
 import { formatLocalizedDate } from "../utilities/formatters";
-import { useDateLocale } from '../hooks/useDateLocale';
+// import { useDateLocale } from '../hooks/useDateLocale';
 import { LocalizedDateFormat } from '../types';
+import { useTranslation } from 'react-i18next';
 
 type TimeAgoProps = {
     date: Date | string | null;
+    dateLocale?: any | null;
     forceLanguage?: string;
     showTooltip?: boolean;
     tooltipDateFormat?: LocalizedDateFormat;
@@ -15,7 +17,8 @@ type TimeAgoProps = {
 };
 
 const TimeAgoComponent: React.FC<TimeAgoProps> = ({ 
-    date, 
+    date,
+    dateLocale = null,
     forceLanguage = null, 
     showTooltip = false, 
     tooltipDateFormat = 'full',
@@ -23,7 +26,13 @@ const TimeAgoComponent: React.FC<TimeAgoProps> = ({
 }) => {
     const [counter, setCounter] = useState(0);
 
-    const { language, dateLocale } = useDateLocale(forceLanguage);
+    let { i18n: { language } } = useTranslation();
+
+    if (forceLanguage) {
+        language = forceLanguage;
+    }
+
+    //const { language, dateLocale } = useDateLocale(forceLanguage);
 
     if (typeof date === 'string') {
         date = new Date(date);
@@ -59,9 +68,9 @@ const TimeAgoComponent: React.FC<TimeAgoProps> = ({
         return <span>-</span>;
     }
 
-    if (dateLocale === null) {
-        return null;
-    }
+    // if (dateLocale === null) {
+    //     return null;
+    // }
 
     const tooltipProps = showTooltip
         ? {
@@ -70,13 +79,19 @@ const TimeAgoComponent: React.FC<TimeAgoProps> = ({
         } 
         : {};
 
+    let formatDistanceToNowOptions = {
+        includeSeconds: true,
+        addSuffix: true
+    };
+
+    if (dateLocale !== null && dateLocale !== 'error') {
+        /** @ts-ignore */
+        formatDistanceToNowOptions.locale = dateLocale;
+    }
+
     return (
         <span {...tooltipProps}>
-            {formatDistanceToNow(date, {
-                includeSeconds: true,
-                addSuffix: true,
-                locale: dateLocale
-            })}
+            {formatDistanceToNow(date, formatDistanceToNowOptions)}
         </span>
     );
 };

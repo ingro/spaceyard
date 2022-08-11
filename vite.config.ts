@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
+// import dynamicImport from 'vite-plugin-dynamic-import';
+// import importDynamicModule from 'vite-plugin-dynamic-import-module';
 // import typescript2 from "rollup-plugin-typescript2";
 // import keysTransformer from 'ts-transformer-keys/transformer';
 const path = require("path");
@@ -10,7 +12,9 @@ export default ({ command, mode }) => {
   return defineConfig({
     // esbuild: command === 'build' ? false : {},
     plugins: [
-      reactRefresh(),
+      /** @ts-ignore */
+      reactRefresh(), 
+      // dynamicImport()
       // {...typescript2({ 
       //   check: false,
       //   transformers: [service => ({
@@ -40,7 +44,7 @@ export default ({ command, mode }) => {
       rollupOptions: {
         external: [
           "@reach/dialog",
-          "date-fns",
+          // "date-fns",
           "downshift",
           "i18next",
           "lodash/defaults",
@@ -69,6 +73,11 @@ export default ({ command, mode }) => {
         },
       },
     },
+    // optimizeDeps: {
+    //   include: [
+    //     'date-fns/esm'
+    //   ]
+    // },
     server: {
       port: 3004,
     },
