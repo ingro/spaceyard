@@ -25,7 +25,7 @@ import { useAppContext } from '../lib/hooks';
 
 function App() {
   // const [dateLocale, setDateLocale] = useState<any>(null);
-  const { setDateLocale, dateLocale } = useAppContext();
+  const { setDateLocale } = useAppContext();
   const [localeToLoad, setLocaleToLoad] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function App() {
   return (
     <>
       <div>
-        <TimeAgo date={new Date()} forceLanguage="de" dateLocale={dateLocale}/>
+        <TimeAgo date={new Date()} forceLanguage="de" />
         {' '}<button className='btn btn-primary' onClick={() => setLocaleToLoad('de')}>Change locale</button>
         <div className="flex flex-col space-y-1 mt-4 w-64">
           <NavLink className="btn btn-link" to="/dashboard">Dashboard</NavLink>

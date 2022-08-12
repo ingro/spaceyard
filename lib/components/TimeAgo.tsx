@@ -6,10 +6,11 @@ import { formatLocalizedDate } from "../utilities/formatters";
 // import { useDateLocale } from '../hooks/useDateLocale';
 import { LocalizedDateFormat } from '../types';
 import { useTranslation } from 'react-i18next';
+import { useAppContext } from '../hooks';
 
 type TimeAgoProps = {
     date: Date | string | null;
-    dateLocale?: any | null;
+    forcedDateLocale?: any | null;
     forceLanguage?: string;
     showTooltip?: boolean;
     tooltipDateFormat?: LocalizedDateFormat;
@@ -18,18 +19,25 @@ type TimeAgoProps = {
 
 const TimeAgoComponent: React.FC<TimeAgoProps> = ({ 
     date,
-    dateLocale = null,
+    forcedDateLocale = null,
     forceLanguage = null, 
     showTooltip = false, 
     tooltipDateFormat = 'full',
     tooltipPosition = 'top'
 }) => {
     const [counter, setCounter] = useState(0);
+    const { dateLocale } = useAppContext();
 
     let { i18n: { language } } = useTranslation();
 
     if (forceLanguage) {
         language = forceLanguage;
+    }
+
+    let finalDateLocale = dateLocale;
+
+    if (forcedDateLocale) {
+        finalDateLocale = forcedDateLocale;
     }
 
     //const { language, dateLocale } = useDateLocale(forceLanguage);
@@ -84,9 +92,9 @@ const TimeAgoComponent: React.FC<TimeAgoProps> = ({
         addSuffix: true
     };
 
-    if (dateLocale !== null && dateLocale !== 'error') {
+    if (finalDateLocale !== null && finalDateLocale !== 'error') {
         /** @ts-ignore */
-        formatDistanceToNowOptions.locale = dateLocale;
+        formatDistanceToNowOptions.locale = finalDateLocale;
     }
 
     return (
