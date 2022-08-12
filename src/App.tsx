@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 // import { OmniBox } from '../lib/components/OmniBox';
 import { TimeAgo } from '../lib/components/TimeAgo';
+import { useAppContext } from '../lib/hooks';
 
 // import { InputSearchReactAria } from './InputSearchReactAria';
 // import { OmniBoxAction } from '../lib/types';
@@ -23,17 +24,21 @@ import { TimeAgo } from '../lib/components/TimeAgo';
 // ];
 
 function App() {
-  const [dateLocale, setDateLocale] = useState<any>(null);
-
-  const localeToLoad = 'it';
+  // const [dateLocale, setDateLocale] = useState<any>(null);
+  const { setDateLocale, dateLocale } = useAppContext();
+  const [localeToLoad, setLocaleToLoad] = useState<string | null>(null);
 
   useEffect(() => {
     load();
 
     async function load() {
-      const locale = await import(`./locales/${localeToLoad}.ts`);
+      if (localeToLoad) {
+        const locale = await import(`./locales/${localeToLoad}.ts`);
 
-      setDateLocale(locale.default);
+        setDateLocale(locale.default);
+      } else {
+        setDateLocale(null);
+      }
     }
   }, [localeToLoad]);
 
@@ -41,6 +46,7 @@ function App() {
     <>
       <div>
         <TimeAgo date={new Date()} forceLanguage="de" dateLocale={dateLocale}/>
+        {' '}<button className='btn btn-primary' onClick={() => setLocaleToLoad('de')}>Change locale</button>
         <div className="flex flex-col space-y-1 mt-4 w-64">
           <NavLink className="btn btn-link" to="/dashboard">Dashboard</NavLink>
           <NavLink className="btn btn-link" to="/forms">Forms</NavLink>
@@ -55,7 +61,7 @@ function App() {
         /> */}
       </div>
     </>
-  )
+  );
 }
 
 export default App;

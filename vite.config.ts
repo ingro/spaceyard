@@ -44,7 +44,7 @@ export default ({ command, mode }) => {
       rollupOptions: {
         external: [
           "@reach/dialog",
-          // "date-fns",
+          "date-fns",
           "downshift",
           "i18next",
           "lodash/defaults",

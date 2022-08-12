@@ -13,6 +13,7 @@ type AppProviderProps = {
 
 export function AppProvider({ children, appStorage, appRoutes }: AppProviderProps) {
     const [isMinimized, setIsMinimized] = useState(true);
+    const [dateLocale, setDateLocale] = useState<any>(null);
     const [user, setUser] = useState(appStorage.get('user'));
     const languageRef = useRef(appStorage.get('language'));
 
@@ -24,6 +25,7 @@ export function AppProvider({ children, appStorage, appRoutes }: AppProviderProp
         user,
         appStorage,
         appRoutes,
+        dateLocale,
         setUser: (userValue: any) => {
             setUser(userValue);
             appStorage.set('user', userValue);
@@ -33,7 +35,8 @@ export function AppProvider({ children, appStorage, appRoutes }: AppProviderProp
             i18n.changeLanguage(language);
             languageRef.current = language;
             appStorage.set('language', language);
-        }
+        },
+        setDateLocale
     };
 
     useEventListener('storage', ({ key, newValue }: any) => {

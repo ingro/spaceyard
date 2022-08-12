@@ -6,12 +6,14 @@ export type AppRoutes = Record<AppRouteNames, string>;
 
 export type AppContextType = {
     appRoutes: AppRoutes;
-    user: any | null;
-    isMinimized: boolean;
     appStorage: any;
-    setUser: (user: any) => void;
+    dateLocale: any;
+    isMinimized: boolean;
+    user: any | null;
+    setDateLocale: (dateLocale: any) => void;
     setIsMinimized: (isMinimized: boolean) => void;
     setLanguage: (language: string) => void;
+    setUser: (user: any) => void;
 };
 
 export type OmniBoxAction = {
