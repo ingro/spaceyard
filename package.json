@@ -18,6 +18,10 @@
     ".": {
       "import": "./dist/spaceyard.es.js",
       "require": "./dist/spaceyard.umd.js"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
     }
   },
   "sideEffects": true,
