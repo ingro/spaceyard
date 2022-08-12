@@ -4,7 +4,7 @@ export * from './hotkeyHooks';
 
 export * from './useAppContext';
 
-export * from './useDateLocale';
+// export * from './useDateLocale';
 
 export * from './useDisclosure';
 
