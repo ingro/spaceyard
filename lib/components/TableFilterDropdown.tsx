@@ -193,7 +193,7 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
                 data-state={isOpen ? 'open' : 'closed'}
                 data-filter-dropdown-id={filterKey}
                 // style={{ opacity, height, willChange: 'opacity, height' }}
-                className={clsx('z-10 border border-gray-500 rounded-b-md p-4 bg-white w-64', {
+                className={clsx('z-10 border border-gray-500 rounded-b-md p-4 bg-white w-64 font-normal', {
                     'hidden': isOpen === false,
                     'fixed': isOpen
                 })}
