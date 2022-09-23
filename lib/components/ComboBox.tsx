@@ -85,9 +85,9 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
     function stateReducer(state: any, actionAndChanges: any) {
         const { type, changes } = actionAndChanges;
     
-        // console.log(type);
-        // console.log(changes);
-        // console.log(state);
+        console.log(type);
+        console.log(changes);
+        console.log(state);
     
         switch (type) {
             case useCombobox.stateChangeTypes.ItemClick:
@@ -101,10 +101,21 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 // il valore è cambiato, dato che il valore proviene dall'esterno
                 internalSelectedItemRef.current = changes.selectedItem;
 
-                return {
+                let newState = {
                     ...changes,
                     inputValue: ''
                 };
+
+                // if (type === useCombobox.stateChangeTypes.InputKeyDownEnter && typeof changes.selectedItem == 'undefined') {
+                //     console.log('KEEP THE MENU OPEN');
+                //     newState = {
+                //         ...newState,
+                //         inputValue: state.inputValue,
+                //         isOpen: true
+                //     }
+                // }
+
+                return newState;
             case useCombobox.stateChangeTypes.InputChange:
                 if (! changes.highlightedIndex) {
                     return {
@@ -142,7 +153,8 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
         },
         initialInputValue: '',
         initialIsOpen,
-        defaultHighlightedIndex: selectedItem ? undefined : 0,
+        // defaultHighlightedIndex: selectedItem ? undefined : 0,
+        defaultHighlightedIndex: selectedItem ? null : 0,
         // initialSelectedItem: selectedItem,
         itemToString,
         stateReducer,
@@ -213,6 +225,12 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 'form-select-open': isOpen,
                 'form-element-has-focus': hasFocus
             })}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    // console.log('STOP PROPAGATION');
+                    e.stopPropagation();
+                }
+            }}
             {...getComboboxProps()}
             // ref={containerRef}
         >
