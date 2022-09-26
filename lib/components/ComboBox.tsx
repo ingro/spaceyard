@@ -85,9 +85,9 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
     function stateReducer(state: any, actionAndChanges: any) {
         const { type, changes } = actionAndChanges;
     
-        console.log(type);
-        console.log(changes);
-        console.log(state);
+        // console.log(type);
+        // console.log(changes);
+        // console.log(state);
     
         switch (type) {
             case useCombobox.stateChangeTypes.ItemClick:
