@@ -245,7 +245,7 @@ function DateField(props: any) {
     const state = useDateFieldState({
         ...props,
         locale,
-        createCalendar,
+        createCalendar
     });
 
     const ref = useRef();
@@ -342,8 +342,14 @@ function FieldButton(props: any) {
 }
 
 export function DateTimePickerInput(props: any) {
-    const state = useDatePickerState(props);
+    const finalProps = {
+        ...props,
+        'aria-label': 'Select a date'
+    };
+
+    const state = useDatePickerState(finalProps);
     const ref = useRef();
+    const triggerRef = useRef();
     const popoverRef = useRef();
 
     const overlayState = useOverlayTriggerState({});
@@ -356,24 +362,30 @@ export function DateTimePickerInput(props: any) {
         dialogProps,
         calendarProps,
         // @ts-ignore
-    } = useDatePicker(props, state, ref);
+    } = useDatePicker(finalProps, state, ref);
 
     // @ts-ignore
-    let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, ref);
+    let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, triggerRef);
 
-    const { overlayProps: positionProps } = useOverlayPosition({
+    const overlay = useOverlayPosition({
         // @ts-ignore
-        targetRef: ref,
+        targetRef: triggerRef,
         // @ts-ignore
         overlayRef: popoverRef,
-        placement: 'bottom start',
+        containerPadding: 0,
+        placement: 'bottom end',
+        // shouldFlip: false,
         offset: 4,
         isOpen: state.isOpen,
     });
 
+    const { overlayProps: positionProps } = overlay;
+
     // console.log('group', groupProps);
     // console.log('field', fieldProps);
+    // console.log('foo', foo);
     // console.log('dialog', dialogProps);
+    // console.log('position', positionProps);
     // console.log('button', buttonProps);
     // console.log('state', state);
 
@@ -408,7 +420,11 @@ export function DateTimePickerInput(props: any) {
                         )}
                         {...fieldProps}
                     />
-                    <span className="absolute flex inset-y-0 right-0 pr-1">
+                    <span 
+                        className="absolute flex inset-y-0 right-0 pr-1" 
+                        // @ts-ignore
+                        ref={triggerRef}
+                    >
                         {/* {date && (
                             <span 
                                 className="flex items-center cursor-pointer text-gray-400 hover:text-gray-700 mr-2" 
