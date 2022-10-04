@@ -90,7 +90,7 @@ export default function Forms() {
             </div>
             <div className="text text-purple-500 text-xl">Form</div>
             <div className="w-1/4 mb-2">
-                <DateTimePickerInput />
+                <DateTimePickerInput locale='it'/>
             </div>
             <div className="text text-purple-500 text-xl">Form</div>
             <form onSubmit={handleSubmit(data => console.warn(data))}>

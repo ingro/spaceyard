@@ -328,7 +328,8 @@ function FieldButton(props: any) {
     return (
         <button
             className={clsx(
-                'flex items-center cursor-pointer text-gray-400 hover:text-gray-700 outline-none select-none group-focus-within:text-primary',
+                'flex items-center cursor-pointer text-gray-400 hover:text-gray-700 outline-none select-none',
+                // group-focus-within:text-primary
                 {
                     '!text-primary': props.isOpen,
                 }
@@ -341,7 +342,19 @@ function FieldButton(props: any) {
     );
 }
 
-export function DateTimePickerInput(props: any) {
+type DateTimePickerInputProps = {
+    minValue?: any,
+    maxValue?: any,
+    value?: any,
+    label?: string,
+    locale?: string,
+    onChange?: (date: any) => void
+};
+
+export function DateTimePickerInput({
+    locale = 'en',
+    ...props
+}: DateTimePickerInputProps) {
     const finalProps = {
         ...props,
         'aria-label': 'Select a date'
@@ -367,7 +380,7 @@ export function DateTimePickerInput(props: any) {
     // @ts-ignore
     let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, triggerRef);
 
-    const overlay = useOverlayPosition({
+    const overlayPosition = useOverlayPosition({
         // @ts-ignore
         targetRef: triggerRef,
         // @ts-ignore
@@ -379,7 +392,7 @@ export function DateTimePickerInput(props: any) {
         isOpen: state.isOpen,
     });
 
-    const { overlayProps: positionProps } = overlay;
+    const { overlayProps: positionProps } = overlayPosition;
 
     // console.log('group', groupProps);
     // console.log('field', fieldProps);
@@ -397,7 +410,7 @@ export function DateTimePickerInput(props: any) {
     const { onPress, ...triggerPropsProper } = triggerProps;
 
     return (
-        <I18nProvider locale="it-IT">
+        <I18nProvider locale={locale}>
             <div>
                 <div {...labelProps} className="text-sm text-gray-800">
                     {props.label}
