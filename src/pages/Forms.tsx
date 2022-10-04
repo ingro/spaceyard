@@ -12,6 +12,7 @@ import { LoadingButton } from '../../lib/components/Buttons';
 import { NumberInputFieldController } from '../../lib/components/NumberInput';
 import { SelectFieldController } from '../../lib/components/Select';
 import { SwitchFieldController } from '../../lib/components/Switch';
+import { DateTimePickerInput } from '../../lib/components/DateTimePickerInput';
 
 const options = [
     { value: 'foo', label: 'Foo' },
@@ -86,6 +87,10 @@ export default function Forms() {
                     setSearch(q);
                     }}
                 /> */}
+            </div>
+            <div className="text text-purple-500 text-xl">Form</div>
+            <div className="w-1/4 mb-2">
+                <DateTimePickerInput />
             </div>
             <div className="text text-purple-500 text-xl">Form</div>
             <form onSubmit={handleSubmit(data => console.warn(data))}>
