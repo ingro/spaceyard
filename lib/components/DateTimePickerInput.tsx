@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 // import { usePopper } from 'react-popper';
 import { useDateFieldState, useDatePickerState } from '@react-stately/datepicker';
 import { useDateField, useDatePicker, useDateSegment } from '@react-aria/datepicker';
@@ -67,15 +67,16 @@ function CalendarCell({ state, date }: any) {
                 ref={ref}
                 hidden={isOutsideVisibleRange}
                 className={clsx('w-10 h-10 outline-none group', {
-                    'rounded-l-full': isRoundedLeft,
-                    'rounded-r-full': isRoundedRight,
+                    // 'rounded-l-full': isRoundedLeft,
+                    // 'rounded-r-full': isRoundedRight,
                     'bg-blue-300': isSelected && !isInvalid,
                     'bg-red-300': isSelected && isInvalid,
                     disabled: isDisabled,
                 })}
             >
                 <div
-                    className={clsx('w-full h-full rounded-full flex items-center justify-center', {
+                    className={clsx('w-full h-full flex items-center justify-center', {
+                        // rounded-full
                         'text-gray-400': isDisabled && !isInvalid,
                         'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
                         'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
@@ -161,6 +162,7 @@ export function CalendarButton(props: any) {
 
 function Calendar(props: any) {
     const { locale } = useLocale();
+    const [depth, setDepth] = useState('day');
 
     const state = useCalendarState({
         ...props,
@@ -168,7 +170,7 @@ function Calendar(props: any) {
         createCalendar,
     });
 
-    // console.log(state);
+    console.log(state);
 
     const ref = useRef();
     const { calendarProps, prevButtonProps, nextButtonProps, title } = useCalendar(
@@ -178,6 +180,8 @@ function Calendar(props: any) {
         ref
     );
 
+    console.log(calendarProps);
+
     return (
         <div
             {...calendarProps}
@@ -186,10 +190,33 @@ function Calendar(props: any) {
             className="inline-block text-gray-800"
         >
             <div className="flex items-center pb-4">
-                <h2 className="flex-1 font-bold text-xl ml-2">{capitalizeFirstLetter(title)}</h2>
                 <CalendarButton {...prevButtonProps}>
                     <FiChevronLeft />
                 </CalendarButton>
+                {depth === 'day' && (
+                    <h2 
+                        className="flex-1 font-bold text-xl ml-2 text-center cursor-pointer"
+                        onClick={() => setDepth('month')}
+                    >
+                        {capitalizeFirstLetter(title)}
+                    </h2>
+                )}
+                {depth === 'month' && (
+                    <h2
+                        className="flex-1 font-bold text-xl ml-2 text-center cursor-pointer"
+                        onClick={() => setDepth('year')}
+                    >
+                        {state.focusedDate.year}
+                    </h2>
+                )}
+                {depth === 'year' && (
+                    <h2
+                        className="flex-1 font-bold text-xl ml-2 text-center"
+                        // onClick={() => setDepth('year')}
+                    >
+                        DECADE
+                    </h2>
+                )}
                 <CalendarButton {...nextButtonProps}>
                     <FiChevronRight />
                 </CalendarButton>
