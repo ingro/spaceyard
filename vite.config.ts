@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import reactRefresh from "@vitejs/plugin-react-refresh";
+import react from "@vitejs/plugin-react";
 // import dynamicImport from 'vite-plugin-dynamic-import';
 // import importDynamicModule from 'vite-plugin-dynamic-import-module';
 // import typescript2 from "rollup-plugin-typescript2";
@@ -12,8 +12,7 @@ export default ({ command, mode }) => {
   return defineConfig({
     // esbuild: command === 'build' ? false : {},
     plugins: [
-      /** @ts-ignore */
-      reactRefresh(), 
+      react(), 
       // dynamicImport()
       // {...typescript2({ 
       //   check: false,

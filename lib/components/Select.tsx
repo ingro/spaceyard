@@ -17,6 +17,7 @@ type SelectProps = {
     dropdownFixed?: boolean;
     dropdownPosition?: 'top' | 'bottom';
     id?: string;
+    initialIsOpen?: boolean;
     name?: string;
     onChange?: (item: any) => void;
     options: Array<SelectOption>;
@@ -34,7 +35,8 @@ export function Select({
     onChange, 
     value,
     showClearBtn = false, 
-    id, 
+    id,
+    initialIsOpen = false,
     dropdownPosition = 'bottom', 
     dropdownFixed = false 
 }: SelectProps) {
@@ -71,6 +73,7 @@ export function Select({
             }
         },
         selectedItem: selectValue,
+        initialIsOpen,
         id 
     });
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import { usePopper } from 'react-popper';
 import { useDateFieldState, useDatePickerState } from '@react-stately/datepicker';
 import { useDateField, useDatePicker, useDateSegment } from '@react-aria/datepicker';
@@ -17,17 +17,18 @@ import {
     useOverlayTrigger,
 } from '@react-aria/overlays';
 import { mergeProps } from '@react-aria/utils';
-import { useLocale, I18nProvider } from '@react-aria/i18n';
+import { useLocale, I18nProvider, useDateFormatter } from '@react-aria/i18n';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { isSameDay } from 'date-fns';
 import clsx from 'clsx';
+import { Select } from './Select';
 
 function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function CalendarCell({ state, date }: any) {
+function CalendarCellTable({ state, date }: any) {
     const ref = useRef();
     const {
         cellProps,
@@ -66,7 +67,7 @@ function CalendarCell({ state, date }: any) {
                 // @ts-ignore
                 ref={ref}
                 hidden={isOutsideVisibleRange}
-                className={clsx('w-10 h-10 outline-none group', {
+                className={clsx('w-11 h-11 outline-none group', {
                     // 'rounded-l-full': isRoundedLeft,
                     // 'rounded-r-full': isRoundedRight,
                     'bg-blue-300': isSelected && !isInvalid,
@@ -97,7 +98,76 @@ function CalendarCell({ state, date }: any) {
     );
 }
 
-function CalendarGrid({ state, ...props }: any) {
+function CalendarCell({ state, date }: any) {
+    const ref = useRef();
+    const {
+        cellProps,
+        buttonProps,
+        isSelected,
+        isOutsideVisibleRange,
+        isDisabled,
+        formattedDate,
+        isInvalid,
+        // @ts-ignore
+    } = useCalendarCell({ date }, state, ref);
+
+    // The start and end date of the selected range will have
+    // an emphasized appearance.
+    const isSelectionStart = state.highlightedRange ? isSameDay(date, state.highlightedRange.start) : isSelected;
+    const isSelectionEnd = state.highlightedRange ? isSameDay(date, state.highlightedRange.end) : isSelected;
+
+    // We add rounded corners on the left for the first day of the month,
+    // the first day of each week, and the start date of the selection.
+    // We add rounded corners on the right for the last day of the month,
+    // the last day of each week, and the end date of the selection.
+    // const { locale } = useLocale();
+    const dayOfWeek = getDayOfWeek(date, 'it');
+    // const isRoundedLeft = isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
+    // const isRoundedRight = isSelected && (isSelectionEnd || dayOfWeek === 6 || date.day === date.calendar.getDaysInMonth(date));
+
+    // const { focusProps, isFocusVisible } = useFocusRing();
+
+    let isFocusVisible = false;
+
+    return (
+        <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
+            <div
+                {...buttonProps}
+                // @ts-ignore
+                ref={ref}
+                hidden={isOutsideVisibleRange}
+                className={clsx('h-10 outline-none group', {
+                    // 'rounded-l-full': isRoundedLeft,
+                    // 'rounded-r-full': isRoundedRight,
+                    'bg-blue-300': isSelected && !isInvalid,
+                    'bg-red-300': isSelected && isInvalid,
+                    disabled: isDisabled,
+                })}
+            >
+                <div
+                    className={clsx('w-full h-full flex items-center justify-center', {
+                        // rounded-full
+                        'text-gray-400': isDisabled && !isInvalid,
+                        'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
+                        'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
+                        'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
+                        'hover:bg-red-400':
+                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
+                        'hover:bg-blue-400':
+                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
+                        'hover:bg-blue-100': !isSelected && !isDisabled,
+                        'cursor-default': isDisabled || isSelected,
+                        'cursor-pointer': !isSelected && !isDisabled,
+                    })}
+                >
+                    {formattedDate}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function CalendarGridTable({ state, ...props }: any) {
     const { locale } = useLocale();
     const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
 
@@ -131,6 +201,40 @@ function CalendarGrid({ state, ...props }: any) {
     );
 }
 
+function CalendarGrid({ state, ...props }: any) {
+    const { locale } = useLocale();
+    const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
+
+    // Get the number of weeks in the month so we can render the proper number of rows.
+    const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale); // Gestire locale date-fns come secondo parametro
+
+    // console.log(gridProps);
+
+    return (
+        <div {...gridProps}>
+            <div {...headerProps} className="text-gray-600 grid grid-cols-7 justify-items-stretch">
+                {weekDays.map((day, index) => (
+                    <div className="text-center" key={index}>
+                        {day}
+                    </div>
+                ))}
+            </div>
+            <div>
+                {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
+                    <div key={weekIndex} className="grid grid-cols-7 justify-items-stretch">
+                        {state
+                            .getDatesInWeek(weekIndex)
+                            // @ts-ignore
+                            .map((date, i) =>
+                                date ? <CalendarCell key={i} state={state} date={date} /> : <div key={i} />
+                            )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export function CalendarButton(props: any) {
     const ref = useRef();
     // @ts-ignore
@@ -160,9 +264,64 @@ export function CalendarButton(props: any) {
     );
 }
 
+function MonthGrid({ state, onSelect }: any) {
+    let months: Array<any> = [];
+
+    let formatter = useDateFormatter({
+        month: "long",
+        timeZone: state.timeZone
+    });
+
+    const numMonths = state.focusedDate.calendar.getMonthsInYear(state.focusedDate);
+
+    for (let i = 1; i <= numMonths; i++) {
+        let date = state.focusedDate.set({ month: i });
+        // months.push(i);
+        months.push(formatter.format(date.toDate(state.timeZone)));
+    }
+
+    return (
+        <div className="grid grid-cols-3 justify-items-stretch gap-0.5">
+            {months.map((month, i) => (
+                <div 
+                    key={i}
+                    className={clsx('h-16 flex items-center border cursor-pointer', {
+                        'bg-blue-600 text-white': month === state.focusedDate.month,
+                        'hover:bg-blue-400': month !== state.focusedDate.month
+                    })}
+                    onClick={() => {
+                        const date = state.focusedDate.set({ month: i + 1 });
+                        state.setFocusedDate(date);
+
+                        onSelect();
+                    }}
+                >
+                    <div className="grow text-center">{month}</div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function getYearOptions(focusedDate: any) {
+    let years = [];
+
+    for (let i = -20; i <= 20; i++) {
+        let date = focusedDate.add({ years: i });
+
+        years.push({
+            value: '' + date.year,
+            label: '' + date.year
+        });
+    }
+
+    return years;
+}
+
 function Calendar(props: any) {
     const { locale } = useLocale();
     const [depth, setDepth] = useState('day');
+    const [showYearSelect, setShowYearSelect] = useState(false);
 
     const state = useCalendarState({
         ...props,
@@ -170,7 +329,7 @@ function Calendar(props: any) {
         createCalendar,
     });
 
-    console.log(state);
+    // console.log(state);
 
     const ref = useRef();
     const { calendarProps, prevButtonProps, nextButtonProps, title } = useCalendar(
@@ -180,17 +339,30 @@ function Calendar(props: any) {
         ref
     );
 
-    console.log(calendarProps);
+    useEffect(() => {
+        if (depth !== 'month') {
+            setShowYearSelect(false);
+        }
+    }, [depth]);
+
+    // console.log(state);
+
+    // console.log(nextButtonProps);
+    // console.log(calendarProps);
 
     return (
         <div
             {...calendarProps}
             // @ts-ignore
             ref={ref}
-            className="inline-block text-gray-800"
+            className="inline-block text-gray-800 w-full"
         >
             <div className="flex items-center pb-4">
-                <CalendarButton {...prevButtonProps}>
+                <CalendarButton 
+                    {...prevButtonProps}
+                    // @ts-ignore
+                    onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusPreviousSection(true)}
+                >
                     <FiChevronLeft />
                 </CalendarButton>
                 {depth === 'day' && (
@@ -203,25 +375,41 @@ function Calendar(props: any) {
                 )}
                 {depth === 'month' && (
                     <h2
-                        className="flex-1 font-bold text-xl ml-2 text-center cursor-pointer"
-                        onClick={() => setDepth('year')}
+                        className="flex-1 flex font-bold text-xl ml-2 text-center cursor-pointer h-10 items-center"
+                        onClick={() => setShowYearSelect(true)}
                     >
-                        {state.focusedDate.year}
+                        {showYearSelect ? 
+                            (<div className="grow">
+                                <Select 
+                                    options={getYearOptions(state.focusedDate)}
+                                    value={'' + state.focusedDate.year}
+                                    initialIsOpen={true}
+                                    onChange={(o) => {
+                                        const date = state.focusedDate.set({ year: parseInt(o.value) });
+                                        state.setFocusedDate(date);
+                                        
+                                        setShowYearSelect(false);
+                                    }} 
+                                />
+                            </div>)
+                            : (<div className="grow">{state.focusedDate.year}</div>)
+                        }
                     </h2>
                 )}
-                {depth === 'year' && (
-                    <h2
-                        className="flex-1 font-bold text-xl ml-2 text-center"
-                        // onClick={() => setDepth('year')}
-                    >
-                        DECADE
-                    </h2>
-                )}
-                <CalendarButton {...nextButtonProps}>
+                <CalendarButton 
+                    {...nextButtonProps} 
+                    // @ts-ignore
+                    onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusNextSection(true)}
+                >
                     <FiChevronRight />
                 </CalendarButton>
             </div>
-            <CalendarGrid state={state} />
+            {depth === 'day' && (
+                <CalendarGrid state={state} />
+            )}
+            {depth === 'month' && (
+                <MonthGrid state={state} onSelect={() => setDepth('day')}/>
+            )}
         </div>
     );
 }
@@ -333,7 +521,7 @@ const Popover = React.forwardRef((props: any, ref) => {
                 {...mergeProps(overlayProps, modalProps, dialogProps)}
                 // @ts-ignore
                 ref={ref}
-                className="bg-white border border-gray-300 rounded-md shadow-lg p-4"
+                className="bg-white border border-gray-300 rounded-md shadow-lg pt-4 px-1 pb-2 w-80"
                 style={props.style}
             >
                 {children}
