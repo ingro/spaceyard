@@ -144,6 +144,8 @@ function CalendarCell({ state, date }: any) {
                 // @ts-ignore
                 ref={ref}
                 hidden={isOutsideVisibleRange}
+                // non é possibile cliccare sui giorni fuori dal mese corrente anche se è possibile renderli visibili,
+                // attendere implementazione su react-aria -> https://github.com/adobe/react-spectrum/issues/3257
                 className={clsx('h-10 outline-none group', {
                     // 'rounded-l-full': isRoundedLeft,
                     // 'rounded-r-full': isRoundedRight,
