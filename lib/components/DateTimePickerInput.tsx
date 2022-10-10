@@ -5,7 +5,7 @@ import { useDateField, useDatePicker, useDateSegment } from '@react-aria/datepic
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { createCalendar, getDayOfWeek, getWeeksInMonth } from '@internationalized/date';
+import { GregorianCalendar, getDayOfWeek, getWeeksInMonth } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -100,6 +100,11 @@ function CalendarCellTable({ state, date }: any) {
 
 function CalendarCell({ state, date }: any) {
     const ref = useRef();
+
+    // console.log(state);
+
+    // @ts-ignore
+    const calendarCellAria = useCalendarCell({ date }, state, ref);
     const {
         cellProps,
         buttonProps,
@@ -109,7 +114,10 @@ function CalendarCell({ state, date }: any) {
         formattedDate,
         isInvalid,
         // @ts-ignore
-    } = useCalendarCell({ date }, state, ref);
+    } = calendarCellAria;
+
+    // console.log(calendarCellAria);
+    // console.log(state);
 
     // The start and end date of the selected range will have
     // an emphasized appearance.
@@ -207,8 +215,6 @@ function CalendarGrid({ state, ...props }: any) {
 
     // Get the number of weeks in the month so we can render the proper number of rows.
     const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale); // Gestire locale date-fns come secondo parametro
-
-    // console.log(gridProps);
 
     return (
         <div {...gridProps}>
@@ -323,13 +329,22 @@ function Calendar(props: any) {
     const [depth, setDepth] = useState('day');
     const [showYearSelect, setShowYearSelect] = useState(false);
 
-    const state = useCalendarState({
+    let state = useCalendarState({
         ...props,
         locale,
-        createCalendar,
+        createCalendar: () => new GregorianCalendar(),
     });
 
-    // console.log(state);
+    // const originalIsCellDisabled = state.isCellDisabled;
+
+    // state.isCellDisabled = (date) => {
+    //     console.log(date);
+    //     const res = originalIsCellDisabled(date);
+
+    //     console.log(res);
+
+    //     return res;
+    // }
 
     const ref = useRef();
     const { calendarProps, prevButtonProps, nextButtonProps, title } = useCalendar(
@@ -361,7 +376,7 @@ function Calendar(props: any) {
                 <CalendarButton 
                     {...prevButtonProps}
                     // @ts-ignore
-                    onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusPreviousSection(true)}
+                    onPress={() => depth === 'day' ? prevButtonProps.onPress() : state.focusPreviousSection(true)}
                 >
                     <FiChevronLeft />
                 </CalendarButton>
@@ -420,8 +435,12 @@ function DateSegment({ segment, state }: any) {
     const { segmentProps } = useDateSegment(segment, state, ref);
 
     // console.log(segmentProps);
+    // console.log(segment);
 
     // const { id, ...rest } = segmentProps;
+
+    // console.log(segment.type);
+    // console.log(String(segment.maxValue).length + 'ch');
 
     return (
         <div
@@ -440,7 +459,7 @@ function DateSegment({ segment, state }: any) {
             {/* Always reserve space for the placeholder, to prevent layout shift when editing. */}
             <span
                 aria-hidden="true"
-                className="block w-full text-center italic text-gray-500 group-focus:text-white"
+                className="block w-full text-center font-mono italic text-gray-500 group-focus:text-white"
                 style={{
                     // @ts-ignore
                     visibility: segment.isPlaceholder ? '' : 'hidden',
@@ -460,7 +479,7 @@ function DateField(props: any) {
     const state = useDateFieldState({
         ...props,
         locale,
-        createCalendar
+        createCalendar: () => new GregorianCalendar()
     });
 
     const ref = useRef();
@@ -591,6 +610,8 @@ export function DateTimePickerInput({
         calendarProps,
         // @ts-ignore
     } = useDatePicker(finalProps, state, ref);
+
+    console.log(calendarProps);
 
     // @ts-ignore
     let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, triggerRef);
