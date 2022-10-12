@@ -5,7 +5,7 @@ import { useDateField, useDatePicker, useDateSegment } from '@react-aria/datepic
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { GregorianCalendar, getDayOfWeek, getWeeksInMonth } from '@internationalized/date';
+import { GregorianCalendar, getDayOfWeek, getWeeksInMonth, CalendarDate } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -22,6 +22,7 @@ import { useOverlayTriggerState } from '@react-stately/overlays';
 import { FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { isSameDay } from 'date-fns';
 import clsx from 'clsx';
+
 import { Select } from './Select';
 
 function capitalizeFirstLetter(text: string) {
@@ -282,10 +283,19 @@ function MonthGrid({ state, onSelect }: any) {
 
     const numMonths = state.focusedDate.calendar.getMonthsInYear(state.focusedDate);
 
+    const d = new Date();
+    const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getUTCDate());
+
     for (let i = 1; i <= numMonths; i++) {
         let date = state.focusedDate.set({ month: i });
-        // months.push(i);
-        months.push(formatter.format(date.toDate(state.timeZone)));
+
+        // console.log(state);
+        
+        months.push({
+            label: formatter.format(date.toDate(state.timeZone)),
+            disabled: date.compare(state.minValue) < 0 || state.maxValue.compare(date) < 0,
+            current: date.compare(today) === 0
+        });
     }
 
     return (
@@ -293,18 +303,25 @@ function MonthGrid({ state, onSelect }: any) {
             {months.map((month, i) => (
                 <div 
                     key={i}
-                    className={clsx('h-16 flex items-center border cursor-pointer', {
-                        'bg-blue-600 text-white': month === state.focusedDate.month,
-                        'hover:bg-blue-400': month !== state.focusedDate.month
+                    className={clsx('h-16 flex items-center border', {
+                        'bg-blue-600 text-white': month.label === state.focusedDate.month && !month.disabled,
+                        'hover:bg-blue-400': month.label !== state.focusedDate.month && !month.disabled,
+                        'bg-yellow-200': month.current && month.label !== state.focusedDate.month,
+                        'bg-slate-200': month.disabled,
+                        'cursor-pointer': !month.disabled
                     })}
                     onClick={() => {
+                        if (month.disabled) {
+                            return;
+                        }
+
                         const date = state.focusedDate.set({ month: i + 1 });
                         state.setFocusedDate(date);
 
                         onSelect();
                     }}
                 >
-                    <div className="grow text-center">{month}</div>
+                    <div className="grow text-center">{month.label}</div>
                 </div>
             ))}
         </div>
@@ -613,7 +630,7 @@ export function DateTimePickerInput({
         // @ts-ignore
     } = useDatePicker(finalProps, state, ref);
 
-    console.log(calendarProps);
+    // console.log(calendarProps);
 
     // @ts-ignore
     let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, triggerRef);

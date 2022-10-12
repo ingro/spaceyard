@@ -91,7 +91,11 @@ export default function Forms() {
             </div>
             <div className="text text-purple-500 text-xl">Form</div>
             <div className="w-1/4 mb-2">
-                <DateTimePickerInput locale='it' minValue={today(getLocalTimeZone())} maxValue={today(getLocalTimeZone()).add({ months: 3 })}/>
+                <DateTimePickerInput 
+                    locale='it' 
+                    minValue={today(getLocalTimeZone())} 
+                    maxValue={today(getLocalTimeZone()).add({ months: 3 })}
+                />
             </div>
             <div className="text text-purple-500 text-xl">Form</div>
             <form onSubmit={handleSubmit(data => console.warn(data))}>
@@ -167,6 +171,7 @@ export default function Forms() {
                         asString={true}
                         label="Data di nascita"
                         placeholder="Inserisci data"
+                        minDate={new Date()}
                         // onChange={d => {
                         //     console.log(d);
                         //     setDate(d);
