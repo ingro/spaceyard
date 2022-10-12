@@ -92,7 +92,8 @@ export default function Forms() {
             <div className="text text-purple-500 text-xl">Form</div>
             <div className="w-1/4 mb-2">
                 <DateTimePickerInput 
-                    locale='it' 
+                    locale='it'
+                    granularity="second"
                     minValue={today(getLocalTimeZone())} 
                     maxValue={today(getLocalTimeZone()).add({ months: 3 })}
                 />

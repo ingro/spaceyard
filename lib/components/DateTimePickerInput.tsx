@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 // import { usePopper } from 'react-popper';
-import { useDateFieldState, useDatePickerState } from '@react-stately/datepicker';
-import { useDateField, useDatePicker, useDateSegment } from '@react-aria/datepicker';
+import { useDateFieldState, useDatePickerState, useTimeFieldState } from '@react-stately/datepicker';
+import { useDateField, useDatePicker, useDateSegment, useTimeField } from '@react-aria/datepicker';
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
@@ -24,6 +24,7 @@ import { isSameDay } from 'date-fns';
 import clsx from 'clsx';
 
 import { Select } from './Select';
+import { Input } from './Input';
 
 function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -138,6 +139,11 @@ function CalendarCell({ state, date }: any) {
 
     let isFocusVisible = false;
 
+    const d = new Date();
+    const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getUTCDate());
+
+    const isToday = today.compare(date) === 0;
+
     return (
         <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
             <div
@@ -162,6 +168,7 @@ function CalendarCell({ state, date }: any) {
                         'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
                         'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
                         'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
+                        'bg-yellow-200': isToday && !isSelectionStart && !isSelectionEnd,
                         'hover:bg-red-400':
                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
                         'hover:bg-blue-400':
@@ -305,9 +312,9 @@ function MonthGrid({ state, onSelect }: any) {
                     key={i}
                     className={clsx('h-16 flex items-center border', {
                         'bg-blue-600 text-white': month.label === state.focusedDate.month && !month.disabled,
-                        'hover:bg-blue-400': month.label !== state.focusedDate.month && !month.disabled,
+                        'hover:bg-blue-100': month.label !== state.focusedDate.month && !month.disabled,
                         'bg-yellow-200': month.current && month.label !== state.focusedDate.month,
-                        'bg-slate-200': month.disabled,
+                        'bg-slate-100 text-gray-400': month.disabled,
                         'cursor-pointer': !month.disabled
                     })}
                     onClick={() => {
@@ -379,7 +386,7 @@ function Calendar(props: any) {
         }
     }, [depth]);
 
-    // console.log(state);
+    console.log(state);
 
     // console.log(nextButtonProps);
     // console.log(calendarProps);
@@ -439,7 +446,27 @@ function Calendar(props: any) {
                 </CalendarButton>
             </div>
             {depth === 'day' && (
-                <CalendarGrid state={state} />
+                <>
+                    <CalendarGrid state={state} />
+                    {props.granularity === 'second' && (
+                        <div className="w-1/3 mt-4">
+                            <label htmlFor="">Time</label>
+                            <TimeField 
+                                className={clsx(
+                                    'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
+                                    // {
+                                    //     'group-hover:border-gray-400': !state.isOpen,
+                                    //     '!border-primary': state.isOpen,
+                                    // }
+                                )}
+                                value={props.timeValue}
+                                onChange={props.setTimeValue}
+                                granularity={props.granularity}
+                                // {...fieldProps}
+                            />
+                        </div>
+                    )}
+                </>
             )}
             {depth === 'month' && (
                 <MonthGrid state={state} onSelect={() => setDepth('day')}/>
@@ -504,6 +531,34 @@ function DateField(props: any) {
     const ref = useRef();
     // @ts-ignore
     const { fieldProps } = useDateField(props, state, ref);
+
+    return (
+        <div
+            {...fieldProps}
+            // @ts-ignore
+            ref={ref}
+            className={props.className}
+        >
+            {state.segments.map((segment, i) => (
+                <DateSegment key={i} segment={segment} state={state} />
+            ))}
+        </div>
+    );
+}
+
+function TimeField(props: any) {
+    const { locale } = useLocale();
+    const state = useTimeFieldState({
+        ...props,
+        locale,
+        createCalendar: () => new GregorianCalendar()
+    });
+
+    const ref = useRef();
+    // @ts-ignore
+    const { labelProps, fieldProps } = useTimeField(props, state, ref);
+
+    // console.log(fieldProps);
 
     return (
         <div
@@ -599,6 +654,7 @@ type DateTimePickerInputProps = {
     minValue?: any,
     maxValue?: any,
     value?: any,
+    granularity?: any,
     label?: string,
     locale?: string,
     onChange?: (date: any) => void
@@ -715,7 +771,7 @@ export function DateTimePickerInput({
                                     state.setOpen(false);
                                 }}
                             >
-                                <Calendar {...calendarProps} />
+                                <Calendar {...calendarProps} granularity={props.granularity} timeValue={state.timeValue} setTimeValue={state.setTimeValue}/>
                             </Popover>
                         </OverlayContainer>
                     )}
