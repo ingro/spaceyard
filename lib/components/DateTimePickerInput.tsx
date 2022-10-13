@@ -386,7 +386,7 @@ function Calendar(props: any) {
         }
     }, [depth]);
 
-    console.log(state);
+    // console.log(state);
 
     // console.log(nextButtonProps);
     // console.log(calendarProps);
@@ -449,8 +449,7 @@ function Calendar(props: any) {
                 <>
                     <CalendarGrid state={state} />
                     {props.granularity === 'second' && (
-                        <div className="w-1/3 mt-4">
-                            <label htmlFor="">Time</label>
+                        <div className="w-1/3 mt-2 ml-2">
                             <TimeField 
                                 className={clsx(
                                     'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
@@ -462,6 +461,7 @@ function Calendar(props: any) {
                                 value={props.timeValue}
                                 onChange={props.setTimeValue}
                                 granularity={props.granularity}
+                                label="Time"
                                 // {...fieldProps}
                             />
                         </div>
@@ -525,6 +525,7 @@ function DateField(props: any) {
     const state = useDateFieldState({
         ...props,
         locale,
+        hideTimeZone: true,
         createCalendar: () => new GregorianCalendar()
     });
 
@@ -551,6 +552,7 @@ function TimeField(props: any) {
     const state = useTimeFieldState({
         ...props,
         locale,
+        hideTimeZone: true,
         createCalendar: () => new GregorianCalendar()
     });
 
@@ -558,19 +560,20 @@ function TimeField(props: any) {
     // @ts-ignore
     const { labelProps, fieldProps } = useTimeField(props, state, ref);
 
-    // console.log(fieldProps);
-
     return (
-        <div
-            {...fieldProps}
-            // @ts-ignore
-            ref={ref}
-            className={props.className}
-        >
-            {state.segments.map((segment, i) => (
-                <DateSegment key={i} segment={segment} state={state} />
-            ))}
-        </div>
+        <>
+            <label className="font-bold" {...labelProps}>{props.label}</label>
+            <div
+                {...fieldProps}
+                // @ts-ignore
+                ref={ref}
+                className={props.className}
+            >
+                {state.segments.map((segment, i) => (
+                    <DateSegment key={i} segment={segment} state={state} />
+                ))}
+            </div>
+        </>
     );
 }
 
@@ -654,6 +657,7 @@ type DateTimePickerInputProps = {
     minValue?: any,
     maxValue?: any,
     value?: any,
+    defaultValue?: any,
     granularity?: any,
     label?: string,
     locale?: string,
@@ -720,6 +724,9 @@ export function DateTimePickerInput({
 
     const { onPress, ...triggerPropsProper } = triggerProps;
 
+    console.log(state.value);
+    console.log(state.validationState);
+
     return (
         <I18nProvider locale={locale}>
             <div>
@@ -740,6 +747,7 @@ export function DateTimePickerInput({
                             {
                                 'group-hover:border-gray-400': !state.isOpen,
                                 '!border-primary': state.isOpen,
+                                '!border-red-500': state.validationState === 'invalid'
                             }
                         )}
                         {...fieldProps}

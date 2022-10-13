@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
-import { today, getLocalTimeZone } from "@internationalized/date";
+import { now, today, getLocalTimeZone } from "@internationalized/date";
 
 import { CheckboxFieldController } from '../../lib/components/Checkbox';
 import { ComboBoxFieldController } from '../../lib/components/ComboBox';
@@ -94,6 +94,7 @@ export default function Forms() {
                 <DateTimePickerInput 
                     locale='it'
                     granularity="second"
+                    defaultValue={now(getLocalTimeZone())}
                     minValue={today(getLocalTimeZone())} 
                     maxValue={today(getLocalTimeZone()).add({ months: 3 })}
                 />
