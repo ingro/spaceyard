@@ -93,7 +93,9 @@ export default function Forms() {
             <div className="w-1/4 mb-2">
                 <DateTimePickerInput 
                     locale='it'
+                    // granularity="day"
                     granularity="second"
+                    showTimeScroller={true}
                     defaultValue={now(getLocalTimeZone())}
                     minValue={today(getLocalTimeZone())} 
                     maxValue={today(getLocalTimeZone()).add({ months: 3 })}

@@ -474,7 +474,7 @@ function Calendar(props: any) {
                         </div>
                     )}
                 </div>
-                {props.granularity === 'second' && depth === 'day' && (
+                {props.granularity === 'second' && depth === 'day' && props.showTimeScroller && (
                     <div className={clsx('px-4 overflow-y-auto', {
                         'max-h-[20rem]': weeksInMonth === 4,
                         'max-h-[22.5rem]': weeksInMonth === 5,
@@ -687,7 +687,10 @@ const Popover = React.forwardRef((props: any, ref) => {
                 {...mergeProps(overlayProps, modalProps, dialogProps)}
                 // @ts-ignore
                 ref={ref}
-                className="bg-white border border-gray-300 rounded-md shadow-lg pt-4 px-1 pb-2 w-96"
+                className={clsx("bg-white border border-gray-300 rounded-md shadow-lg pt-4 px-1 pb-2", {
+                    'w-96': props.granularity === 'second' && props.showTimeScroller,
+                    'w-80': props.granularity !== 'second' || !props.showTimeScroller,
+                })}
                 style={props.style}
             >
                 {children}
@@ -731,11 +734,13 @@ type DateTimePickerInputProps = {
     granularity?: any,
     label?: string,
     locale?: string,
-    onChange?: (date: any) => void
+    onChange?: (date: any) => void,
+    showTimeScroller?: boolean
 };
 
 export function DateTimePickerInput({
     locale = 'en',
+    showTimeScroller = false,
     ...props
 }: DateTimePickerInputProps) {
     const finalProps = {
@@ -778,14 +783,6 @@ export function DateTimePickerInput({
     });
 
     const { overlayProps: positionProps } = overlayPosition;
-
-    // console.log('group', groupProps);
-    // console.log('field', fieldProps);
-    // console.log('foo', foo);
-    // console.log('dialog', dialogProps);
-    // console.log('position', positionProps);
-    // console.log('button', buttonProps);
-    // console.log('state', state);
 
     // const [referenceElement, setReferenceElement] = useState(null);
     // const [popperElement, setPopperElement] = useState(null);
@@ -845,8 +842,16 @@ export function DateTimePickerInput({
                                 onClose={() => {
                                     state.setOpen(false);
                                 }}
+                                granularity={props.granularity}
+                                showTimeScroller={showTimeScroller}
                             >
-                                <Calendar {...calendarProps} granularity={props.granularity} timeValue={state.timeValue} setTimeValue={state.setTimeValue}/>
+                                <Calendar 
+                                    {...calendarProps} 
+                                    granularity={props.granularity} 
+                                    timeValue={state.timeValue} 
+                                    setTimeValue={state.setTimeValue}
+                                    showTimeScroller={showTimeScroller}
+                                />
                             </Popover>
                         </OverlayContainer>
                     )}
