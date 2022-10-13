@@ -29,75 +29,75 @@ function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function CalendarCellTable({ state, date }: any) {
-    const ref = useRef();
-    const {
-        cellProps,
-        buttonProps,
-        isSelected,
-        isOutsideVisibleRange,
-        isDisabled,
-        formattedDate,
-        isInvalid,
-        // @ts-ignore
-    } = useCalendarCell({ date }, state, ref);
+// function CalendarCellTable({ state, date }: any) {
+//     const ref = useRef();
+//     const {
+//         cellProps,
+//         buttonProps,
+//         isSelected,
+//         isOutsideVisibleRange,
+//         isDisabled,
+//         formattedDate,
+//         isInvalid,
+//         // @ts-ignore
+//     } = useCalendarCell({ date }, state, ref);
 
-    // The start and end date of the selected range will have
-    // an emphasized appearance.
-    const isSelectionStart = state.highlightedRange ? isSameDay(date, state.highlightedRange.start) : isSelected;
-    const isSelectionEnd = state.highlightedRange ? isSameDay(date, state.highlightedRange.end) : isSelected;
+//     // The start and end date of the selected range will have
+//     // an emphasized appearance.
+//     const isSelectionStart = state.highlightedRange ? isSameDay(date, state.highlightedRange.start) : isSelected;
+//     const isSelectionEnd = state.highlightedRange ? isSameDay(date, state.highlightedRange.end) : isSelected;
 
-    // We add rounded corners on the left for the first day of the month,
-    // the first day of each week, and the start date of the selection.
-    // We add rounded corners on the right for the last day of the month,
-    // the last day of each week, and the end date of the selection.
-    // const { locale } = useLocale();
-    const dayOfWeek = getDayOfWeek(date, 'it');
-    const isRoundedLeft = isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
-    const isRoundedRight =
-        isSelected && (isSelectionEnd || dayOfWeek === 6 || date.day === date.calendar.getDaysInMonth(date));
+//     // We add rounded corners on the left for the first day of the month,
+//     // the first day of each week, and the start date of the selection.
+//     // We add rounded corners on the right for the last day of the month,
+//     // the last day of each week, and the end date of the selection.
+//     // const { locale } = useLocale();
+//     const dayOfWeek = getDayOfWeek(date, 'it');
+//     const isRoundedLeft = isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
+//     const isRoundedRight =
+//         isSelected && (isSelectionEnd || dayOfWeek === 6 || date.day === date.calendar.getDaysInMonth(date));
 
-    // const { focusProps, isFocusVisible } = useFocusRing();
+//     // const { focusProps, isFocusVisible } = useFocusRing();
 
-    let isFocusVisible = false;
+//     let isFocusVisible = false;
 
-    return (
-        <td {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
-            <div
-                {...buttonProps}
-                // @ts-ignore
-                ref={ref}
-                hidden={isOutsideVisibleRange}
-                className={clsx('w-11 h-11 outline-none group', {
-                    // 'rounded-l-full': isRoundedLeft,
-                    // 'rounded-r-full': isRoundedRight,
-                    'bg-blue-300': isSelected && !isInvalid,
-                    'bg-red-300': isSelected && isInvalid,
-                    disabled: isDisabled,
-                })}
-            >
-                <div
-                    className={clsx('w-full h-full flex items-center justify-center', {
-                        // rounded-full
-                        'text-gray-400': isDisabled && !isInvalid,
-                        'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
-                        'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
-                        'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
-                        'hover:bg-red-400':
-                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
-                        'hover:bg-blue-400':
-                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
-                        'hover:bg-blue-100': !isSelected && !isDisabled,
-                        'cursor-default': isDisabled || isSelected,
-                        'cursor-pointer': !isSelected && !isDisabled,
-                    })}
-                >
-                    {formattedDate}
-                </div>
-            </div>
-        </td>
-    );
-}
+//     return (
+//         <td {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
+//             <div
+//                 {...buttonProps}
+//                 // @ts-ignore
+//                 ref={ref}
+//                 hidden={isOutsideVisibleRange}
+//                 className={clsx('w-11 h-11 outline-none group', {
+//                     // 'rounded-l-full': isRoundedLeft,
+//                     // 'rounded-r-full': isRoundedRight,
+//                     'bg-blue-300': isSelected && !isInvalid,
+//                     'bg-red-300': isSelected && isInvalid,
+//                     disabled: isDisabled,
+//                 })}
+//             >
+//                 <div
+//                     className={clsx('w-full h-full flex items-center justify-center', {
+//                         // rounded-full
+//                         'text-gray-400': isDisabled && !isInvalid,
+//                         'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
+//                         'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
+//                         'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
+//                         'hover:bg-red-400':
+//                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
+//                         'hover:bg-blue-400':
+//                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
+//                         'hover:bg-blue-100': !isSelected && !isDisabled,
+//                         'cursor-default': isDisabled || isSelected,
+//                         'cursor-pointer': !isSelected && !isDisabled,
+//                     })}
+//                 >
+//                     {formattedDate}
+//                 </div>
+//             </div>
+//         </td>
+//     );
+// }
 
 function CalendarCell({ state, date }: any) {
     const ref = useRef();
@@ -184,39 +184,39 @@ function CalendarCell({ state, date }: any) {
     );
 }
 
-function CalendarGridTable({ state, ...props }: any) {
-    const { locale } = useLocale();
-    const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
+// function CalendarGridTable({ state, ...props }: any) {
+//     const { locale } = useLocale();
+//     const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
 
-    // Get the number of weeks in the month so we can render the proper number of rows.
-    const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale); // Gestire locale date-fns come secondo parametro
+//     // Get the number of weeks in the month so we can render the proper number of rows.
+//     const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale); // Gestire locale date-fns come secondo parametro
 
-    return (
-        <table {...gridProps} cellPadding="0" className="flex-1">
-            <thead {...headerProps} className="text-gray-600">
-                <tr>
-                    {weekDays.map((day, index) => (
-                        <th className="text-center" key={index}>
-                            {day}
-                        </th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
-                    <tr key={weekIndex}>
-                        {state
-                            .getDatesInWeek(weekIndex)
-                            // @ts-ignore
-                            .map((date, i) =>
-                                date ? <CalendarCell key={i} state={state} date={date} /> : <td key={i} />
-                            )}
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    );
-}
+//     return (
+//         <table {...gridProps} cellPadding="0" className="flex-1">
+//             <thead {...headerProps} className="text-gray-600">
+//                 <tr>
+//                     {weekDays.map((day, index) => (
+//                         <th className="text-center" key={index}>
+//                             {day}
+//                         </th>
+//                     ))}
+//                 </tr>
+//             </thead>
+//             <tbody>
+//                 {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
+//                     <tr key={weekIndex}>
+//                         {state
+//                             .getDatesInWeek(weekIndex)
+//                             // @ts-ignore
+//                             .map((date, i) =>
+//                                 date ? <CalendarCell key={i} state={state} date={date} /> : <td key={i} />
+//                             )}
+//                     </tr>
+//                 ))}
+//             </tbody>
+//         </table>
+//     );
+// }
 
 function CalendarGrid({ state, ...props }: any) {
     const { locale } = useLocale();
@@ -496,14 +496,6 @@ function DateSegment({ segment, state }: any) {
     // @ts-ignore
     const { segmentProps } = useDateSegment(segment, state, ref);
 
-    // console.log(segmentProps);
-    // console.log(segment);
-
-    // const { id, ...rest } = segmentProps;
-
-    // console.log(segment.type);
-    // console.log(String(segment.maxValue).length + 'ch');
-
     return (
         <div
             {...segmentProps}
@@ -745,6 +737,7 @@ export function DateTimePickerInput({
 }: DateTimePickerInputProps) {
     const finalProps = {
         ...props,
+        shouldCloseOnSelect: props.granularity !== 'second',
         'aria-label': 'Select a date'
     };
 
@@ -821,14 +814,6 @@ export function DateTimePickerInput({
                         // @ts-ignore
                         ref={triggerRef}
                     >
-                        {/* {date && (
-                            <span 
-                                className="flex items-center cursor-pointer text-gray-400 hover:text-gray-700 mr-2" 
-                                // onClick={() => onChange(null)}
-                            >
-                                <FiX className="h-5 w-5"/>
-                            </span>
-                        )} */}
                         <FieldButton {...buttonProps} isOpen={state.isOpen} />
                     </span>
                     {state.isOpen && (
