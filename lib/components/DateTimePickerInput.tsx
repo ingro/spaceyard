@@ -5,7 +5,7 @@ import { useDateField, useDatePicker, useDateSegment, useTimeField } from '@reac
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { GregorianCalendar, getDayOfWeek, getWeeksInMonth, CalendarDate } from '@internationalized/date';
+import { GregorianCalendar, getDayOfWeek, getWeeksInMonth, CalendarDate, Time } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -24,7 +24,6 @@ import { isSameDay } from 'date-fns';
 import clsx from 'clsx';
 
 import { Select } from './Select';
-import { Input } from './Input';
 
 function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -386,7 +385,8 @@ function Calendar(props: any) {
         }
     }, [depth]);
 
-    // console.log(state);
+    // Get the number of weeks in the month so we can render the proper number of rows.
+    const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
 
     // console.log(nextButtonProps);
     // console.log(calendarProps);
@@ -447,25 +447,41 @@ function Calendar(props: any) {
             </div>
             {depth === 'day' && (
                 <>
-                    <CalendarGrid state={state} />
-                    {props.granularity === 'second' && (
-                        <div className="w-1/3 mt-2 ml-2">
-                            <TimeField 
-                                className={clsx(
-                                    'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
-                                    // {
-                                    //     'group-hover:border-gray-400': !state.isOpen,
-                                    //     '!border-primary': state.isOpen,
-                                    // }
-                                )}
-                                value={props.timeValue}
-                                onChange={props.setTimeValue}
-                                granularity={props.granularity}
-                                label="Time"
-                                // {...fieldProps}
-                            />
+                    <div className="flex">
+                        <div className='grow'>
+                            <CalendarGrid state={state} />
+                            {props.granularity === 'second' && (
+                                <div className="w-1/2 mt-2 ml-2">
+                                    <TimeField 
+                                        className={clsx(
+                                            'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
+                                            // {
+                                            //     'group-hover:border-gray-400': !state.isOpen,
+                                            //     '!border-primary': state.isOpen,
+                                            // }
+                                        )}
+                                        value={props.timeValue}
+                                        onChange={props.setTimeValue}
+                                        granularity={props.granularity}
+                                        label="Time"
+                                        // {...fieldProps}
+                                    />
+                                </div>
+                            )}
                         </div>
-                    )}
+                        {props.granularity === 'second' && (
+                            <div className={clsx('px-4 overflow-y-auto', {
+                                'max-h-64': weeksInMonth === 4,
+                                'max-h-[19.5rem]': weeksInMonth === 5,
+                                'max-h-[22.5rem]': weeksInMonth === 6
+                            })}>
+                                <TimeScroller 
+                                    value={props.timeValue}
+                                    onChange={props.setTimeValue}
+                                />
+                            </div>
+                        )}
+                    </div>
                 </>
             )}
             {depth === 'month' && (
@@ -547,6 +563,60 @@ function DateField(props: any) {
     );
 }
 
+function TimeScroller(props: any) {
+    let options = [];
+
+    for (let i = 0; i < 24; i++) {
+        options.push([i, 0]);
+        options.push([i, 30]);
+    }
+
+    const selectedRef = useRef(null);
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (selectedRef.current) {
+                // @ts-ignore
+                selectedRef.current.focus();
+            }
+        }, 0);
+    }, []);
+
+    return (
+        <div className='flex flex-col items-stretch'>
+            {options.map(([h, m]) => {
+                const minutes = m === 0 ? '00' : m;
+                const hours = h < 10 ? `0${h}` : h;
+
+                const t = new Time(h, m);
+
+                const diff = t.compare(props.value);
+                const isCurrent = diff > -1800000 && diff < 0;
+
+                return (
+                    <div
+                        className={clsx('grow px-1 outline-0', {
+                            'bg-blue-600 text-white': isCurrent,
+                            'hover:bg-blue-100 cursor-pointer': !isCurrent
+                        })}
+                        key={`${h}:${m}`}
+                        onClick={() => props.onChange(t)}
+                        tabIndex={0}
+                        // @ts-ignore
+                        ref={(node: any) => {
+                            if (isCurrent) {
+                                selectedRef.current = node;
+                            }
+                        }}
+                    >
+                        {`${hours}:${minutes}`}
+                    </div>
+                );
+            })}       
+        </div>
+    );
+}
+
 function TimeField(props: any) {
     const { locale } = useLocale();
     const state = useTimeFieldState({
@@ -617,7 +687,7 @@ const Popover = React.forwardRef((props: any, ref) => {
                 {...mergeProps(overlayProps, modalProps, dialogProps)}
                 // @ts-ignore
                 ref={ref}
-                className="bg-white border border-gray-300 rounded-md shadow-lg pt-4 px-1 pb-2 w-80"
+                className="bg-white border border-gray-300 rounded-md shadow-lg pt-4 px-1 pb-2 w-96"
                 style={props.style}
             >
                 {children}
@@ -723,9 +793,6 @@ export function DateTimePickerInput({
     // const { styles, attributes } = usePopper(referenceElement, popperElement);
 
     const { onPress, ...triggerPropsProper } = triggerProps;
-
-    console.log(state.value);
-    console.log(state.validationState);
 
     return (
         <I18nProvider locale={locale}>
