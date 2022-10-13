@@ -398,56 +398,59 @@ function Calendar(props: any) {
             ref={ref}
             className="inline-block text-gray-800 w-full"
         >
-            <div className="flex items-center pb-4">
-                <CalendarButton 
-                    {...prevButtonProps}
-                    // @ts-ignore
-                    onPress={() => depth === 'day' ? prevButtonProps.onPress() : state.focusPreviousSection(true)}
-                >
-                    <FiChevronLeft />
-                </CalendarButton>
-                {depth === 'day' && (
-                    <h2 
-                        className="flex-1 font-bold text-xl ml-2 text-center cursor-pointer"
-                        onClick={() => setDepth('month')}
-                    >
-                        {capitalizeFirstLetter(title)}
-                    </h2>
-                )}
-                {depth === 'month' && (
-                    <h2
-                        className="flex-1 flex font-bold text-xl ml-2 text-center cursor-pointer h-10 items-center"
-                        onClick={() => setShowYearSelect(true)}
-                    >
-                        {showYearSelect ? 
-                            (<div className="grow">
-                                <Select 
-                                    options={getYearOptions(state.focusedDate)}
-                                    value={'' + state.focusedDate.year}
-                                    initialIsOpen={true}
-                                    onChange={(o) => {
-                                        const date = state.focusedDate.set({ year: parseInt(o.value) });
-                                        state.setFocusedDate(date);
-                                        
-                                        setShowYearSelect(false);
-                                    }} 
-                                />
-                            </div>)
-                            : (<div className="grow">{state.focusedDate.year}</div>)
-                        }
-                    </h2>
-                )}
-                <CalendarButton 
-                    {...nextButtonProps} 
-                    // @ts-ignore
-                    onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusNextSection(true)}
-                >
-                    <FiChevronRight />
-                </CalendarButton>
-            </div>
-            {depth === 'day' && (
-                <>
-                    <div className="flex">
+            <div className="flex">
+                <div className='grow'>
+                    <div className="flex items-center pb-4">
+                        <CalendarButton 
+                            {...prevButtonProps}
+                            // @ts-ignore
+                            onPress={() => depth === 'day' ? prevButtonProps.onPress() : state.focusPreviousSection(true)}
+                        >
+                            <FiChevronLeft />
+                        </CalendarButton>
+                        {depth === 'day' && (
+                            <h2 
+                                className="flex-1 font-bold text-xl ml-2 text-center cursor-pointer"
+                                onClick={() => setDepth('month')}
+                            >
+                                {capitalizeFirstLetter(title)}
+                            </h2>
+                        )}
+                        {depth === 'month' && (
+                            <h2
+                                className="flex-1 flex font-bold text-xl ml-2 text-center cursor-pointer h-10 items-center"
+                                onClick={() => setShowYearSelect(true)}
+                            >
+                                {showYearSelect ? 
+                                    (<div className="grow">
+                                        <Select 
+                                            options={getYearOptions(state.focusedDate)}
+                                            value={'' + state.focusedDate.year}
+                                            initialIsOpen={true}
+                                            onChange={(o) => {
+                                                const date = state.focusedDate.set({ year: parseInt(o.value) });
+                                                state.setFocusedDate(date);
+                                                
+                                                setShowYearSelect(false);
+                                            }} 
+                                        />
+                                    </div>)
+                                    : (<div className="grow">{state.focusedDate.year}</div>)
+                                }
+                            </h2>
+                        )}
+                        <CalendarButton 
+                            {...nextButtonProps} 
+                            // @ts-ignore
+                            onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusNextSection(true)}
+                        >
+                            <FiChevronRight />
+                        </CalendarButton>
+                    </div>
+                    {depth === 'month' && (
+                        <MonthGrid state={state} onSelect={() => setDepth('day')}/>
+                    )}
+                    {depth === 'day' && (
                         <div className='grow'>
                             <CalendarGrid state={state} />
                             {props.granularity === 'second' && (
@@ -469,24 +472,21 @@ function Calendar(props: any) {
                                 </div>
                             )}
                         </div>
-                        {props.granularity === 'second' && (
-                            <div className={clsx('px-4 overflow-y-auto', {
-                                'max-h-64': weeksInMonth === 4,
-                                'max-h-[19.5rem]': weeksInMonth === 5,
-                                'max-h-[22.5rem]': weeksInMonth === 6
-                            })}>
-                                <TimeScroller 
-                                    value={props.timeValue}
-                                    onChange={props.setTimeValue}
-                                />
-                            </div>
-                        )}
+                    )}
+                </div>
+                {props.granularity === 'second' && depth === 'day' && (
+                    <div className={clsx('px-4 overflow-y-auto', {
+                        'max-h-[20rem]': weeksInMonth === 4,
+                        'max-h-[22.5rem]': weeksInMonth === 5,
+                        'max-h-[25rem]': weeksInMonth === 6
+                    })}>
+                        <TimeScroller 
+                            value={props.timeValue}
+                            onChange={props.setTimeValue}
+                        />
                     </div>
-                </>
-            )}
-            {depth === 'month' && (
-                <MonthGrid state={state} onSelect={() => setDepth('day')}/>
-            )}
+                )}   
+            </div>
         </div>
     );
 }
