@@ -29,76 +29,6 @@ function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-// function CalendarCellTable({ state, date }: any) {
-//     const ref = useRef();
-//     const {
-//         cellProps,
-//         buttonProps,
-//         isSelected,
-//         isOutsideVisibleRange,
-//         isDisabled,
-//         formattedDate,
-//         isInvalid,
-//         // @ts-ignore
-//     } = useCalendarCell({ date }, state, ref);
-
-//     // The start and end date of the selected range will have
-//     // an emphasized appearance.
-//     const isSelectionStart = state.highlightedRange ? isSameDay(date, state.highlightedRange.start) : isSelected;
-//     const isSelectionEnd = state.highlightedRange ? isSameDay(date, state.highlightedRange.end) : isSelected;
-
-//     // We add rounded corners on the left for the first day of the month,
-//     // the first day of each week, and the start date of the selection.
-//     // We add rounded corners on the right for the last day of the month,
-//     // the last day of each week, and the end date of the selection.
-//     // const { locale } = useLocale();
-//     const dayOfWeek = getDayOfWeek(date, 'it');
-//     const isRoundedLeft = isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
-//     const isRoundedRight =
-//         isSelected && (isSelectionEnd || dayOfWeek === 6 || date.day === date.calendar.getDaysInMonth(date));
-
-//     // const { focusProps, isFocusVisible } = useFocusRing();
-
-//     let isFocusVisible = false;
-
-//     return (
-//         <td {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
-//             <div
-//                 {...buttonProps}
-//                 // @ts-ignore
-//                 ref={ref}
-//                 hidden={isOutsideVisibleRange}
-//                 className={clsx('w-11 h-11 outline-none group', {
-//                     // 'rounded-l-full': isRoundedLeft,
-//                     // 'rounded-r-full': isRoundedRight,
-//                     'bg-blue-300': isSelected && !isInvalid,
-//                     'bg-red-300': isSelected && isInvalid,
-//                     disabled: isDisabled,
-//                 })}
-//             >
-//                 <div
-//                     className={clsx('w-full h-full flex items-center justify-center', {
-//                         // rounded-full
-//                         'text-gray-400': isDisabled && !isInvalid,
-//                         'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
-//                         'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
-//                         'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
-//                         'hover:bg-red-400':
-//                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
-//                         'hover:bg-blue-400':
-//                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
-//                         'hover:bg-blue-100': !isSelected && !isDisabled,
-//                         'cursor-default': isDisabled || isSelected,
-//                         'cursor-pointer': !isSelected && !isDisabled,
-//                     })}
-//                 >
-//                     {formattedDate}
-//                 </div>
-//             </div>
-//         </td>
-//     );
-// }
-
 function CalendarCell({ state, date }: any) {
     const ref = useRef();
 
@@ -167,7 +97,7 @@ function CalendarCell({ state, date }: any) {
                         'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
                         'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
                         'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
-                        'bg-yellow-200': isToday && !isSelectionStart && !isSelectionEnd,
+                        'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
                         'hover:bg-red-400':
                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
                         'hover:bg-blue-400':
@@ -183,40 +113,6 @@ function CalendarCell({ state, date }: any) {
         </div>
     );
 }
-
-// function CalendarGridTable({ state, ...props }: any) {
-//     const { locale } = useLocale();
-//     const { gridProps, headerProps, weekDays } = useCalendarGrid(props, state);
-
-//     // Get the number of weeks in the month so we can render the proper number of rows.
-//     const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale); // Gestire locale date-fns come secondo parametro
-
-//     return (
-//         <table {...gridProps} cellPadding="0" className="flex-1">
-//             <thead {...headerProps} className="text-gray-600">
-//                 <tr>
-//                     {weekDays.map((day, index) => (
-//                         <th className="text-center" key={index}>
-//                             {day}
-//                         </th>
-//                     ))}
-//                 </tr>
-//             </thead>
-//             <tbody>
-//                 {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
-//                     <tr key={weekIndex}>
-//                         {state
-//                             .getDatesInWeek(weekIndex)
-//                             // @ts-ignore
-//                             .map((date, i) =>
-//                                 date ? <CalendarCell key={i} state={state} date={date} /> : <td key={i} />
-//                             )}
-//                     </tr>
-//                 ))}
-//             </tbody>
-//         </table>
-//     );
-// }
 
 function CalendarGrid({ state, ...props }: any) {
     const { locale } = useLocale();
@@ -295,41 +191,46 @@ function MonthGrid({ state, onSelect }: any) {
     for (let i = 1; i <= numMonths; i++) {
         let date = state.focusedDate.set({ month: i });
 
-        // console.log(state);
+        // console.log(formatter.format(date.toDate(state.timeZone)));
         
         months.push({
             label: formatter.format(date.toDate(state.timeZone)),
             disabled: date.compare(state.minValue) < 0 || state.maxValue.compare(date) < 0,
-            current: date.compare(today) === 0
+            current: today.month === date.month && today.year === date.year
         });
     }
 
     return (
         <div className="grid grid-cols-3 justify-items-stretch gap-0.5">
-            {months.map((month, i) => (
-                <div 
-                    key={i}
-                    className={clsx('h-16 flex items-center border', {
-                        'bg-blue-600 text-white': month.label === state.focusedDate.month && !month.disabled,
-                        'hover:bg-blue-100': month.label !== state.focusedDate.month && !month.disabled,
-                        'bg-yellow-200': month.current && month.label !== state.focusedDate.month,
-                        'bg-slate-100 text-gray-400': month.disabled,
-                        'cursor-pointer': !month.disabled
-                    })}
-                    onClick={() => {
-                        if (month.disabled) {
-                            return;
-                        }
+            {months.map((month, i) => {
+                const monthIndex = i + 1;
+                // console.log(monthIndex, state.focusedDate.month);
 
-                        const date = state.focusedDate.set({ month: i + 1 });
-                        state.setFocusedDate(date);
+                return (
+                    <div 
+                        key={i}
+                        className={clsx('h-16 flex items-center border', {
+                            'bg-blue-600 text-white': monthIndex === state.value.month && !month.disabled,
+                            'hover:bg-blue-100': monthIndex !== state.value.month && !month.disabled,
+                            'bg-yellow-100': month.current && monthIndex !== state.value.month,
+                            'bg-slate-100 text-gray-400': month.disabled,
+                            'cursor-pointer': !month.disabled
+                        })}
+                        onClick={() => {
+                            if (month.disabled) {
+                                return;
+                            }
 
-                        onSelect();
-                    }}
-                >
-                    <div className="grow text-center">{month.label}</div>
-                </div>
-            ))}
+                            const date = state.focusedDate.set({ month: i + 1 });
+                            state.setFocusedDate(date);
+
+                            onSelect();
+                        }}
+                    >
+                        <div className="grow text-center">{month.label}</div>
+                    </div>
+                );
+            })}
         </div>
     );
 }
