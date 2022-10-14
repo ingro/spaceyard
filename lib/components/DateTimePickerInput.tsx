@@ -94,9 +94,9 @@ function CalendarCell({ state, date }: any) {
                     className={clsx('w-full h-full flex items-center justify-center', {
                         // rounded-full
                         'text-gray-400': isDisabled && !isInvalid,
-                        'ring-2 group-focus:z-2 ring-blue-600 ring-offset-2': isFocusVisible,
-                        'bg-red-600 text-white hover:bg-red-700': (isSelectionStart || isSelectionEnd) && isInvalid,
-                        'bg-blue-600 text-white hover:bg-blue-700': (isSelectionStart || isSelectionEnd) && !isInvalid,
+                        'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
+                        'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
+                        'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
                         'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
                         'hover:bg-red-400':
                             isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
@@ -210,7 +210,7 @@ function MonthGrid({ state, onSelect }: any) {
                     <div 
                         key={i}
                         className={clsx('h-16 flex items-center border', {
-                            'bg-blue-600 text-white': monthIndex === state.value.month && !month.disabled,
+                            'bg-primary text-white': monthIndex === state.value.month && !month.disabled,
                             'hover:bg-blue-100': monthIndex !== state.value.month && !month.disabled,
                             'bg-yellow-100': month.current && monthIndex !== state.value.month,
                             'bg-slate-100 text-gray-400': month.disabled,
@@ -512,12 +512,16 @@ function TimeScroller(props: any) {
                 const t = new Time(h, m);
 
                 const diff = t.compare(props.value);
-                const isCurrent = diff > -1800000 && diff < 0;
+                // seleziono come corrente l'opzione per la quale la differenza 
+                // con l'orario selezionato è tra 0 e 1.800.000 ms (30 minuti)
+                // e negativo, quindi seleziono l'opzione precedente:
+                // es.: 14:37:12 -> 14:30:00
+                const isCurrent = diff > -1800000 && diff <= 0;
 
                 return (
                     <div
                         className={clsx('grow px-1 outline-0', {
-                            'bg-blue-600 text-white': isCurrent,
+                            'bg-primary text-white': isCurrent,
                             'hover:bg-blue-100 cursor-pointer': !isCurrent
                         })}
                         key={`${h}:${m}`}
