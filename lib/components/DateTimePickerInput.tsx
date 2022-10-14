@@ -60,13 +60,11 @@ function CalendarCell({ state, date }: any) {
     // We add rounded corners on the right for the last day of the month,
     // the last day of each week, and the end date of the selection.
     // const { locale } = useLocale();
-    const dayOfWeek = getDayOfWeek(date, 'it');
+    // const dayOfWeek = getDayOfWeek(date, 'it');
     // const isRoundedLeft = isSelected && (isSelectionStart || dayOfWeek === 0 || date.day === 1);
     // const isRoundedRight = isSelected && (isSelectionEnd || dayOfWeek === 6 || date.day === date.calendar.getDaysInMonth(date));
 
     // const { focusProps, isFocusVisible } = useFocusRing();
-
-    let isFocusVisible = false;
 
     const d = new Date();
     const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getUTCDate());
@@ -74,44 +72,72 @@ function CalendarCell({ state, date }: any) {
     const isToday = today.compare(date) === 0;
 
     return (
-        <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
-            <div
+        <div {...cellProps} className={clsx('py-0.5 relative')}>
+            <button
                 {...buttonProps}
                 // @ts-ignore
                 ref={ref}
                 hidden={isOutsideVisibleRange}
-                // non é possibile cliccare sui giorni fuori dal mese corrente anche se è possibile renderli visibili,
-                // attendere implementazione su react-aria -> https://github.com/adobe/react-spectrum/issues/3257
-                className={clsx('h-10 outline-none group', {
-                    // 'rounded-l-full': isRoundedLeft,
-                    // 'rounded-r-full': isRoundedRight,
-                    'bg-blue-300': isSelected && !isInvalid,
-                    'bg-red-300': isSelected && isInvalid,
-                    disabled: isDisabled,
+                className={clsx('w-full h-10 flex items-center justify-center focus:ring-2 ring-blue-400 ring-offset-1 outline-none', {
+                    // rounded-full
+                    'text-gray-400': isDisabled && !isInvalid,
+                    // 'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
+                    'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
+                    'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
+                    'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
+                    'hover:bg-red-400':
+                        isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
+                    'hover:bg-blue-400':
+                        isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
+                    'hover:bg-blue-100': !isSelected && !isDisabled,
+                    'cursor-default': isDisabled || isSelected,
+                    'cursor-pointer': !isSelected && !isDisabled,
                 })}
             >
-                <div
-                    className={clsx('w-full h-full flex items-center justify-center', {
-                        // rounded-full
-                        'text-gray-400': isDisabled && !isInvalid,
-                        'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
-                        'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
-                        'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
-                        'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
-                        'hover:bg-red-400':
-                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
-                        'hover:bg-blue-400':
-                            isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
-                        'hover:bg-blue-100': !isSelected && !isDisabled,
-                        'cursor-default': isDisabled || isSelected,
-                        'cursor-pointer': !isSelected && !isDisabled,
-                    })}
-                >
-                    {formattedDate}
-                </div>
-            </div>
+                {formattedDate}
+            </button>
         </div>
-    );
+    )
+
+    // return (
+    //     <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
+    //         <div
+    //             {...buttonProps}
+    //             // @ts-ignore
+    //             ref={ref}
+    //             hidden={isOutsideVisibleRange}
+    //             // non é possibile cliccare sui giorni fuori dal mese corrente anche se è possibile renderli visibili,
+    //             // attendere implementazione su react-aria -> https://github.com/adobe/react-spectrum/issues/3257
+    //             className={clsx('h-10 outline-none group', {
+    //                 // 'rounded-l-full': isRoundedLeft,
+    //                 // 'rounded-r-full': isRoundedRight,
+    //                 'bg-blue-300': isSelected && !isInvalid,
+    //                 'bg-red-300': isSelected && isInvalid,
+    //                 disabled: isDisabled,
+    //             })}
+    //         >
+    //             <div
+    //                 className={clsx('w-full h-full flex items-center justify-center', {
+    //                     // rounded-full
+    //                     'text-gray-400': isDisabled && !isInvalid,
+    //                     'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
+    //                     'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
+    //                     'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
+    //                     'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
+    //                     'hover:bg-red-400':
+    //                         isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
+    //                     'hover:bg-blue-400':
+    //                         isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
+    //                     'hover:bg-blue-100': !isSelected && !isDisabled,
+    //                     'cursor-default': isDisabled || isSelected,
+    //                     'cursor-pointer': !isSelected && !isDisabled,
+    //                 })}
+    //             >
+    //                 {formattedDate}
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
 }
 
 function CalendarGrid({ state, ...props }: any) {
@@ -132,7 +158,7 @@ function CalendarGrid({ state, ...props }: any) {
             </div>
             <div>
                 {[...new Array(weeksInMonth).keys()].map((weekIndex) => (
-                    <div key={weekIndex} className="grid grid-cols-7 justify-items-stretch">
+                    <div key={weekIndex} className="grid grid-cols-7 gap-0.5 justify-items-stretch">
                         {state
                             .getDatesInWeek(weekIndex)
                             // @ts-ignore
@@ -324,6 +350,7 @@ function Calendar(props: any) {
             <div className="flex">
                 <div className='grow'>
                     <div className="flex items-center pb-4">
+                        {/* TODO: render focusabile il tasto avanti e indietro come fatto per le celle del calendario */}
                         <CalendarButton 
                             {...finalPrevButtonProps}
                             // @ts-ignore
@@ -409,6 +436,7 @@ function Calendar(props: any) {
                         'max-h-[22.5rem]': weeksInMonth === 5,
                         'max-h-[25rem]': weeksInMonth === 6
                     })}>
+                        {/* TODO: render focusabile le opzioni del TimeScroller come fatto per le celle del calendario */}
                         <TimeScroller 
                             value={props.timeValue}
                             onChange={props.setTimeValue}
@@ -498,7 +526,7 @@ function TimeScroller(props: any) {
         setTimeout(() => {
             if (selectedRef.current) {
                 // @ts-ignore
-                selectedRef.current.focus();
+                selectedRef.current.scrollIntoView({ block: 'center' });
             }
         }, 0);
     }, []);
