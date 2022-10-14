@@ -98,7 +98,7 @@ export default function Forms() {
                     showTimeScroller={true}
                     defaultValue={now(getLocalTimeZone())}
                     minValue={today(getLocalTimeZone())} 
-                    maxValue={today(getLocalTimeZone()).add({ months: 4 })}
+                    maxValue={today(getLocalTimeZone()).add({ months: 6 })}
                     onChange={(f) => console.log(f)}
                 />
             </div>

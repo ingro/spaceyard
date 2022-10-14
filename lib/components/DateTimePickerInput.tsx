@@ -235,11 +235,19 @@ function MonthGrid({ state, onSelect }: any) {
     );
 }
 
-function getYearOptions(focusedDate: any) {
+function getYearOptions(state: any) {
     let years = [];
 
     for (let i = -20; i <= 20; i++) {
-        let date = focusedDate.add({ years: i });
+        let date = state.focusedDate.add({ years: i });
+
+        if (state.minValue && date.year < state.minValue.year) {
+            continue;
+        }
+        
+        if (state.maxValue && date.year > state.maxValue.year) {
+            continue;
+        }
 
         years.push({
             value: '' + date.year,
@@ -288,9 +296,23 @@ function Calendar(props: any) {
 
     // Get the number of weeks in the month so we can render the proper number of rows.
     const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale);
+    // console.log(state.focusedDate);
+    // console.log(state.maxValue);
 
-    // console.log(nextButtonProps);
-    // console.log(calendarProps);
+    let finalPrevButtonProps = { ...prevButtonProps };
+    let finalNextButtonProps = { ...nextButtonProps };
+
+    if (depth === 'month') {
+        if (state.minValue && state.focusedDate.year === state.minValue.year) {
+            finalPrevButtonProps.isDisabled = true;
+        }
+
+        if (state.maxValue && state.focusedDate.year === state.maxValue.year) {
+            finalNextButtonProps.isDisabled = true;
+        }
+    }
+
+    const yearOptions = getYearOptions(state);
 
     return (
         <div
@@ -303,9 +325,9 @@ function Calendar(props: any) {
                 <div className='grow'>
                     <div className="flex items-center pb-4">
                         <CalendarButton 
-                            {...prevButtonProps}
+                            {...finalPrevButtonProps}
                             // @ts-ignore
-                            onPress={() => depth === 'day' ? prevButtonProps.onPress() : state.focusPreviousSection(true)}
+                            onPress={() => depth === 'day' ? finalPrevButtonProps.onPress() : state.focusPreviousSection(true)}
                         >
                             <FiChevronLeft />
                         </CalendarButton>
@@ -319,13 +341,19 @@ function Calendar(props: any) {
                         )}
                         {depth === 'month' && (
                             <h2
-                                className="flex-1 flex font-bold text-xl ml-2 text-center cursor-pointer h-10 items-center"
-                                onClick={() => setShowYearSelect(true)}
+                                className={clsx('flex-1 flex font-bold text-xl ml-2 text-center h-10 items-center', {
+                                    'cursor-pointer': yearOptions.length > 1
+                                })}
+                                onClick={() => {
+                                    if (yearOptions.length > 1) {
+                                        setShowYearSelect(true);
+                                    }
+                                }}
                             >
                                 {showYearSelect ? 
                                     (<div className="grow">
                                         <Select 
-                                            options={getYearOptions(state.focusedDate)}
+                                            options={yearOptions}
                                             value={'' + state.focusedDate.year}
                                             initialIsOpen={true}
                                             onChange={(o) => {
@@ -341,9 +369,9 @@ function Calendar(props: any) {
                             </h2>
                         )}
                         <CalendarButton 
-                            {...nextButtonProps} 
+                            {...finalNextButtonProps} 
                             // @ts-ignore
-                            onPress={() => depth === 'day' ? nextButtonProps.onPress() : state.focusNextSection(true)}
+                            onPress={() => depth === 'day' ? finalNextButtonProps.onPress() : state.focusNextSection(true)}
                         >
                             <FiChevronRight />
                         </CalendarButton>
