@@ -190,7 +190,7 @@ export function CalendarButton(props: any) {
             // {...mergeProps(buttonProps, focusProps)}
             // @ts-ignore
             ref={ref}
-            className={clsx('p-2 rounded-full outline-none', {
+            className={clsx('p-2 rounded-full focus:ring-2 ring-blue-400 ring-offset-1 outline-none', {
                 'text-gray-400': props.isDisabled,
                 'hover:bg-blue-100 active:bg-blue-200': !props.isDisabled,
                 'ring-2 ring-offset-2 ring-primary': isFocusVisible,
@@ -431,7 +431,7 @@ function Calendar(props: any) {
                     )}
                 </div>
                 {props.granularity === 'second' && depth === 'day' && props.showTimeScroller && (
-                    <div className={clsx('px-4 overflow-y-auto', {
+                    <div className={clsx('px-4 overflow-y-auto py-4', {
                         'max-h-[20rem]': weeksInMonth === 4,
                         'max-h-[22.5rem]': weeksInMonth === 5,
                         'max-h-[25rem]': weeksInMonth === 6
@@ -514,13 +514,19 @@ function DateField(props: any) {
 
 function TimeScroller(props: any) {
     let options = [];
+    let optionKeys: Array<string> = [];
 
     for (let i = 0; i < 24; i++) {
         options.push([i, 0]);
         options.push([i, 30]);
+
+        optionKeys.push(`${i}-0`);
+        optionKeys.push(`${i}-30`);
     }
 
-    const selectedRef = useRef(null);
+    // console.log(options);
+
+    const selectedRef = useRef();
 
     useEffect(() => {
         setTimeout(() => {
@@ -532,7 +538,25 @@ function TimeScroller(props: any) {
     }, []);
 
     return (
-        <div className='flex flex-col items-stretch'>
+        <div 
+            className='flex flex-col items-stretch outline-none'
+            tabIndex={0}
+            onFocusCapture={(e) => {
+                const parent = e.target;
+
+                if (parent.classList.contains('time-scroller-element')) {
+                    return;
+                }
+
+                let { hour, minute } = props.value;
+
+                let m = minute >= 30 ? 30 : 0;
+
+                const current = parent.querySelector(`.t_${hour}-${m}`);
+                // @ts-ignore
+                current.focus();
+            }}
+        >
             {options.map(([h, m]) => {
                 const minutes = m === 0 ? '00' : m;
                 const hours = h < 10 ? `0${h}` : h;
@@ -546,15 +570,78 @@ function TimeScroller(props: any) {
                 // es.: 14:37:12 -> 14:30:00
                 const isCurrent = diff > -1800000 && diff <= 0;
 
+                const key = `${h}-${m}`;
+
                 return (
                     <div
-                        className={clsx('grow px-1 outline-0', {
+                        className={clsx('grow px-1 focus:ring-2 ring-blue-400 ring-offset-1 outline-none time-scroller-element', `t_${key}`, {
                             'bg-primary text-white': isCurrent,
                             'hover:bg-blue-100 cursor-pointer': !isCurrent
                         })}
-                        key={`${h}:${m}`}
+                        key={key}
                         onClick={() => props.onChange(t)}
-                        tabIndex={0}
+                        tabIndex={-1}
+                        data-time={key}
+                        onKeyDown={(event) => {
+                            // console.log(event);
+                            if (event.code === 'Enter') {
+                                props.onChange(t);
+
+                                return;
+                            }
+
+                            if (event.code === 'ArrowDown') {
+                                // @ts-ignore
+                                const elementTime = event.target.dataset.time;
+
+                                const index = optionKeys.indexOf(elementTime);
+                                
+                                let nextTime = optionKeys[index + 1];
+
+                                if (!nextTime) {
+                                    nextTime = optionKeys[0];
+                                }
+
+                                // @ts-ignore
+                                const parent = event.target.parentElement;
+                                const nextChild = parent.querySelector(`.t_${nextTime}`);
+                                nextChild.focus();
+
+                                if (nextTime === '0-0') {
+                                    setTimeout(() => {
+                                        parent.parentElement.scrollTop = 0;
+                                    }, 100);
+                                }
+                                
+                                return;
+                            }
+
+                            if (event.code === 'ArrowUp') {
+                                // @ts-ignore
+                                const elementTime = event.target.dataset.time;
+
+                                const index = optionKeys.indexOf(elementTime);
+                                
+                                let prevTime = optionKeys[index - 1];
+
+                                if (!prevTime) {
+                                    prevTime = optionKeys[47];
+                                }
+
+                                // @ts-ignore
+                                const parent = event.target.parentElement;
+                                const prevChild = parent.querySelector(`.t_${prevTime}`);
+                                prevChild.focus();
+
+                                if (prevTime === '23-30') {
+                                    setTimeout(() => {
+                                        parent.parentElement.scrollTop = parent.offsetHeight;
+                                    }, 100);
+                                }
+                                
+                                return;
+                            }
+                        }}
                         // @ts-ignore
                         ref={(node: any) => {
                             if (isCurrent) {
