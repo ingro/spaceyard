@@ -78,7 +78,7 @@ function CalendarCell({ state, date }: any) {
                 // @ts-ignore
                 ref={ref}
                 hidden={isOutsideVisibleRange}
-                className={clsx('w-full h-10 flex items-center justify-center focus:ring-2 ring-blue-400 ring-offset-1 outline-none', {
+                className={clsx('w-full h-9 flex items-center justify-center focus:ring-2 ring-blue-400 ring-offset-1 outline-none', {
                     // rounded-full
                     'text-gray-400': isDisabled && !isInvalid,
                     // 'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
@@ -178,8 +178,6 @@ export function CalendarButton(props: any) {
     const { buttonProps } = useButton(props, ref);
     // const { focusProps, isFocusVisible } = useFocusRing();
 
-    const isFocusVisible = false;
-
     const { isDisabled, onPress, ...rest } = props;
 
     return (
@@ -190,10 +188,9 @@ export function CalendarButton(props: any) {
             // {...mergeProps(buttonProps, focusProps)}
             // @ts-ignore
             ref={ref}
-            className={clsx('p-2 rounded-full focus:ring-2 ring-blue-400 ring-offset-1 outline-none', {
+            className={clsx('p-2 rounded-full focus:ring-2 ring-blue-400 ring-offset-0.5 outline-none', {
                 'text-gray-400': props.isDisabled,
-                'hover:bg-blue-100 active:bg-blue-200': !props.isDisabled,
-                'ring-2 ring-offset-2 ring-primary': isFocusVisible,
+                'hover:bg-blue-100 active:bg-blue-200': !props.isDisabled
             })}
         >
             {props.children}
@@ -349,7 +346,7 @@ function Calendar(props: any) {
         >
             <div className="flex">
                 <div className='grow'>
-                    <div className="flex items-center pb-4">
+                    <div className="flex items-center pb-4 pr-8">
                         {/* TODO: render focusabile il tasto avanti e indietro come fatto per le celle del calendario */}
                         <CalendarButton 
                             {...finalPrevButtonProps}
@@ -407,7 +404,7 @@ function Calendar(props: any) {
                         <MonthGrid state={state} onSelect={() => setDepth('day')}/>
                     )}
                     {depth === 'day' && (
-                        <div className='grow'>
+                        <div className='grow pr-8'>
                             <CalendarGrid state={state} />
                             {props.granularity === 'second' && (
                                 <div className="w-1/2 mt-2 ml-2">
@@ -431,10 +428,10 @@ function Calendar(props: any) {
                     )}
                 </div>
                 {props.granularity === 'second' && depth === 'day' && props.showTimeScroller && (
-                    <div className={clsx('px-4 overflow-y-auto py-4', {
-                        'max-h-[20rem]': weeksInMonth === 4,
-                        'max-h-[22.5rem]': weeksInMonth === 5,
-                        'max-h-[25rem]': weeksInMonth === 6
+                    <div className={clsx('overflow-y-auto py-4 pl-5 pr-1 timescroller-container bg-slate-50', {
+                        'max-h-[19rem]': weeksInMonth === 4,
+                        'max-h-[21.5rem]': weeksInMonth === 5,
+                        'max-h-[24rem]': weeksInMonth === 6
                     })}>
                         {/* TODO: render focusabile le opzioni del TimeScroller come fatto per le celle del calendario */}
                         <TimeScroller 
