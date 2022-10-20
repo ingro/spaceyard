@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 // import { usePopper } from 'react-popper';
 import { useDateFieldState, useDatePickerState, useTimeFieldState } from '@react-stately/datepicker';
 import { useDateField, useDatePicker, useDateSegment, useTimeField } from '@react-aria/datepicker';
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { GregorianCalendar, getDayOfWeek, getWeeksInMonth, CalendarDate, Time } from '@internationalized/date';
+import { GregorianCalendar, getWeeksInMonth, CalendarDate, Time, parseDate } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -21,9 +21,13 @@ import { useLocale, I18nProvider, useDateFormatter } from '@react-aria/i18n';
 import { useOverlayTriggerState } from '@react-stately/overlays';
 import { FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { isSameDay } from 'date-fns';
+import { Control, useController } from 'react-hook-form';
+import uniqueId from 'lodash/uniqueId';
+import pick from 'lodash/pick';
 import clsx from 'clsx';
 
 import { Select } from './Select';
+import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 
 function capitalizeFirstLetter(text: string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -66,8 +70,9 @@ function CalendarCell({ state, date }: any) {
 
     // const { focusProps, isFocusVisible } = useFocusRing();
 
+    // FIXME: utilizzare funzione today di @internazionalized/date
     const d = new Date();
-    const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getUTCDate());
+    const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate());
 
     const isToday = today.compare(date) === 0;
 
@@ -501,6 +506,7 @@ function DateField(props: any) {
             // @ts-ignore
             ref={ref}
             className={props.className}
+            onBlur={props.onBlur}
         >
             {state.segments.map((segment, i) => (
                 <DateSegment key={i} segment={segment} state={state} />
@@ -762,29 +768,45 @@ function FieldButton(props: any) {
         </button>
     );
 }
-
-type DateTimePickerInputProps = {
-    minValue?: any,
-    maxValue?: any,
-    value?: any,
-    defaultValue?: any,
-    granularity?: any,
-    label?: string,
-    locale?: string,
-    onChange?: (date: any) => void,
-    showTimeScroller?: boolean
+class DateTimePickerInputClass {
+    constructor(
+        public defaultValue?: any,
+        public granularity?: any,
+        public label?: string,
+        public locale?: string,
+        public maxValue?: CalendarDate,
+        public minValue?: CalendarDate,
+        public onBlur?: () => void,
+        public onChange?: (date: any) => void,
+        public placeholder?: string,
+        public showTimeScroller?: boolean,
+        public value?: any,
+    ) {}
 };
 
-export function DateTimePickerInput({
+interface DateTimePickerInputProps extends DateTimePickerInputClass {};
+
+export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProps>(({
     locale = 'en',
     showTimeScroller = false,
+    label = 'Select a date',
     ...props
-}: DateTimePickerInputProps) {
+}, forwardRef) => {
     const finalProps = {
         ...props,
         shouldCloseOnSelect: props.granularity !== 'second',
-        'aria-label': 'Select a date'
+        'aria-label': label
     };
+
+    // const originalOnChange = props.onChange;
+
+    // finalProps.onChange = (d) => {
+    //     console.log(d);
+    //     console.log(d.toDate());
+    //     if (originalOnChange) {
+    //         originalOnChange(d);
+    //     }
+    // };
 
     const state = useDatePickerState(finalProps);
     const ref = useRef();
@@ -795,7 +817,7 @@ export function DateTimePickerInput({
 
     const {
         groupProps,
-        labelProps,
+        // labelProps,
         fieldProps,
         buttonProps,
         dialogProps,
@@ -804,6 +826,7 @@ export function DateTimePickerInput({
     } = useDatePicker(finalProps, state, ref);
 
     // console.log(calendarProps);
+    // console.log(dialogProps);
 
     // @ts-ignore
     let { triggerProps /*, overlayProps*/ } = useOverlayTrigger({ type: 'dialog' }, overlayState, triggerRef);
@@ -829,12 +852,14 @@ export function DateTimePickerInput({
 
     const { onPress, ...triggerPropsProper } = triggerProps;
 
+    // console.log(labelProps); -> onClick() => focusManager.focusFirst()
+
     return (
         <I18nProvider locale={locale}>
             <div>
-                <div {...labelProps} className="text-sm text-gray-800">
-                    {props.label}
-                </div>
+                {/* <div {...labelProps} className="text-sm text-gray-800">
+                    {label}
+                </div> */}
                 <div
                     className="relative group w-full"
                     {...triggerPropsProper}
@@ -843,7 +868,7 @@ export function DateTimePickerInput({
                     {...groupProps}
                 >
                     <DateField
-                        // ref={setReferenceElement}
+                        // ref={forwardRef}
                         className={clsx(
                             'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
                             {
@@ -852,6 +877,7 @@ export function DateTimePickerInput({
                                 '!border-red-500': state.validationState === 'invalid'
                             }
                         )}
+                        onBlur={props.onBlur}
                         {...fieldProps}
                     />
                     <span 
@@ -888,5 +914,61 @@ export function DateTimePickerInput({
                 </div>
             </div>
         </I18nProvider>
+    );
+});
+
+interface DateTimePickerInputFieldProps extends DateTimePickerInputProps, FieldWrapperProps {};
+
+export const DateTimePickerInputField = React.forwardRef<any, DateTimePickerInputFieldProps>((props, forwardRef) => {
+    const inputId = uniqueId(`form-${props.name}_`);
+
+    const inputPropsName = Object.keys(new DateTimePickerInputClass('', () => {}));
+
+    // @ts-ignore
+    const inputProps: DatePickerInputProps = pick(props, inputPropsName);
+
+    return (
+        <FieldWrapper {...props} inputId={inputId}>
+            <DateTimePickerInput
+                {...inputProps}
+                ref={forwardRef} 
+            />
+        </FieldWrapper>
+    );
+});
+
+interface DateTimePickerInputFieldControllerProps extends DateTimePickerInputFieldProps {
+    name: string;
+    control: Control;
+    defaultValue?: any;
+};
+
+export function DateTimePickerInputFieldController({ name, control, defaultValue, ...rest}: DateTimePickerInputFieldControllerProps) {
+    const { field, fieldState } = useController({
+        name,
+        control,
+        defaultValue
+    });
+
+    // console.log(field);
+
+    if (field.value) {
+        field.value = new CalendarDate(field.value.getFullYear(), field.value.getMonth() + 1, field.value.getDate());
+
+        // field.value = new CalendarDate(field.value.year, field.value.month, field.value.day);
+    }
+
+    const originalOnchange = field.onChange;
+
+    field.onChange = (d) => {
+        originalOnchange(d.toDate());
+    }
+
+    return (
+        <DateTimePickerInputField 
+            {...field}
+            {...rest}
+            error={fieldState.error}
+        />
     );
 }

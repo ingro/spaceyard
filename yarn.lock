@@ -1901,6 +1901,11 @@
     use-deep-compare-effect "^1.8.1"
     uuid "^8.3.2"
 
+"@hookform/resolvers@^2.9.9":
+  version "2.9.9"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.9.tgz#db87ae0dec1ac006b2f01caf8d53422d7bc341ff"
+  integrity sha512-WMKO5HbNoGMdQNmf6kcjHmBKPd3voKvDdzr+IQGn1Rtb7dIQbTE33zf5dptZnv8dF4K0NvnzpTgz3bLdeAPc9w==
+
 "@ingruz/tabulisk@^0.17.3":
   version "0.17.3"
   resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-0.17.3.tgz#3c3c7ada944f6c78b5184009af9d53b568c296a9"
@@ -7520,6 +7525,11 @@ yargs@^16.2.0:
     string-width "^4.2.0"
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
+
+zod@^3.19.1:
+  version "3.19.1"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.19.1.tgz#112f074a97b50bfc4772d4ad1576814bd8ac4473"
+  integrity sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==
 
 zustand@^3.7.2:
   version "3.7.2"
