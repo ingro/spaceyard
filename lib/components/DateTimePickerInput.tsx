@@ -455,6 +455,17 @@ function DateSegment({ segment, state }: any) {
     // @ts-ignore
     const { segmentProps } = useDateSegment(segment, state, ref);
 
+    // console.log(segmentProps);
+
+    // const oldHandler = segmentProps.onFocus;
+
+    // segmentProps.onFocus = (e) => {
+    //     console.log(e);
+
+    //     // @ts-ignore
+    //     oldHandler(e);
+    // }
+
     return (
         <div
             {...segmentProps}
@@ -472,7 +483,7 @@ function DateSegment({ segment, state }: any) {
             {/* Always reserve space for the placeholder, to prevent layout shift when editing. */}
             <span
                 aria-hidden="true"
-                className="block w-full text-center font-mono italic text-gray-500 group-focus:text-white"
+                className="block w-full text-center font-mono italic text-gray-500 group-focus:text-white select-none"
                 style={{
                     // @ts-ignore
                     visibility: segment.isPlaceholder ? '' : 'hidden',
@@ -817,7 +828,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
 
     const {
         groupProps,
-        // labelProps,
+        labelProps,
         fieldProps,
         buttonProps,
         dialogProps,
@@ -856,7 +867,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
 
     return (
         <I18nProvider locale={locale}>
-            <div>
+            <div onTouchStartCapture={e => console.warn(e)}>
                 {/* <div {...labelProps} className="text-sm text-gray-800">
                     {label}
                 </div> */}
