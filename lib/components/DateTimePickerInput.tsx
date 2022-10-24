@@ -803,7 +803,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     label = 'Select a date',
     ...props
 }, forwardRef) => {
-    const [isOpen, setIsOpen] = useState<false>();
+    // const [isOpen, setIsOpen] = useState<false>();
 
     const finalProps = {
         ...props,
@@ -844,7 +844,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
         // setIsOpen(state.isOpen);
         // console.warn('SET IS OPEN', state.isOpen);
         if (state.isOpen === false && state.value && props.onBlur) {
-            console.warn('BLURRR');
+            // console.warn('BLURRR');
             props.onBlur();
         }
     }, [state.isOpen]);
