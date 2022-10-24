@@ -351,7 +351,7 @@ function Calendar(props: any) {
         >
             <div className="flex">
                 <div className='grow'>
-                    <div className="flex items-center pb-4 pr-8">
+                    <div className={clsx('flex items-center pb-4', props.showTimeScroller ? 'pr-8' : 'pr-0')}>
                         {/* TODO: render focusabile il tasto avanti e indietro come fatto per le celle del calendario */}
                         <CalendarButton 
                             {...finalPrevButtonProps}
@@ -409,7 +409,7 @@ function Calendar(props: any) {
                         <MonthGrid state={state} onSelect={() => setDepth('day')}/>
                     )}
                     {depth === 'day' && (
-                        <div className='grow pr-8'>
+                        <div className={clsx('grow', props.showTimeScroller ? 'pr-8' : 'pr-0')}>
                             <CalendarGrid state={state} />
                             {props.granularity === 'second' && (
                                 <div className="w-1/2 mt-2 ml-2">
@@ -803,10 +803,23 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     label = 'Select a date',
     ...props
 }, forwardRef) => {
+    const [isOpen, setIsOpen] = useState<false>();
+
     const finalProps = {
         ...props,
         shouldCloseOnSelect: props.granularity !== 'second',
-        'aria-label': label
+        'aria-label': label,
+        // onOpenChange: (isOpen: boolean) => {
+        //     setTimeout(() => {
+        //         console.log('isOpen', isOpen);
+        //         console.log('value', props.value);
+        //         console.log('state', state);
+        //         if (isOpen === false && props.value && props.onBlur) {
+        //             console.warn('BLURRR');
+        //             props.onBlur();
+        //         }
+        //     }, 1000);
+        // }
     };
 
     // const originalOnChange = props.onChange;
@@ -825,6 +838,16 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     const popoverRef = useRef();
 
     const overlayState = useOverlayTriggerState({});
+
+    useEffect(() => {
+        // @ts-ignore
+        // setIsOpen(state.isOpen);
+        // console.warn('SET IS OPEN', state.isOpen);
+        if (state.isOpen === false && state.value && props.onBlur) {
+            console.warn('BLURRR');
+            props.onBlur();
+        }
+    }, [state.isOpen]);
 
     const {
         groupProps,
