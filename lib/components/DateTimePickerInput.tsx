@@ -5,7 +5,7 @@ import { useDateField, useDatePicker, useDateSegment, useTimeField } from '@reac
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { GregorianCalendar, getWeeksInMonth, CalendarDate, Time, parseDate } from '@internationalized/date';
+import { GregorianCalendar, getWeeksInMonth, CalendarDate, CalendarDateTime, Time, parseDateTime, getLocalTimeZone } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -959,7 +959,7 @@ export const DateTimePickerInputField = React.forwardRef<any, DateTimePickerInpu
     const inputPropsName = Object.keys(new DateTimePickerInputClass('', () => {}));
 
     // @ts-ignore
-    const inputProps: DatePickerInputProps = pick(props, inputPropsName);
+    const inputProps: DateTimePickerInputProps = pick(props, inputPropsName);
 
     return (
         <FieldWrapper {...props} inputId={inputId}>
@@ -984,18 +984,27 @@ export function DateTimePickerInputFieldController({ name, control, defaultValue
         defaultValue
     });
 
-    // console.log(field);
+    // console.log(field.value);
 
     if (field.value) {
-        field.value = new CalendarDate(field.value.getFullYear(), field.value.getMonth() + 1, field.value.getDate());
-
-        // field.value = new CalendarDate(field.value.year, field.value.month, field.value.day);
+        if (rest.granularity === 'second') {
+            field.value = new CalendarDateTime(
+                field.value.getFullYear(), 
+                field.value.getMonth() + 1, 
+                field.value.getDate(), 
+                field.value.getHours(), 
+                field.value.getMinutes(), 
+                field.value.getSeconds()
+            );
+        } else {
+            field.value = new CalendarDate(field.value.getFullYear(), field.value.getMonth() + 1, field.value.getDate());
+        }
     }
 
     const originalOnchange = field.onChange;
 
     field.onChange = (d) => {
-        originalOnchange(d.toDate());
+        originalOnchange(d.toDate(getLocalTimeZone()));
     }
 
     return (

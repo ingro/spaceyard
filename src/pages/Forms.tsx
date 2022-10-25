@@ -209,6 +209,8 @@ export default function Forms() {
                     />
                     <DateTimePickerInputFieldController
                         name="event_date"
+                        locale="it"
+                        granularity="second"
                         control={control}
                         label="Data e orario appuntamento"
                     />
