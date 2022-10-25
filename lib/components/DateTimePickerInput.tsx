@@ -220,10 +220,10 @@ function MonthGrid({ state, onSelect }: any) {
         let date = state.focusedDate.set({ month: i });
 
         // console.log(formatter.format(date.toDate(state.timeZone)));
-        
+
         months.push({
             label: formatter.format(date.toDate(state.timeZone)),
-            disabled: date.compare(state.minValue) < 0 || state.maxValue.compare(date) < 0,
+            disabled: (state.minValue && date.compare(state.minValue) < 0) || (state.maxValue && state.maxValue?.compare(date) < 0) || false,
             current: today.month === date.month && today.year === date.year
         });
     }
@@ -238,9 +238,9 @@ function MonthGrid({ state, onSelect }: any) {
                     <div 
                         key={i}
                         className={clsx('h-16 flex items-center border', {
-                            'bg-primary text-white': monthIndex === state.value.month && !month.disabled,
-                            'hover:bg-blue-100': monthIndex !== state.value.month && !month.disabled,
-                            'bg-yellow-100': month.current && monthIndex !== state.value.month,
+                            'bg-primary text-white': monthIndex === state.value?.month && !month.disabled,
+                            'hover:bg-blue-100': monthIndex !== state.value?.month && !month.disabled,
+                            'bg-yellow-100': month.current && monthIndex !== state.value?.month,
                             'bg-slate-100 text-gray-400': month.disabled,
                             'cursor-pointer': !month.disabled
                         })}
