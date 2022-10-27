@@ -111,9 +111,9 @@ export default function Forms() {
                     }}
                 /> */}
             </div>
-            <div className="text text-purple-500 text-xl">Date Time Picker</div>
+            {/* <div className="text text-purple-500 text-xl">Date Time Picker</div>
             <div className="w-1/4 mb-2">
-                {/* <DateTimePickerInput 
+                <DateTimePickerInput 
                     locale='it'
                     // granularity="day"
                     granularity="second"
@@ -122,8 +122,8 @@ export default function Forms() {
                     minValue={today(getLocalTimeZone())} 
                     maxValue={today(getLocalTimeZone()).add({ months: 6 })}
                     onChange={(f) => console.log(f)}
-                /> */}
-            </div>
+                />
+            </div> */}
             <div className="text text-purple-500 text-xl">Form</div>
             <form onSubmit={onSubmit}>
                 <div className="w-1/4 mb-2">

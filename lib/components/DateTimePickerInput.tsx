@@ -5,7 +5,7 @@ import { useDateField, useDatePicker, useDateSegment, useTimeField } from '@reac
 import { useButton } from '@react-aria/button';
 import { useCalendarState } from '@react-stately/calendar';
 import { useCalendar, useCalendarCell, useCalendarGrid } from '@react-aria/calendar';
-import { GregorianCalendar, getWeeksInMonth, CalendarDate, CalendarDateTime, Time, parseDateTime, getLocalTimeZone } from '@internationalized/date';
+import { GregorianCalendar, getWeeksInMonth, CalendarDate, CalendarDateTime, Time, isToday, getLocalTimeZone } from '@internationalized/date';
 import { FocusScope } from '@react-aria/focus';
 import { useDialog } from '@react-aria/dialog';
 import {
@@ -70,11 +70,10 @@ function CalendarCell({ state, date }: any) {
 
     // const { focusProps, isFocusVisible } = useFocusRing();
 
-    // FIXME: utilizzare funzione today di @internazionalized/date
-    const d = new Date();
-    const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    // const d = new Date();
+    // const today = new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate());
 
-    const isToday = today.compare(date) === 0;
+    // const isToday = today.compare(date) === 0;
 
     return (
         <div {...cellProps} className={clsx('py-0.5 relative')}>
@@ -89,7 +88,7 @@ function CalendarCell({ state, date }: any) {
                     // 'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
                     'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
                     'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
-                    'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
+                    'bg-yellow-100': isToday(date, getLocalTimeZone()) && !isSelectionStart && !isSelectionEnd,
                     'hover:bg-red-400':
                         isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
                     'hover:bg-blue-400':
@@ -102,7 +101,7 @@ function CalendarCell({ state, date }: any) {
                 {formattedDate}
             </button>
         </div>
-    )
+    );
 
     // return (
     //     <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
@@ -290,6 +289,17 @@ function Calendar(props: any) {
     const { locale } = useLocale();
     const [depth, setDepth] = useState('day');
     const [showYearSelect, setShowYearSelect] = useState(false);
+
+    const originalOnChange = props.onChange;
+
+    props = { ...props, onChange: (newValue: any) => {
+        originalOnChange(newValue);
+
+        if (props.timeValue === null) {
+            const now = new Date();
+            props.setTimeValue(new Time(now.getHours(), now.getMinutes(), now.getSeconds()));
+        }
+    }};
 
     let state = useCalendarState({
         ...props,
@@ -517,7 +527,11 @@ function DateField(props: any) {
             // @ts-ignore
             ref={ref}
             className={props.className}
-            onBlur={props.onBlur}
+            onBlur={() => {
+                if (props.value) {
+                    props.onBlur();
+                }
+            }}
         >
             {state.segments.map((segment, i) => (
                 <DateSegment key={i} segment={segment} state={state} />
@@ -808,7 +822,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     const finalProps = {
         ...props,
         shouldCloseOnSelect: props.granularity !== 'second',
-        'aria-label': label,
+        'aria-label': label
         // onOpenChange: (isOpen: boolean) => {
         //     setTimeout(() => {
         //         console.log('isOpen', isOpen);
@@ -1004,6 +1018,12 @@ export function DateTimePickerInputFieldController({ name, control, defaultValue
     const originalOnchange = field.onChange;
 
     field.onChange = (d) => {
+        // FIXME: C'è sempre la possibilità che venga impostata l'ora 00:00:00 volontariamente...
+        // if (! field.value && d.hour === 0 && d.minute === 0 && d.second === 0 && d.millisecond === 0) {
+        //     const now = new Date();
+        //     d = d.set({ hour: now.getHours(), minute: now.getMinutes(), second: now.getSeconds() });
+        // }
+
         originalOnchange(d.toDate(getLocalTimeZone()));
     }
 
