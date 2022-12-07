@@ -42,6 +42,8 @@ export default ({ command, mode }) => {
       },
       rollupOptions: {
         external: [
+          /@react-aria\/.*/,
+          /@react-stately\/.*/,
           "@reach/dialog",
           "date-fns",
           "downshift",
