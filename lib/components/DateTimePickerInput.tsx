@@ -192,7 +192,7 @@ export function CalendarButton(props: any) {
             // {...mergeProps(buttonProps, focusProps)}
             // @ts-ignore
             ref={ref}
-            className={clsx('p-2 rounded-full focus:ring-2 ring-blue-400 ring-offset-0.5 outline-none', {
+            className={clsx('p-2 rounded-full focus:ring-2 ring-blue-400 outline-none', {
                 'text-gray-400': props.isDisabled,
                 'hover:bg-blue-100 active:bg-blue-200': !props.isDisabled
             })}
@@ -368,7 +368,7 @@ function Calendar(props: any) {
                             // @ts-ignore
                             onPress={() => depth === 'day' ? finalPrevButtonProps.onPress() : state.focusPreviousSection(true)}
                         >
-                            <FiChevronLeft />
+                            <FiChevronLeft style={{display: 'block'}}/>
                         </CalendarButton>
                         {depth === 'day' && (
                             <h2 
@@ -412,7 +412,7 @@ function Calendar(props: any) {
                             // @ts-ignore
                             onPress={() => depth === 'day' ? finalNextButtonProps.onPress() : state.focusNextSection(true)}
                         >
-                            <FiChevronRight />
+                            <FiChevronRight style={{display: 'block'}}/>
                         </CalendarButton>
                     </div>
                     {depth === 'month' && (
@@ -528,7 +528,7 @@ function DateField(props: any) {
             ref={ref}
             className={props.className}
             onBlur={() => {
-                if (props.value) {
+                if (props.value && props.onBlur) {
                     props.onBlur();
                 }
             }}
