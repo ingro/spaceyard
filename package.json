@@ -8,7 +8,7 @@
   "repository": "",
   "homepage": "",
   "types": "dist/main.d.ts",
-  "module": "dist/spaceyard.es.js",
+  "module": "dist/spaceyard.mjs",
   "main": "dist/spaceyard.umd.js",
   "files": [
     "dist",
@@ -16,7 +16,7 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/spaceyard.es.js",
+      "import": "./dist/spaceyard.mjs",
       "require": "./dist/spaceyard.umd.js"
     },
     "./dist/style.css": {
