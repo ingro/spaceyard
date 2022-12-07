@@ -128,7 +128,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-focus-lock": "^2.5.0",
     "react-hook-form": "^7.0.0",
-    "react-i18next": "^11.8.0",
+    "react-i18next": "^11.x || ^12.x",
     "react-icons": "^4.2.0",
     "react-popper": "^2.2.0",
     "react-router": "^5.2.0",
