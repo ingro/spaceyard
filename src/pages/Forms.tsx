@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { object, z } from 'zod';
+import { now, today, getLocalTimeZone } from "@internationalized/date";
 
 import { CheckboxFieldController } from '../../lib/components/Checkbox';
 import { ComboBoxFieldController } from '../../lib/components/ComboBox';
@@ -12,6 +15,8 @@ import { LoadingButton } from '../../lib/components/Buttons';
 import { NumberInputFieldController } from '../../lib/components/NumberInput';
 import { SelectFieldController } from '../../lib/components/Select';
 import { SwitchFieldController } from '../../lib/components/Switch';
+import { DateTimePickerInput, DateTimePickerInputFieldController } from '../../lib/components/DateTimePickerInput';
+import { format } from 'date-fns';
 
 const options = [
     { value: 'foo', label: 'Foo' },
@@ -33,10 +38,29 @@ const options = [
     { value: '14', label: 'Quattrodici' },
 ];
 
+// const dateSchema = z.preprocess((arg) => {
+//     if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+// }, z.date());
+
+const validationSchema = z.object({
+    combo: z.any().nullish(),
+    confirm: z.boolean().nullish(),
+    foo: z.any().nullish(),
+    multiple: z.array(z.any()).nullish(),
+    name: z.string().min(1),
+    privacy: z.boolean().nullish(),
+    qty: z.number().max(10).nullish(),
+    start_date: z.date().max(new Date()).transform((d) => format(d, 'yyyy-MM-dd')),
+    event_date: z.date().max(new Date())
+});
+
 const pause = (ms: number) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export default function Forms() {
-    const { control, handleSubmit, formState } = useForm({});
+    const { control, handleSubmit, formState } = useForm({
+        mode: 'onTouched',
+        resolver: zodResolver(validationSchema)
+    });
 
     const [search, setSearch] = useState('');
 
@@ -87,15 +111,28 @@ export default function Forms() {
                     }}
                 /> */}
             </div>
+            {/* <div className="text text-purple-500 text-xl">Date Time Picker</div>
+            <div className="w-1/4 mb-2">
+                <DateTimePickerInput 
+                    locale='it'
+                    // granularity="day"
+                    granularity="second"
+                    showTimeScroller={true}
+                    defaultValue={now(getLocalTimeZone())}
+                    minValue={today(getLocalTimeZone())} 
+                    maxValue={today(getLocalTimeZone()).add({ months: 6 })}
+                    onChange={(f) => console.log(f)}
+                />
+            </div> */}
             <div className="text text-purple-500 text-xl">Form</div>
-            <form onSubmit={handleSubmit(data => console.warn(data))}>
+            <form onSubmit={onSubmit}>
                 <div className="w-1/4 mb-2">
                     <InputFieldController 
                         name="name"
                         layout="stacked"
                         placeholder="Name"
                         control={control}
-                        disabled={true}
+                        // disabled={true}
                         // error="Required"
                     />
                 </div>
@@ -158,15 +195,24 @@ export default function Forms() {
                     <DatePickerInputFieldController 
                         name="start_date"
                         // value={date}
-                        asString={true}
+                        // asString={true}
                         label="Data di nascita"
                         placeholder="Inserisci data"
+                        // minDate={new Date()}
                         // onChange={d => {
                         //     console.log(d);
                         //     setDate(d);
                         // }}
-                        dateFormat="dd/MM/yyyy"
+                        //dateFormat="dd/MM/yyyy"
+                        // dateFormat="yyyy-MM-dd"
                         control={control}
+                    />
+                    <DateTimePickerInputFieldController
+                        name="event_date"
+                        locale="it"
+                        granularity="second"
+                        control={control}
+                        label="Data e orario appuntamento"
                     />
                 </div>
                 <DevTool control={control} placement="top-right" />

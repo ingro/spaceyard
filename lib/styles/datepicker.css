@@ -15,3 +15,18 @@
 .react-calendar__tile--active:enabled:focus {
     @apply bg-primary-lighter;
 }
+
+.timescroller-container::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+.timescroller-container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.timescroller-container::-webkit-scrollbar-thumb {
+    @apply bg-slate-400;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
