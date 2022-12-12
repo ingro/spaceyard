@@ -213,6 +213,7 @@ export default function Forms() {
                         granularity="second"
                         control={control}
                         label="Data e orario appuntamento"
+                        confirmBtn={true}
                     />
                 </div>
                 <DevTool control={control} placement="top-right" />

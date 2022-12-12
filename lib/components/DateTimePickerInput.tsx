@@ -806,6 +806,7 @@ class DateTimePickerInputClass {
         public placeholder?: string,
         public showTimeScroller?: boolean,
         public value?: any,
+        public confirmBtn?: boolean
     ) {}
 };
 
@@ -815,9 +816,12 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     locale = 'en',
     showTimeScroller = false,
     label = 'Select a date',
+    confirmBtn = false,
     ...props
 }, forwardRef) => {
     // const [isOpen, setIsOpen] = useState<false>();
+
+    const originalOnChange = props.onChange;
 
     const finalProps = {
         ...props,
@@ -835,6 +839,10 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
         //     }, 1000);
         // }
     };
+
+    if (confirmBtn) {
+        finalProps.onChange = (d) => console.warn(d)
+    }
 
     // const originalOnChange = props.onChange;
 
@@ -933,6 +941,20 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
                         // @ts-ignore
                         ref={triggerRef}
                     >
+                        {confirmBtn && (
+                            <button 
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    alert('Confirm!');
+                                }}
+                                disabled={state.value === null}
+                                className={clsx('mr-2 px-2 py-0', {
+                                    'bg-green-500 hover:bg-green-400': state.value !== null,
+                                    'cursor-not-allowed': state.value === null
+                                })}
+                            >v</button>
+                        )}
                         <FieldButton {...buttonProps} isOpen={state.isOpen} />
                     </span>
                     {state.isOpen && (
