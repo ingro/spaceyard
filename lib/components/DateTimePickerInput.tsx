@@ -19,7 +19,7 @@ import {
 import { mergeProps } from '@react-aria/utils';
 import { useLocale, I18nProvider, useDateFormatter } from '@react-aria/i18n';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import { FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiCalendar, FiChevronLeft, FiChevronRight, FiCheckSquare } from 'react-icons/fi';
 import { isSameDay } from 'date-fns';
 import { Control, useController } from 'react-hook-form';
 import uniqueId from 'lodash/uniqueId';
@@ -422,21 +422,36 @@ function Calendar(props: any) {
                         <div className={clsx('grow', props.showTimeScroller ? 'pr-8' : 'pr-0')}>
                             <CalendarGrid state={state} />
                             {props.granularity === 'second' && (
-                                <div className="w-1/2 mt-2 ml-2">
-                                    <TimeField 
-                                        className={clsx(
-                                            'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
-                                            // {
-                                            //     'group-hover:border-gray-400': !state.isOpen,
-                                            //     '!border-primary': state.isOpen,
-                                            // }
-                                        )}
-                                        value={props.timeValue}
-                                        onChange={props.setTimeValue}
-                                        granularity={props.granularity}
-                                        label="Time"
-                                        // {...fieldProps}
-                                    />
+                                <div className="flex">
+                                    <div className="w-1/2 mt-2 ml-2">
+                                        <TimeField 
+                                            className={clsx(
+                                                'form-input cursor-default flex group-focus-within:border-primary group-focus-within:group-hover:border-primary',
+                                                // {
+                                                //     'group-hover:border-gray-400': !state.isOpen,
+                                                //     '!border-primary': state.isOpen,
+                                                // }
+                                            )}
+                                            value={props.timeValue}
+                                            onChange={props.setTimeValue}
+                                            granularity={props.granularity}
+                                            label="Time"
+                                            // {...fieldProps}
+                                        />
+                                    </div>
+                                    {props.confirmBtn && (
+                                        <div className='h-9 self-end'>
+                                            <button 
+                                                className='ml-2 mb-1 p-2 rounded bg-primary cursor-pointer hover:bg-primary-lighter text-white disabled:cursor-not-allowed disabled:bg-gray-300'
+                                                disabled={!state.value}
+                                                // FIXME: props.value contiene solo la data, come fare per impostare anche il time?
+                                                // dateTimeValue che contiene state.value CalendarDateTime viene valorizzato solo successivamente...
+                                                onClick={() => props.onConfirm ? props.onConfirm(props.value) : () => {}}
+                                            >
+                                                <FiCheckSquare className='h-5 w-5' />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -821,10 +836,33 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
 }, forwardRef) => {
     // const [isOpen, setIsOpen] = useState<false>();
 
+    // console.log(props);
+
+    const [value, setValue] = useState(undefined);
+
+    useEffect(() => {
+        if (props.value) {
+            if (typeof value === 'undefined') {
+                setValue(props.value);
+
+                return;
+            }
+
+            // @ts-ignore
+            // console.log(value.compare(props.value));
+
+            // @ts-ignore
+            if (value.compare(props.value) !== 0) {
+                setValue(props.value);
+            }
+        }
+    }, [props.value]);
+
     const originalOnChange = props.onChange;
 
     const finalProps = {
         ...props,
+        value,
         shouldCloseOnSelect: props.granularity !== 'second',
         'aria-label': label
         // onOpenChange: (isOpen: boolean) => {
@@ -841,7 +879,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
     };
 
     if (confirmBtn) {
-        finalProps.onChange = (d) => console.warn(d)
+        finalProps.onChange = (d) => setValue(d)
     }
 
     // const originalOnChange = props.onChange;
@@ -946,14 +984,19 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
                                 onClick={e => {
                                     e.stopPropagation();
                                     e.preventDefault();
-                                    alert('Confirm!');
+                                    
+                                    if (originalOnChange) {
+                                        originalOnChange(state.value);
+                                    }
                                 }}
                                 disabled={state.value === null}
-                                className={clsx('mr-2 px-2 py-0', {
-                                    'bg-green-500 hover:bg-green-400': state.value !== null,
-                                    'cursor-not-allowed': state.value === null
+                                className={clsx('mr-1 px-2 py-0 cursor-pointer disabled:text-gray-300 disabled:cursor-not-allowed text-gray-400 hover:text-gray-700', {
+                                    // 'cursor-pointer': state.value !== null,
+                                    // 'cursor-not-allowed': state.value === null
                                 })}
-                            >v</button>
+                            >
+                                <FiCheckSquare className='h-5 w-5'/>
+                            </button>
                         )}
                         <FieldButton {...buttonProps} isOpen={state.isOpen} />
                     </span>
@@ -977,6 +1020,9 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
                                     timeValue={state.timeValue} 
                                     setTimeValue={state.setTimeValue}
                                     showTimeScroller={showTimeScroller}
+                                    confirmBtn={confirmBtn}
+                                    onConfirm={originalOnChange}
+                                    dateTimeValue={state.value}
                                 />
                             </Popover>
                         </OverlayContainer>
