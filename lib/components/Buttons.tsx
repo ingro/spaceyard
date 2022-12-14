@@ -11,11 +11,11 @@ export function CancelModalButton({ onClose, label = 'Chiudi' }: any) {
 
 type FormSubmitButtonProps = {
     formState: FormState<any>;
-    onClick: () => void;
+    onClick?: () => void;
     children: any;
 };
 
-export function FormSubmitButton({ formState, onClick, children }: FormSubmitButtonProps) {
+export function FormSubmitButton({ formState, onClick = () => {}, children }: FormSubmitButtonProps) {
     return (
         <button 
             className="btn btn-primary form-submit-btn"
