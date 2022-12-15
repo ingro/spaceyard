@@ -59,7 +59,10 @@ const pause = (ms: number) =>  new Promise(resolve => setTimeout(resolve, ms));
 export default function Forms() {
     const { control, handleSubmit, formState } = useForm({
         mode: 'onTouched',
-        resolver: zodResolver(validationSchema)
+        resolver: zodResolver(validationSchema),
+        // defaultValues: {
+        //     event_date: new Date('2022-12-06T14:55:00.000Z')
+        // }
     });
 
     const [search, setSearch] = useState('');

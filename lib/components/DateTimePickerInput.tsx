@@ -352,6 +352,20 @@ function Calendar(props: any) {
 
     const yearOptions = getYearOptions(state);
 
+    const handleOnConfirm = () => {
+        if (props.onConfirm) {
+            // console.log(state);
+            // console.log(props);
+
+            const { year, month, day } = state.value;
+            const { hour, minute, second } = props.timeValue;
+
+            const d = new CalendarDateTime(year, month, day, hour, minute, second);
+
+            props.onConfirm(d);
+        }
+    }
+
     return (
         <div
             {...calendarProps}
@@ -444,9 +458,7 @@ function Calendar(props: any) {
                                             <button 
                                                 className='ml-2 mb-1 p-2 rounded bg-primary cursor-pointer hover:bg-primary-lighter text-white disabled:cursor-not-allowed disabled:bg-gray-300'
                                                 disabled={!state.value}
-                                                // FIXME: props.value contiene solo la data, come fare per impostare anche il time?
-                                                // dateTimeValue che contiene state.value CalendarDateTime viene valorizzato solo successivamente...
-                                                onClick={() => props.onConfirm ? props.onConfirm(props.value) : () => {}}
+                                                onClick={handleOnConfirm}
                                             >
                                                 <FiCheckSquare className='h-5 w-5' />
                                             </button>
@@ -909,6 +921,18 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
         }
     }, [state.isOpen]);
 
+    const [needsUpdate, setNeedsUpdate] = useState(false);
+
+    useEffect(() => {
+        if (confirmBtn && state.value && props.value) {
+            if (state.value.compare(props.value) !== 0) {
+                setNeedsUpdate(true);
+            } else {
+                setNeedsUpdate(false);
+            }
+        }
+    }, [state.value, props.value]);
+
     const {
         groupProps,
         labelProps,
@@ -990,12 +1014,15 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
                                     }
                                 }}
                                 disabled={state.value === null}
-                                className={clsx('mr-1 px-2 py-0 cursor-pointer disabled:text-gray-300 disabled:cursor-not-allowed text-gray-400 hover:text-gray-700', {
+                                className={clsx('rounded-full mr-1 px-2 py-0 cursor-pointer disabled:text-gray-300 disabled:cursor-not-allowed text-gray-400 hover:text-gray-700', {
+                                    // 'text-primary-lighter': needsUpdate
                                     // 'cursor-pointer': state.value !== null,
                                     // 'cursor-not-allowed': state.value === null
                                 })}
                             >
-                                <FiCheckSquare className='h-5 w-5'/>
+                                <FiCheckSquare className={clsx('h-5 w-5 rounded-full', {
+                                    pulse: needsUpdate
+                                })}/>
                             </button>
                         )}
                         <FieldButton {...buttonProps} isOpen={state.isOpen} />
@@ -1083,6 +1110,7 @@ export function DateTimePickerInputFieldController({ name, control, defaultValue
         }
     }
 
+
     const originalOnchange = field.onChange;
 
     field.onChange = (d) => {
@@ -1093,6 +1121,8 @@ export function DateTimePickerInputFieldController({ name, control, defaultValue
         // }
 
         originalOnchange(d.toDate(getLocalTimeZone()));
+
+        // console.log(d.toDate(getLocalTimeZone()));
     }
 
     return (
