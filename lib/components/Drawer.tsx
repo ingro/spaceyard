@@ -1,6 +1,6 @@
 import React from 'react';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import Portal from "@reach/portal";
+import { Portal } from "@reach/portal";
 import { animated, useTransition } from 'react-spring';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';

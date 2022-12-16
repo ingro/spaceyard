@@ -49,6 +49,7 @@ export default ({ command, mode }) => {
           /lodash\/.*/,
           /react\/.*/,
           "@reach/dialog",
+          "date-fns",
           "downshift",
           "i18next",
           "query-string",
@@ -64,7 +65,7 @@ export default ({ command, mode }) => {
           "react-router-dom",
           "react-spring",
           "react-toastify",
-          // "react",
+          "react",
           "zustand"
         ],
         output: {
