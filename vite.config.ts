@@ -42,13 +42,13 @@ export default ({ command, mode }) => {
       },
       rollupOptions: {
         external: [
+          /@reach\/.*/,
           /@react-aria\/.*/,
           /@react-icons\/.*/,
           /@react-stately\/.*/,
           /date-fns\/.*/,
           /lodash\/.*/,
           /react\/.*/,
-          "@reach/dialog",
           "date-fns",
           "downshift",
           "i18next",
