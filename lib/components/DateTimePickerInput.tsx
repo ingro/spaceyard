@@ -102,46 +102,6 @@ function CalendarCell({ state, date }: any) {
             </button>
         </div>
     );
-
-    // return (
-    //     <div {...cellProps} className={clsx('py-0.5 relative', isFocusVisible ? 'z-10' : 'z-0')}>
-    //         <div
-    //             {...buttonProps}
-    //             // @ts-ignore
-    //             ref={ref}
-    //             hidden={isOutsideVisibleRange}
-    //             // non é possibile cliccare sui giorni fuori dal mese corrente anche se è possibile renderli visibili,
-    //             // attendere implementazione su react-aria -> https://github.com/adobe/react-spectrum/issues/3257
-    //             className={clsx('h-10 outline-none group', {
-    //                 // 'rounded-l-full': isRoundedLeft,
-    //                 // 'rounded-r-full': isRoundedRight,
-    //                 'bg-blue-300': isSelected && !isInvalid,
-    //                 'bg-red-300': isSelected && isInvalid,
-    //                 disabled: isDisabled,
-    //             })}
-    //         >
-    //             <div
-    //                 className={clsx('w-full h-full flex items-center justify-center', {
-    //                     // rounded-full
-    //                     'text-gray-400': isDisabled && !isInvalid,
-    //                     'ring-2 group-focus:z-2 ring-primary ring-offset-2': isFocusVisible,
-    //                     'bg-red-600 text-white': (isSelectionStart || isSelectionEnd) && isInvalid,
-    //                     'bg-primary text-white': (isSelectionStart || isSelectionEnd) && !isInvalid,
-    //                     'bg-yellow-100': isToday && !isSelectionStart && !isSelectionEnd,
-    //                     'hover:bg-red-400':
-    //                         isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && isInvalid,
-    //                     'hover:bg-blue-400':
-    //                         isSelected && !isDisabled && !(isSelectionStart || isSelectionEnd) && !isInvalid,
-    //                     'hover:bg-blue-100': !isSelected && !isDisabled,
-    //                     'cursor-default': isDisabled || isSelected,
-    //                     'cursor-pointer': !isSelected && !isDisabled,
-    //                 })}
-    //             >
-    //                 {formattedDate}
-    //             </div>
-    //         </div>
-    //     </div>
-    // );
 }
 
 function CalendarGrid({ state, ...props }: any) {
@@ -326,6 +286,8 @@ function Calendar(props: any) {
         ref
     );
 
+    // console.log(state);
+
     useEffect(() => {
         if (depth !== 'month') {
             setShowYearSelect(false);
@@ -363,6 +325,8 @@ function Calendar(props: any) {
             const d = new CalendarDateTime(year, month, day, hour, minute, second);
 
             props.onConfirm(d);
+
+            props.close();
         }
     }
 
@@ -450,20 +414,12 @@ function Calendar(props: any) {
                                             onChange={props.setTimeValue}
                                             granularity={props.granularity}
                                             label="Time"
+                                            displayConfirmBtn={props.confirmBtn}
+                                            confirmBtnDisabled={!state.value}
+                                            onConfirm={handleOnConfirm}
                                             // {...fieldProps}
                                         />
                                     </div>
-                                    {props.confirmBtn && (
-                                        <div className='h-9 self-end'>
-                                            <button 
-                                                className='ml-2 mb-1 p-2 rounded bg-primary cursor-pointer hover:bg-primary-lighter text-white disabled:cursor-not-allowed disabled:bg-gray-300'
-                                                disabled={!state.value}
-                                                onClick={handleOnConfirm}
-                                            >
-                                                <FiCheckSquare className='h-5 w-5' />
-                                            </button>
-                                        </div>
-                                    )}
                                 </div>
                             )}
                         </div>
@@ -728,15 +684,26 @@ function TimeField(props: any) {
     return (
         <>
             <label className="font-bold" {...labelProps}>{props.label}</label>
-            <div
-                {...fieldProps}
-                // @ts-ignore
-                ref={ref}
-                className={props.className}
-            >
-                {state.segments.map((segment, i) => (
-                    <DateSegment key={i} segment={segment} state={state} />
-                ))}
+            <div className='flex items-stretch'>
+                <div
+                    {...fieldProps}
+                    // @ts-ignore
+                    ref={ref}
+                    className={props.className}
+                >
+                    {state.segments.map((segment, i) => (
+                        <DateSegment key={i} segment={segment} state={state} />
+                    ))}
+                </div>
+                {props.displayConfirmBtn && (
+                    <button 
+                        className='h-auto p-2 rounded-tr-md rounded-br-md bg-primary cursor-pointer hover:bg-primary-lighter text-white disabled:cursor-not-allowed disabled:bg-gray-300 focus:ring-2 ring-blue-400 outline-none'
+                        disabled={props.confirmBtnDisabled}
+                        onClick={props.onConfirm}
+                    >
+                        <FiCheckSquare className='h-5 w-5' />
+                    </button>
+                )}
             </div>
         </>
     );
@@ -935,7 +902,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
 
     const {
         groupProps,
-        labelProps,
+        // labelProps,
         fieldProps,
         buttonProps,
         dialogProps,
@@ -943,7 +910,6 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
         // @ts-ignore
     } = useDatePicker(finalProps, state, ref);
 
-    // console.log(calendarProps);
     // console.log(dialogProps);
 
     // @ts-ignore
@@ -960,6 +926,8 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
         offset: 4,
         isOpen: state.isOpen,
     });
+
+    // console.log(overlayPosition);
 
     const { overlayProps: positionProps } = overlayPosition;
 
@@ -1049,6 +1017,7 @@ export const DateTimePickerInput = React.forwardRef<any, DateTimePickerInputProp
                                     showTimeScroller={showTimeScroller}
                                     confirmBtn={confirmBtn}
                                     onConfirm={originalOnChange}
+                                    close={state.close}
                                     dateTimeValue={state.value}
                                 />
                             </Popover>
