@@ -16,6 +16,7 @@ import DataGrid from './pages/DataGrid';
 import Forms from './pages/Forms';
 import Notifications from './pages/Notifications';
 import Overlays from './pages/Overlays';
+import OmniboxPage from './pages/OmniboxPage';
 
 const appStorage = createAppStorage('spaceyard');
 
@@ -45,6 +46,7 @@ export default function Root() {
                                 <Route path="/notifications"><Notifications /></Route>
                                 <Route path="/overlays"><Overlays /></Route>
                                 <Route path="/datatable"><DataGrid /></Route>
+                                <Route path="/omnibox"><OmniboxPage /></Route>
                             </Switch>
                         </div>
                         <ToastContainer />

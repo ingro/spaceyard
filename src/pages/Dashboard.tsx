@@ -1,6 +1,8 @@
 import React from 'react';
+import clsx from 'clsx';
 
 import { DashboardPanel } from '../../lib/components/DashboardPanel';
+import { DashboardWidgetContainer } from '../../lib/main';
 import { createAppStorage } from '../../lib/utilities/storage';
 
 const storage = createAppStorage('spaceyard');
@@ -66,13 +68,31 @@ const widgetsList = {
     }
 };
 
+const bgColors = {
+    statsWidget: 'bg-green-400',
+    LastRequestWidget: 'bg-red-400',
+    ExportErrorByDateWidget: 'bg-violet-400',
+    ExportErrorByProviderWidget: 'bg-blue-400'
+};
+
+function DummyPanel({ widgetConfig }: any) {
+    return (
+        <DashboardWidgetContainer widgetConfig={widgetConfig}>
+            {/* @ts-ignore */}
+            <div className={clsx('h-full flex items-center text-center', bgColors[widgetConfig.code])}>
+                <div className="grow">{widgetConfig.code}</div>
+            </div>
+        </DashboardWidgetContainer>
+    );
+}
+
 export default function Dashboard() {
     return (
         <DashboardPanel
             appStorage={storage}
             // @ts-ignore
             widgetsList={widgetsList}
-            getComponentFn={() => <span />}
+            getComponentFn={() => DummyPanel}
             defaultWidgetMinHeight={300}
         >
             <h2>Dashboard</h2>

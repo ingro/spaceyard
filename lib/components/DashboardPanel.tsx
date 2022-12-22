@@ -33,6 +33,8 @@ export function DashboardPanel({ appStorage, children, widgetsList, defaultWidge
         });
     }, [widgetConfig]);
 
+    console.log(widgets);
+
     return (
         <>
             {isOpen && (

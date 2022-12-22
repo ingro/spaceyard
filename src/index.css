@@ -18,6 +18,10 @@
     &.btn-link {
         @apply border-0 text-blue-400 text-left underline;
     }
+
+    svg {
+        display: inline;
+    }
 }
 
 .--tabulisk-paginator-pageSizeSelector {

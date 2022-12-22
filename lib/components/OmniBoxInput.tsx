@@ -25,7 +25,7 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
         // getToggleButtonProps,
         getMenuProps,
         getInputProps,
-        getComboboxProps,
+        // getComboboxProps,
         highlightedIndex,
         getItemProps,
         inputValue
@@ -70,7 +70,9 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
     });
 
     return (
-        <div {...getComboboxProps()}>
+        <div 
+            // {...getComboboxProps()}
+        >
             <input 
                 className="w-full text-2xl bg-gray-600 text-gray-300 p-2 outline-none border-none"
                 placeholder="Cerca azione..."

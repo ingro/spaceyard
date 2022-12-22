@@ -1,9 +1,9 @@
-import create, { UseStore } from 'zustand';
+import create from 'zustand';
 
 import { OmniBoxAction, OmniBoxActionsState } from '../types';
 
-export function createOmniboxActionsStore(actions: Array<OmniBoxAction>): UseStore<OmniBoxActionsState> {
-    const wat = create<OmniBoxActionsState>(set => ({
+export function createOmniboxActionsStore(actions: Array<OmniBoxAction>) {
+    const store = create<OmniBoxActionsState>(set => ({
         actions,
         addActions: (actions: any) => {
             set((state: any) => ({ actions: state.actions.concat(actions) }));
@@ -13,5 +13,5 @@ export function createOmniboxActionsStore(actions: Array<OmniBoxAction>): UseSto
         }
     }));
 
-    return wat;
+    return store;
 }

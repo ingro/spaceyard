@@ -1,27 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 
-// import { OmniBox } from '../lib/components/OmniBox';
 import { TimeAgo } from '../lib/components/TimeAgo';
 import { useAppContext } from '../lib/hooks';
 
 // import { InputSearchReactAria } from './InputSearchReactAria';
-// import { OmniBoxAction } from '../lib/types';
-
-// const actions: Array<OmniBoxAction> = [
-//   {
-//     value: 'foo',
-//     label: 'Foo',
-//     Icon: FiCheck,
-//     key: 'foo'
-//   },
-//   {
-//     value: 'bar',
-//     label: 'Bar',
-//     Icon: FiAlertTriangle,
-//     key: 'bar'
-//   }
-// ];
 
 function App() {
   // const [dateLocale, setDateLocale] = useState<any>(null);
@@ -53,12 +36,8 @@ function App() {
           <NavLink className="btn btn-link" to="/notifications">Notifications</NavLink>
           <NavLink className="btn btn-link" to="/overlays">Overlays</NavLink>
           <NavLink className="btn btn-link" to="/datatable">DataTable</NavLink>
+          <NavLink className="btn btn-link" to="/omnibox">Omnibox</NavLink>
         </div>
-        {/* <OmniBox 
-          isOpen={true}
-          onClose={() => {}}
-          actions={actions}
-        /> */}
       </div>
     </>
   );
