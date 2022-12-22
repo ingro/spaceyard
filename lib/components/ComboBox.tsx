@@ -187,7 +187,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
         getToggleButtonProps,
         getMenuProps,
         getInputProps,
-        getComboboxProps,
+        // getComboboxProps,
         highlightedIndex,
         getItemProps,
         inputValue,
@@ -231,7 +231,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                     e.stopPropagation();
                 }
             }}
-            {...getComboboxProps()}
+            // {...getComboboxProps()}
             // ref={containerRef}
         >
             <input 

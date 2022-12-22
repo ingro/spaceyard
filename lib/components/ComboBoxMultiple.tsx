@@ -217,7 +217,7 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
         getToggleButtonProps,
         getMenuProps,
         getInputProps,
-        getComboboxProps,
+        // getComboboxProps,
         highlightedIndex,
         getItemProps,
         // inputValue,
@@ -235,7 +235,7 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
     return (
         <div 
             className="relative h-full w-full font-normal"
-            {...getComboboxProps()}
+            // {...getComboboxProps()}
             tabIndex={0}
             onFocus={() => {
                 // @ts-ignore
