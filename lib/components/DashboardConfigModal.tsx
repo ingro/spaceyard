@@ -1,32 +1,19 @@
-import React, { useState, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { FiCheck, FiMenu } from 'react-icons/fi';
+import { useState, useRef } from 'react';
+import { FiCheck } from 'react-icons/fi';
+import { useListState } from '@react-stately/list';
+import { Item } from '@react-stately/collections';
+import { useDroppableCollectionState, useDraggableCollectionState } from '@react-stately/dnd';
+import { useListBox, useOption } from '@react-aria/listbox';
+import { useDroppableCollection, ListDropTargetDelegate, useDraggableCollection, useDraggableItem, useDropIndicator, useDroppableItem } from '@react-aria/dnd';
+import { ListKeyboardDelegate } from '@react-aria/selection';
+import { mergeProps } from '@react-aria/utils';
 import difference from 'lodash/difference';
-import find from 'lodash/find';
 import clsx from 'clsx';
 
-import { Select } from './Select';
-import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
 import { CancelModalButton } from './Buttons';
-import { Checkbox } from './Checkbox';
 import DefaultErrorFallback from './DefaultErrorFallback';
-import { DashboardWidgedSizes, DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
-
-const sizes = {
-    sm: 'Small',
-    md: 'Medium',
-    lg: 'Large',
-    xl: 'X-Large'
-};
-
-function getSizeOptions() {
-    return Object.entries(sizes).map(([key, value]) => {
-        return {
-            value: key,
-            label: value
-        };
-    });
-}
+import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
+import { DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
 
 function getInitialState(widgetConfig: Array<DashboardWidgetConfig>, widgetsList: Record<string, DashboardWidgetConfigStatic>) {
     // @ts-ignore
@@ -49,6 +36,171 @@ function getInitialState(widgetConfig: Array<DashboardWidgetConfig>, widgetsList
     return state;
 }
 
+function DropIndicator(props: any) {
+    const ref = useRef();
+    const { dropIndicatorProps, isHidden, isDropTarget } = useDropIndicator(
+        props,
+        props.dropState,
+        // @ts-ignore
+        ref
+    );
+
+    if (isHidden) {
+        return null;
+    }
+  
+    return (
+        <li
+            {...dropIndicatorProps}
+            role="option"
+            // @ts-ignore
+            ref={ref}
+            className={`drop-indicator ${isDropTarget ? 'drop-target' : ''}`}
+        />
+    );
+  }
+
+function ReorderableWidget({ item, state, dragState, dropState }: any) {
+    const ref = useRef();
+
+    const { optionProps, isSelected, isDisabled } = useOption(
+        { key: item.code },
+        state,
+        // @ts-ignore
+        ref
+    );
+
+    const { dropProps, isDropTarget } = useDroppableItem(
+        {
+            target: { type: 'item', key: item.code, dropPosition: 'on' }
+        },
+        dropState,
+        // @ts-ignore
+        ref
+    );
+
+    // const { isFocusVisible, focusProps } = useFocusRing();
+
+    const { dragProps } = useDraggableItem({
+        key: item.code
+    }, dragState);
+
+    return (
+        <>
+            <DropIndicator
+                target={{ type: 'item', key: item.code, dropPosition: 'before' }}
+                dropState={dropState}
+            />
+            <li
+                {...mergeProps(optionProps, dragProps, dropProps)}
+                // @ts-ignore
+                ref={ref}
+                className={clsx('option', {
+                    // 'focus-visible': isFocusVisible,
+                    'drop-target': isDropTarget
+                })}
+            >
+                {item.name}
+            </li>
+            {state.collection.getKeyAfter(item.code) == null &&
+                (
+                    <DropIndicator
+                        target={{ type: 'item', key: item.code, dropPosition: 'after' }}
+                        dropState={dropState}
+                    />
+                )
+            }
+        </>
+    );
+}
+
+function WidgetList(props: any) {
+    const { items } = props;
+
+    const state = useListState(props);
+    const ref = useRef();
+
+    const { listBoxProps } = useListBox(
+        {
+            ...props,
+            shouldSelectOnPressUp: true
+        },
+        state,
+        // @ts-ignore
+        ref
+    );
+
+    const dropState = useDroppableCollectionState({
+        ...props,
+        collection: state.collection,
+        selectionManager: state.selectionManager
+    });
+
+    const { collectionProps } = useDroppableCollection(
+        {
+            ...props,
+            keyboardDelegate: new ListKeyboardDelegate(
+                state.collection,
+                state.disabledKeys,
+                // @ts-ignore
+                ref
+            ),
+            dropTargetDelegate: new ListDropTargetDelegate(
+                state.collection, 
+                // @ts-ignore
+                ref
+            )
+        },
+        dropState,
+        // @ts-ignore
+        ref
+    );
+
+    const dragState = useDraggableCollectionState({
+        ...props,
+        collection: state.collection,
+        selectionManager: state.selectionManager,
+        getItems: props.getItems || ((keys) => {
+            // console.log(keys);
+            return [...keys].map((key) => {
+                // console.log(state.collection);
+                const item = state.collection.getItem(key);
+
+                console.log(item);
+    
+                return {
+                    'text/plain': item.textValue
+                };
+            })
+        })
+    });
+
+    useDraggableCollection(
+        props, 
+        dragState, 
+        // @ts-ignore
+        ref
+    );
+
+    return (
+        <ul
+            {...mergeProps(listBoxProps, collectionProps)} 
+            // @ts-ignore
+            ref={ref}
+        >
+            {items.map((item: any) => (
+                <ReorderableWidget
+                    key={item.code}
+                    item={item}
+                    state={state}
+                    dragState={dragState}
+                    dropState={dropState}
+                />
+            ))}
+        </ul>
+    )
+}
+
 function reorder(list: Array<any>, startIndex: number, endIndex: number) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -57,112 +209,29 @@ function reorder(list: Array<any>, startIndex: number, endIndex: number) {
     return result;
 }
 
-function WidgetElement({ widget, index, updateWidgetActive, updateWidgetSize, isDragging }: any) {
-    return (
-        <Draggable 
-            key={widget.code}
-            draggableId={widget.code}
-            index={index}
-        >
-            {(provided: any, snapshot: any) => (
-                <div
-                    className={clsx('px-4 py-2 mb-2 outline-none rounded-sm flex items-center', {
-                        'bg-green-200': widget.active && ! snapshot.isDragging,
-                        'bg-blue-200': ! widget.active && ! snapshot.isDragging,
-                        'bg-green-400': widget.active && snapshot.isDragging,
-                        'bg-blue-400': ! widget.active && snapshot.isDragging
-                    })}
-                    ref={provided.innerRef}
-                    style={provided.draggableProps.style}
-                    {...provided.draggableProps}
-                >
-                    <span 
-                        className="px-2 py-1 bg-gray-300 mr-2 outline-none"
-                        {...provided.dragHandleProps}
-                    >
-                        <FiMenu />
-                    </span>
-                    <span className="grow">
-                        {widget.name}
-                    </span>
-                    <Checkbox 
-                        checked={widget.active}
-                        label="Attivo"
-                        onChange={(checked: boolean) => {
-                            updateWidgetActive(widget.code, checked)
-                        }}
-                    />
-                    <span className="ml-2 w-32">
-                        {/* {isDragging ? (
-                            // Necessario ri-renderizzare il Select in maniera che popper aggiorni la posizione...
-                            // @ts-ignore
-                            <div className="bg-white py-1.5 px-2 w-full">{sizes[widget.size]}</div>
-                        ) : ( */}
-                        <Select
-                            options={getSizeOptions()}
-                            onChange={(item: any) => updateWidgetSize(widget.code, item ? item.value : null)}
-                            value={widget.size}
-                        />
-                        {/* )} */}
-                    </span>
-                </div>
-            )}
-        </Draggable>
-    )
-}
-
-const WidgetList = React.memo(({ widgets, updateWidgetActive, updateWidgetSize, isDragging }: any) => {
-    return widgets.map((widget: DashboardWidgetConfig, index: number) => (
-        <WidgetElement 
-            widget={widget} 
-            index={index} 
-            key={widget.code}
-            updateWidgetActive={updateWidgetActive}
-            updateWidgetSize={updateWidgetSize}
-            isDragging={isDragging}
-        />
-    ));
-});
-
 export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
     const [items, setItems] = useState(getInitialState(widgetConfig, widgetsList));
 
-    const onDragEnd = useCallback((result: any) => {
-        if (!result.destination) {
-            return;
-        }
-    
+    // console.log(items);
+
+    const onReorder = (e: any) => {
+        console.log(e.target, e.keys);
+
         const reordered = reorder(
             items,
-            result.source.index,
-            result.destination.index
+            0,
+            3
         );
     
         setItems(reordered);
-    }, [items]);
 
-    function updateWidgetSize(code: string, size: DashboardWidgedSizes) {
-        const widget = find(items, { code });
-
-        if (widget) {
-            widget.size = size;
+        if (e.target.dropPosition === 'before') {
+            
+        } else if (e.target.dropPosition === 'after') {
+            
         }
-
-        // @ts-ignore
-        setItems([].concat(...items));
     }
-
-    function updateWidgetActive(code: string, active: boolean) {
-        const widget = find(items, { code });
-
-        if (widget) {
-            widget.active = active;
-        }
-
-        // @ts-ignore
-        setItems([].concat(...items));
-    }
-
+    
     return (
         <Modal
             labelId="dashboard-config"
@@ -178,28 +247,14 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
             </ModalTitle>
             <ModalBody>
                 <div style={{ minHeight: '50vh' }}>
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="droppable">
-                            {(provided: any, snapshot: any) => (
-                                <div
-                                    className={clsx('px-1 pt-2 pb-1', {
-                                        'bg-gray-300': snapshot.isDraggingOver,
-                                        'bg-gray-200': ! snapshot.isDraggingOver
-                                    })}
-                                    {...provided.droppableProps}
-                                    ref={provided.innerRef}
-                                >
-                                    <WidgetList 
-                                        widgets={items} 
-                                        updateWidgetActive={updateWidgetActive}
-                                        updateWidgetSize={updateWidgetSize}
-                                        isDragging={snapshot.isDraggingOver}
-                                    />
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
+                    <WidgetList
+                        selectionMode="single"
+                        selectionBehavior="replace"
+                        items={items}
+                        onReorder={onReorder}
+                    >
+                        {(item: any) => <Item key={item.code}>{item.name}</Item>}
+                    </WidgetList>
                 </div>
             </ModalBody>
             <ModalFooter>
