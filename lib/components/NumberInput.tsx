@@ -115,7 +115,7 @@ export const NumberInput = React.forwardRef<any, NumberInputProps>((props, forwa
     const hasValue = inputProps.value && inputProps.value !== '';
 
     // console.log(incrementProps);
-    // console.log(inputProps);
+    // console.log(groupProps);
     
     return (
         <div className={clsx('group relative', {

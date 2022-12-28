@@ -87,6 +87,7 @@
     "downshift": "7.0.5",
     "i18next-http-backend": "^2.1.1",
     "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
     "lodash": "^4.17.21",
     "postcss": "^8.4.20",
     "postcss-nesting": "^10.2.0",
