@@ -12,10 +12,10 @@ import { DatePickerInputFieldController } from '../../lib/components/DatePickerI
 import { InputFieldController } from '../../lib/components/Input';
 import { InputSearch } from '../../lib/components/InputSearch';
 import { LoadingButton } from '../../lib/components/Buttons';
-import { NumberInput, NumberInputFieldController } from '../../lib/components/NumberInput';
+import { NumberInputFieldController } from '../../lib/components/NumberInput';
 import { SelectFieldController } from '../../lib/components/Select';
 import { SwitchFieldController } from '../../lib/components/Switch';
-import { DateTimePickerInput, DateTimePickerInputFieldController } from '../../lib/components/DateTimePickerInput';
+import { DateTimePickerInputFieldController } from '../../lib/components/DateTimePickerInput';
 import { format } from 'date-fns';
 
 const options = [
@@ -77,7 +77,6 @@ export default function Forms() {
 
     return (
         <div>
-            <NumberInput onChange={d => console.warn(d)} />
             <div className="text text-purple-500 text-xl">Input liberi</div>
             <div className="w-1/4 mb-2">
                 <InputSearch 
