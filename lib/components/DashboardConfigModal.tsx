@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiMenu } from 'react-icons/fi';
 import { useListState } from '@react-stately/list';
 import { Item } from '@react-stately/collections';
 import { useDroppableCollectionState, useDraggableCollectionState } from '@react-stately/dnd';
 import { useListBox, useOption } from '@react-aria/listbox';
-import { useDroppableCollection, ListDropTargetDelegate, useDraggableCollection, useDraggableItem, useDropIndicator, useDroppableItem } from '@react-aria/dnd';
+import { useDroppableCollection, ListDropTargetDelegate, useDraggableCollection, useDraggableItem, useDropIndicator, useDroppableItem, DragPreview } from '@react-aria/dnd';
 import { ListKeyboardDelegate } from '@react-aria/selection';
 import { mergeProps } from '@react-aria/utils';
 import difference from 'lodash/difference';
@@ -13,7 +13,25 @@ import clsx from 'clsx';
 import { CancelModalButton } from './Buttons';
 import DefaultErrorFallback from './DefaultErrorFallback';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
+import { Checkbox } from './Checkbox';
+import { Select } from './Select';
 import { DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
+
+const sizes = {
+    sm: 'Small',
+    md: 'Medium',
+    lg: 'Large',
+    xl: 'X-Large'
+};
+
+function getSizeOptions() {
+    return Object.entries(sizes).map(([key, value]) => {
+        return {
+            value: key,
+            label: value
+        };
+    });
+}
 
 function getInitialState(widgetConfig: Array<DashboardWidgetConfig>, widgetsList: Record<string, DashboardWidgetConfigStatic>) {
     // @ts-ignore
@@ -45,6 +63,8 @@ function DropIndicator(props: any) {
         ref
     );
 
+    // console.log(isHidden, isDropTarget, dropIndicatorProps);
+
     if (isHidden) {
         return null;
     }
@@ -55,7 +75,11 @@ function DropIndicator(props: any) {
             role="option"
             // @ts-ignore
             ref={ref}
-            className={`drop-indicator ${isDropTarget ? 'drop-target' : ''}`}
+            className={clsx('drop-indicator w-full ml-0 mb-[-2px] h-12 outline-none bg-transparent', {
+                'drop-target': isDropTarget,
+                // 'bg-transparent': !isDropTarget,
+                // 'bg-blue-500': isDropTarget
+            })}
         />
     );
   }
@@ -95,12 +119,36 @@ function ReorderableWidget({ item, state, dragState, dropState }: any) {
                 {...mergeProps(optionProps, dragProps, dropProps)}
                 // @ts-ignore
                 ref={ref}
-                className={clsx('option', {
+                className={clsx('option px-4 py-2 mb-2 outline-none rounded-sm flex items-center bg-green-200', {
                     // 'focus-visible': isFocusVisible,
                     'drop-target': isDropTarget
                 })}
             >
-                {item.name}
+                <span 
+                    className="px-2 py-1 bg-gray-300 mr-2 outline-none"
+                >
+                    <FiMenu />
+                </span>
+                <span className="grow">
+                    {item.name}
+                </span>
+                <Checkbox 
+                    checked={item.active}
+                    label="Attivo"
+                    onChange={(checked: boolean) => {
+                        console.warn(checked);
+                        // updateWidgetActive(widget.code, checked)
+                    }}
+                />
+                <span className="ml-2 w-32">
+                    <Select
+                        options={getSizeOptions()}
+                        onChange={(item: any) => {
+                            // updateWidgetSize(item.code, item ? item.value : null)
+                        }}
+                        value={item.size}
+                    />
+                </span>
             </li>
             {state.collection.getKeyAfter(item.code) == null &&
                 (
@@ -116,6 +164,7 @@ function ReorderableWidget({ item, state, dragState, dropState }: any) {
 
 function WidgetList(props: any) {
     const { items } = props;
+    const preview = useRef(null);
 
     const state = useListState(props);
     const ref = useRef();
@@ -149,7 +198,7 @@ function WidgetList(props: any) {
                 state.collection, 
                 // @ts-ignore
                 ref
-            )
+            ),
         },
         dropState,
         // @ts-ignore
@@ -160,6 +209,7 @@ function WidgetList(props: any) {
         ...props,
         collection: state.collection,
         selectionManager: state.selectionManager,
+        preview,
         getItems: props.getItems || ((keys) => {
             // console.log(keys);
             return [...keys].map((key) => {
@@ -197,6 +247,13 @@ function WidgetList(props: any) {
                     dropState={dropState}
                 />
             ))}
+            {/* <DragPreview ref={preview}>
+                {(items) => (
+                    <div className='bg-blue-500 text-white h-16'>
+                        <span className="text-2xl">FOO BAR</span>
+                    </div>
+                )}
+            </DragPreview> */}
         </ul>
     )
 }
@@ -249,7 +306,7 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
                 <div style={{ minHeight: '50vh' }}>
                     <WidgetList
                         selectionMode="single"
-                        selectionBehavior="replace"
+                        // selectionBehavior="replace"
                         items={items}
                         onReorder={onReorder}
                     >
