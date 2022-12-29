@@ -75,10 +75,10 @@ function DropIndicator(props: any) {
             role="option"
             // @ts-ignore
             ref={ref}
-            className={clsx('drop-indicator w-full ml-0 mb-[-2px] h-12 outline-none bg-transparent', {
+            className={clsx('drop-indicator absolute w-full mb-[-0.25rem] mt-[-0.25rem] h-0.5 outline-none', {
                 'drop-target': isDropTarget,
-                // 'bg-transparent': !isDropTarget,
-                // 'bg-blue-500': isDropTarget
+                'bg-transparent': !isDropTarget,
+                'bg-blue-500': isDropTarget
             })}
         />
     );
@@ -119,16 +119,16 @@ function ReorderableWidget({ item, state, dragState, dropState }: any) {
                 {...mergeProps(optionProps, dragProps, dropProps)}
                 // @ts-ignore
                 ref={ref}
-                className={clsx('option px-4 py-2 mb-2 outline-none rounded-sm flex items-center bg-green-200', {
+                className={clsx('option px-4 py-2 mb-2 outline-none rounded-sm flex items-center bg-green-200 border border-gray-400', {
                     // 'focus-visible': isFocusVisible,
                     'drop-target': isDropTarget
                 })}
             >
-                <span 
+                {/* <span 
                     className="px-2 py-1 bg-gray-300 mr-2 outline-none"
                 >
                     <FiMenu />
-                </span>
+                </span> */}
                 <span className="grow">
                     {item.name}
                 </span>
@@ -234,6 +234,7 @@ function WidgetList(props: any) {
 
     return (
         <ul
+            className='relative'
             {...mergeProps(listBoxProps, collectionProps)} 
             // @ts-ignore
             ref={ref}
