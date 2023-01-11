@@ -8,13 +8,13 @@ import { createAppStorage } from '../../lib/utilities/storage';
 const storage = createAppStorage('spaceyard');
 
 const widgetsList = {
-    statsWidget: {
-        name: 'Statistiche XYZ',
+    xyzWidget: {
+        name: 'XYZ',
         minHeight: 400,
         extras: []
     },
-    LastRequestWidget: {
-        name: 'Ultime richieste',
+    abcWidget: {
+        name: 'ABC',
         extras: [
             {
                 name: 'rows_number',
@@ -58,21 +58,21 @@ const widgetsList = {
             }
         ]
     },
-    ExportErrorByDateWidget: { 
-        name: 'Errori export per data',
+    wasdWidget: { 
+        name: 'WASD',
         extras: []
     },
-    ExportErrorByProviderWidget: {
-        name: 'Errori export per tipo',
+    qwertyWidget: {
+        name: 'QWERTY',
         extras: []
     }
 };
 
 const bgColors = {
-    statsWidget: 'bg-green-400',
-    LastRequestWidget: 'bg-red-400',
-    ExportErrorByDateWidget: 'bg-violet-400',
-    ExportErrorByProviderWidget: 'bg-blue-400'
+    xyzWidget: 'bg-green-400',
+    abcWidget: 'bg-red-400',
+    wasdWidget: 'bg-violet-400',
+    qwertyWidget: 'bg-blue-400'
 };
 
 function DummyPanel({ widgetConfig }: any) {

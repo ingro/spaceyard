@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { FiCheck, FiMenu } from 'react-icons/fi';
+import { FiCheck } from 'react-icons/fi';
 import { useListState } from '@react-stately/list';
 import { Item } from '@react-stately/collections';
 import { useDroppableCollectionState, useDraggableCollectionState } from '@react-stately/dnd';
@@ -8,6 +8,8 @@ import { useDroppableCollection, ListDropTargetDelegate, useDraggableCollection,
 import { ListKeyboardDelegate } from '@react-aria/selection';
 import { mergeProps } from '@react-aria/utils';
 import difference from 'lodash/difference';
+import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import clsx from 'clsx';
 
 import { CancelModalButton } from './Buttons';
@@ -15,7 +17,7 @@ import DefaultErrorFallback from './DefaultErrorFallback';
 import { Modal, ModalBody, ModalFooter, ModalTitle } from './Modal';
 import { Checkbox } from './Checkbox';
 import { Select } from './Select';
-import { DashboardWidgetConfig, DashboardWidgetConfigStatic } from '../types';
+import { DashboardWidgetConfig, DashboardWidgetConfigStatic, DashboardWidgedSizes } from '../types';
 
 const sizes = {
     sm: 'Small',
@@ -55,11 +57,10 @@ function getInitialState(widgetConfig: Array<DashboardWidgetConfig>, widgetsList
 }
 
 function DropIndicator(props: any) {
-    const ref = useRef();
+    const ref = useRef(null);
     const { dropIndicatorProps, isHidden, isDropTarget } = useDropIndicator(
         props,
         props.dropState,
-        // @ts-ignore
         ref
     );
 
@@ -73,24 +74,64 @@ function DropIndicator(props: any) {
         <li
             {...dropIndicatorProps}
             role="option"
-            // @ts-ignore
             ref={ref}
-            className={clsx('drop-indicator absolute w-full mb-[-0.25rem] mt-[-0.25rem] h-0.5 outline-none', {
-                'drop-target': isDropTarget,
-                'bg-transparent': !isDropTarget,
-                'bg-blue-500': isDropTarget
+            className={clsx('drop-indicator absolute w-full outline-none mt-[-1.25rem]', { // mb-[-0.25rem] mt-[-0.25rem]
+                // 'bg-transparent': !isDropTarget,
+                // 'bg-blue-500 drop-target': isDropTarget
             })}
-        />
+        >
+            <span className="border-2 border-blue-500 absolute grow-0 rounded-full h-4 w-4 bg-white top-2 left-[-1rem]" />
+            <span className="border-t border-2 border-blue-500 w-full inline-block grow" />
+            <span className="border-2 border-blue-500 absolute grow-0 rounded-full h-4 w-4 bg-white top-2 right-[-1rem]" />
+        </li>
     );
-  }
+}
 
-function ReorderableWidget({ item, state, dragState, dropState }: any) {
-    const ref = useRef();
+function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}, updateWidgetSize = () => {} }: any) {
+    return (
+        <span
+            className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border', {
+                'bg-green-200': item.active,
+                'bg-blue-200': !item.active,
+                'border-gray-400 px-4': !isDragPreview,
+                'border-blue-500 px-12 font-semibold': isDragPreview
+                // 'focus-visible': isFocusVisible,
+                // 'drop-target': isDropTarget
+            })}
+        >
+            <span className="grow">
+                {item.name}
+            </span>
+            {isDragPreview === false && (
+                <>
+                    <Checkbox 
+                        checked={item.active}
+                        label="Attivo"
+                        onChange={(checked: boolean) => {
+                            updateWidgetActive(item.code, checked);
+                        }}
+                    />
+                    <span className="ml-2 w-32">
+                        <Select
+                            options={getSizeOptions()}
+                            onChange={(option: any) => {
+                                updateWidgetSize(item.code, option ? option.value : null)
+                            }}
+                            value={item.size}
+                        />
+                    </span>
+                </>    
+            )}
+        </span>
+    );
+}
+
+function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActive, updateWidgetSize }: any) {
+    const ref = useRef(null);
 
     const { optionProps, isSelected, isDisabled } = useOption(
         { key: item.code },
         state,
-        // @ts-ignore
         ref
     );
 
@@ -99,7 +140,6 @@ function ReorderableWidget({ item, state, dragState, dropState }: any) {
             target: { type: 'item', key: item.code, dropPosition: 'on' }
         },
         dropState,
-        // @ts-ignore
         ref
     );
 
@@ -117,38 +157,13 @@ function ReorderableWidget({ item, state, dragState, dropState }: any) {
             />
             <li
                 {...mergeProps(optionProps, dragProps, dropProps)}
-                // @ts-ignore
                 ref={ref}
-                className={clsx('option px-4 py-2 mb-2 outline-none rounded-sm flex items-center bg-green-200 border border-gray-400', {
-                    // 'focus-visible': isFocusVisible,
-                    'drop-target': isDropTarget
-                })}
+                // className={clsx('option px-4 py-2 mb-2 outline-none rounded-sm flex items-center bg-green-200 border border-gray-400', {
+                //     // 'focus-visible': isFocusVisible,
+                //     'drop-target': isDropTarget
+                // })}
             >
-                {/* <span 
-                    className="px-2 py-1 bg-gray-300 mr-2 outline-none"
-                >
-                    <FiMenu />
-                </span> */}
-                <span className="grow">
-                    {item.name}
-                </span>
-                <Checkbox 
-                    checked={item.active}
-                    label="Attivo"
-                    onChange={(checked: boolean) => {
-                        console.warn(checked);
-                        // updateWidgetActive(widget.code, checked)
-                    }}
-                />
-                <span className="ml-2 w-32">
-                    <Select
-                        options={getSizeOptions()}
-                        onChange={(item: any) => {
-                            // updateWidgetSize(item.code, item ? item.value : null)
-                        }}
-                        value={item.size}
-                    />
-                </span>
+                <WidgetItem item={item} updateWidgetActive={updateWidgetActive} updateWidgetSize={updateWidgetSize}/>
             </li>
             {state.collection.getKeyAfter(item.code) == null &&
                 (
@@ -167,15 +182,15 @@ function WidgetList(props: any) {
     const preview = useRef(null);
 
     const state = useListState(props);
-    const ref = useRef();
+    const ref = useRef(null);
 
     const { listBoxProps } = useListBox(
         {
             ...props,
+            'aria-label': 'Widget List',
             shouldSelectOnPressUp: true
         },
         state,
-        // @ts-ignore
         ref
     );
 
@@ -191,17 +206,14 @@ function WidgetList(props: any) {
             keyboardDelegate: new ListKeyboardDelegate(
                 state.collection,
                 state.disabledKeys,
-                // @ts-ignore
                 ref
             ),
             dropTargetDelegate: new ListDropTargetDelegate(
                 state.collection, 
-                // @ts-ignore
                 ref
             ),
         },
         dropState,
-        // @ts-ignore
         ref
     );
 
@@ -216,9 +228,10 @@ function WidgetList(props: any) {
                 // console.log(state.collection);
                 const item = state.collection.getItem(key);
 
-                console.log(item);
+                // console.log(item);
     
                 return {
+                    ...item.value,
                     'text/plain': item.textValue
                 };
             })
@@ -228,16 +241,14 @@ function WidgetList(props: any) {
     useDraggableCollection(
         props, 
         dragState, 
-        // @ts-ignore
         ref
     );
 
     return (
         <ul
-            className='relative'
-            {...mergeProps(listBoxProps, collectionProps)} 
-            // @ts-ignore
+            className='relative mt-1'
             ref={ref}
+            {...mergeProps(listBoxProps, collectionProps)} 
         >
             {items.map((item: any) => (
                 <ReorderableWidget
@@ -246,15 +257,21 @@ function WidgetList(props: any) {
                     state={state}
                     dragState={dragState}
                     dropState={dropState}
+                    updateWidgetActive={props.updateWidgetActive}
+                    updateWidgetSize={props.updateWidgetSize}
                 />
             ))}
-            {/* <DragPreview ref={preview}>
-                {(items) => (
-                    <div className='bg-blue-500 text-white h-16'>
-                        <span className="text-2xl">FOO BAR</span>
-                    </div>
-                )}
-            </DragPreview> */}
+            <DragPreview ref={preview}>
+                {(items) => {
+                    const item = items[0];
+
+                    // console.log(item);
+
+                    return (
+                        <WidgetItem item={item} isDragPreview={true} />
+                    );
+                }}
+            </DragPreview>
         </ul>
     )
 }
@@ -270,24 +287,59 @@ function reorder(list: Array<any>, startIndex: number, endIndex: number) {
 export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
     const [items, setItems] = useState(getInitialState(widgetConfig, widgetsList));
 
-    // console.log(items);
-
     const onReorder = (e: any) => {
-        console.log(e.target, e.keys);
+        // console.log(items);
+        // console.log(e.target);
+        // console.log(Array.from(e.keys));
+
+        const sourceCode = Array.from(e.keys)[0];
+
+        if (sourceCode === e.target.key) {
+            return;
+        }
+
+        // @ts-ignore
+        const sourceIndex = findIndex(items, { code: sourceCode });
+        let targetIndex = findIndex(items, { code: e.target.key });
+
+        // if (e.target.dropPosition === 'before' && targetIndex > 0) {
+        //     targetIndex = targetIndex - 1;
+        // } else if (e.target.dropPosition === 'after') {
+        //     // targetIndex = targetIndex + 1;
+        // }
+
+        // console.log(sourceIndex);
+        // console.log(targetIndex);
 
         const reordered = reorder(
             items,
-            0,
-            3
+            sourceIndex,
+            targetIndex
         );
     
         setItems(reordered);
+    }
 
-        if (e.target.dropPosition === 'before') {
-            
-        } else if (e.target.dropPosition === 'after') {
-            
+    function updateWidgetSize(code: string, size: DashboardWidgedSizes) {
+        const widget = find(items, { code });
+
+        if (widget) {
+            widget.size = size;
         }
+
+        // @ts-ignore
+        setItems([].concat(...items));
+    }
+
+    function updateWidgetActive(code: string, active: boolean) {
+        const widget = find(items, { code });
+
+        if (widget) {
+            widget.active = active;
+        }
+
+        // @ts-ignore
+        setItems([].concat(...items));
     }
     
     return (
@@ -310,6 +362,8 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
                         // selectionBehavior="replace"
                         items={items}
                         onReorder={onReorder}
+                        updateWidgetActive={updateWidgetActive}
+                        updateWidgetSize={updateWidgetSize}
                     >
                         {(item: any) => <Item key={item.code}>{item.name}</Item>}
                     </WidgetList>
