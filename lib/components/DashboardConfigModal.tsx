@@ -126,7 +126,7 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
     );
 }
 
-function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActive, updateWidgetSize }: any) {
+function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActive, updateWidgetSize, WidgetItemComponent }: any) {
     const ref = useRef(null);
 
     const { optionProps, isSelected, isDisabled } = useOption(
@@ -163,7 +163,7 @@ function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActi
                 //     'drop-target': isDropTarget
                 // })}
             >
-                <WidgetItem item={item} updateWidgetActive={updateWidgetActive} updateWidgetSize={updateWidgetSize}/>
+                <WidgetItemComponent item={item} updateWidgetActive={updateWidgetActive} updateWidgetSize={updateWidgetSize}/>
             </li>
             {state.collection.getKeyAfter(item.code) == null &&
                 (
@@ -177,7 +177,7 @@ function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActi
     );
 }
 
-function WidgetList(props: any) {
+export function WidgetList(props: any) {
     const { items } = props;
     const preview = useRef(null);
 
@@ -244,6 +244,8 @@ function WidgetList(props: any) {
         ref
     );
 
+    const WidgetItemComponent = props.WidgetItemComponent;
+
     return (
         <ul
             className='relative mt-1'
@@ -259,6 +261,7 @@ function WidgetList(props: any) {
                     dropState={dropState}
                     updateWidgetActive={props.updateWidgetActive}
                     updateWidgetSize={props.updateWidgetSize}
+                    WidgetItemComponent={WidgetItemComponent}
                 />
             ))}
             <DragPreview ref={preview}>
@@ -276,7 +279,7 @@ function WidgetList(props: any) {
     )
 }
 
-function reorder(list: Array<any>, startIndex: number, endIndex: number) {
+export function reorder(list: Array<any>, startIndex: number, endIndex: number) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -364,6 +367,7 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
                         onReorder={onReorder}
                         updateWidgetActive={updateWidgetActive}
                         updateWidgetSize={updateWidgetSize}
+                        WidgetItemComponent={WidgetItem}
                     >
                         {(item: any) => <Item key={item.code}>{item.name}</Item>}
                     </WidgetList>
