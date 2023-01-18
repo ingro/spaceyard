@@ -59,7 +59,7 @@ function WidgetItem({ item, isDragPreview }: any) {
             })}
         >
             <span className="grow">
-                {item.name}
+                {item.label}
             </span>
         </span>
     );
@@ -93,10 +93,6 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
     const [selected, setSelected] = useState(getInitialSelectedColumns(availableColumns, currentColumns));
 
     const onReorderAvailable = (e: any) => {
-        // console.log(items);
-        // console.log(e.target);
-        // console.log(Array.from(e.keys));
-
         const sourceCode = Array.from(e.keys)[0];
 
         if (sourceCode === e.target.key) {
@@ -108,15 +104,6 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         // @ts-ignore
         let targetIndex = findIndex(available, { code: e.target.key });
 
-        // if (e.target.dropPosition === 'before' && targetIndex > 0) {
-        //     targetIndex = targetIndex - 1;
-        // } else if (e.target.dropPosition === 'after') {
-        //     // targetIndex = targetIndex + 1;
-        // }
-
-        // console.log(sourceIndex);
-        // console.log(targetIndex);
-
         const reordered = reorder(
             available,
             sourceIndex,
@@ -127,10 +114,6 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
     }
 
     const onReorderSelected = (e: any) => {
-        // console.log(items);
-        // console.log(e.target);
-        // console.log(Array.from(e.keys));
-
         const sourceCode = Array.from(e.keys)[0];
 
         if (sourceCode === e.target.key) {
@@ -141,15 +124,6 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         const sourceIndex = findIndex(selected, { code: sourceCode });
         // @ts-ignore
         let targetIndex = findIndex(selected, { code: e.target.key });
-
-        // if (e.target.dropPosition === 'before' && targetIndex > 0) {
-        //     targetIndex = targetIndex - 1;
-        // } else if (e.target.dropPosition === 'after') {
-        //     // targetIndex = targetIndex + 1;
-        // }
-
-        // console.log(sourceIndex);
-        // console.log(targetIndex);
 
         const reordered = reorder(
             selected,
@@ -175,26 +149,30 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
             </ModalTitle>
             <ModalBody>
                 <div className="grid grid-cols-2 gap-4" style={{ minHeight: '50vh' }}>
-                    <WidgetList
-                        selectionMode="single"
-                        items={available}
-                        onReorder={onReorderAvailable}
-                        updateWidgetActive={() => {}}
-                        updateWidgetSize={() => {}}
-                        WidgetItemComponent={WidgetItem}
-                    >
-                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </WidgetList>
-                    <WidgetList
-                        selectionMode="single"
-                        items={selected}
-                        onReorder={onReorderSelected}
-                        updateWidgetActive={() => {}}
-                        updateWidgetSize={() => {}}
-                        WidgetItemComponent={WidgetItem}
-                    >
-                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </WidgetList>
+                    <div>
+                        <span className="text-lg">Colonne disponibili</span>
+                        <WidgetList
+                            selectionMode="single"
+                            items={available}
+                            itemKeyName="id"
+                            onReorder={onReorderAvailable}
+                            WidgetItemComponent={WidgetItem}
+                        >
+                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                        </WidgetList>
+                    </div>
+                    <div>
+                        <span className="text-lg">Colonne selezionate</span>
+                        <WidgetList
+                            selectionMode="single"
+                            items={selected}
+                            itemKeyName="id"
+                            onReorder={onReorderSelected}
+                            WidgetItemComponent={WidgetItem}
+                        >
+                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                        </WidgetList>
+                    </div>
                 </div>
                 <div className="mt-2">
                     <button 

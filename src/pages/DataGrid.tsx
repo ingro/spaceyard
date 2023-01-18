@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DataTable, useUrlSyncedDataTableState } from '@ingruz/tabulisk';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
@@ -9,12 +9,14 @@ const data = [
     {
         id: 1,
         name: 'Foo',
-        city: 'Topolinia'
+        city: 'Topolinia',
+        age: 25
     },
     {
         id: 2,
         name: 'Bar',
-        city: 'Paperopoli'
+        city: 'Paperopoli',
+        age: 32
     }
 ];
 
@@ -36,6 +38,11 @@ const columns = [
         )
     },
     {
+        Header: 'Eta',
+        accessor: 'age',
+        id: 'age'
+    },
+    {
         Header: 'Città',
         accessor: 'city',
         id: 'city'
@@ -51,7 +58,8 @@ export default function DataGrid() {
 
     const m = useDisclosure();
 
-    const selectedColumnsState = useState(columns.map(column => column.accessor));
+    // const selectedColumnsState = useState(columns.map(column => column.accessor));
+    const selectedColumnsState = useState(['id', 'name']);
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 

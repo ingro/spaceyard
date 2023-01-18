@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { useListState } from '@react-stately/list';
 import { Item } from '@react-stately/collections';
@@ -126,18 +126,18 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
     );
 }
 
-function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActive, updateWidgetSize, WidgetItemComponent }: any) {
+function ReorderableWidget({ item, itemKeyName, state, dragState, dropState, WidgetItemComponent, ...rest }: any) {
     const ref = useRef(null);
 
     const { optionProps, isSelected, isDisabled } = useOption(
-        { key: item.code },
+        { key: item[itemKeyName] },
         state,
         ref
     );
 
     const { dropProps, isDropTarget } = useDroppableItem(
         {
-            target: { type: 'item', key: item.code, dropPosition: 'on' }
+            target: { type: 'item', key: item[itemKeyName], dropPosition: 'on' }
         },
         dropState,
         ref
@@ -146,13 +146,13 @@ function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActi
     // const { isFocusVisible, focusProps } = useFocusRing();
 
     const { dragProps } = useDraggableItem({
-        key: item.code
+        key: item[itemKeyName]
     }, dragState);
 
     return (
         <>
             <DropIndicator
-                target={{ type: 'item', key: item.code, dropPosition: 'before' }}
+                target={{ type: 'item', key: item[itemKeyName], dropPosition: 'before' }}
                 dropState={dropState}
             />
             <li
@@ -163,12 +163,17 @@ function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActi
                 //     'drop-target': isDropTarget
                 // })}
             >
-                <WidgetItemComponent item={item} updateWidgetActive={updateWidgetActive} updateWidgetSize={updateWidgetSize}/>
+                <WidgetItemComponent 
+                    item={item} 
+                    {...rest}
+                    // updateWidgetActive={updateWidgetActive} 
+                    // updateWidgetSize={updateWidgetSize}
+                />
             </li>
-            {state.collection.getKeyAfter(item.code) == null &&
+            {state.collection.getKeyAfter(item[itemKeyName]) == null &&
                 (
                     <DropIndicator
-                        target={{ type: 'item', key: item.code, dropPosition: 'after' }}
+                        target={{ type: 'item', key: item[itemKeyName], dropPosition: 'after' }}
                         dropState={dropState}
                     />
                 )
@@ -177,8 +182,19 @@ function ReorderableWidget({ item, state, dragState, dropState, updateWidgetActi
     );
 }
 
-export function WidgetList(props: any) {
-    const { items } = props;
+type WidgetListProps = {
+    children: any;
+    getItems?: any;
+    items: Array<any>;
+    itemKeyName: string;
+    onReorder: (e: any) => void;
+    selectionMode?: "single";
+    WidgetItemComponent: any;
+    [x: string | number | symbol]: unknown;
+}
+
+export function WidgetList(props: WidgetListProps) {
+    const { items, itemKeyName, WidgetItemComponent, getItems } = props;
     const preview = useRef(null);
 
     const state = useListState(props);
@@ -222,7 +238,7 @@ export function WidgetList(props: any) {
         collection: state.collection,
         selectionManager: state.selectionManager,
         preview,
-        getItems: props.getItems || ((keys) => {
+        getItems: getItems || ((keys) => {
             // console.log(keys);
             return [...keys].map((key) => {
                 // console.log(state.collection);
@@ -232,7 +248,8 @@ export function WidgetList(props: any) {
     
                 return {
                     ...item.value,
-                    'text/plain': item.textValue
+                    'text/plain': item.textValue,
+                    'custom-app-type-bidirectional': JSON.stringify(item)
                 };
             })
         })
@@ -244,8 +261,6 @@ export function WidgetList(props: any) {
         ref
     );
 
-    const WidgetItemComponent = props.WidgetItemComponent;
-
     return (
         <ul
             className='relative mt-1'
@@ -254,13 +269,12 @@ export function WidgetList(props: any) {
         >
             {items.map((item: any) => (
                 <ReorderableWidget
-                    key={item.code}
+                    {...props}
+                    key={item[itemKeyName]}
                     item={item}
                     state={state}
                     dragState={dragState}
                     dropState={dropState}
-                    updateWidgetActive={props.updateWidgetActive}
-                    updateWidgetSize={props.updateWidgetSize}
                     WidgetItemComponent={WidgetItemComponent}
                 />
             ))}
@@ -271,7 +285,7 @@ export function WidgetList(props: any) {
                     // console.log(item);
 
                     return (
-                        <WidgetItem item={item} isDragPreview={true} />
+                        <WidgetItemComponent item={item} isDragPreview={true} />
                     );
                 }}
             </DragPreview>
@@ -364,6 +378,7 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
                         selectionMode="single"
                         // selectionBehavior="replace"
                         items={items}
+                        itemKeyName="code"
                         onReorder={onReorder}
                         updateWidgetActive={updateWidgetActive}
                         updateWidgetSize={updateWidgetSize}
