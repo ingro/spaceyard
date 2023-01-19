@@ -100,9 +100,9 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         }
 
         // @ts-ignore
-        const sourceIndex = findIndex(available, { code: sourceCode });
+        const sourceIndex = findIndex(available, { id: sourceCode });
         // @ts-ignore
-        let targetIndex = findIndex(available, { code: e.target.key });
+        const targetIndex = findIndex(available, { id: e.target.key });
 
         const reordered = reorder(
             available,
@@ -121,9 +121,9 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         }
 
         // @ts-ignore
-        const sourceIndex = findIndex(selected, { code: sourceCode });
+        const sourceIndex = findIndex(selected, { id: sourceCode });
         // @ts-ignore
-        let targetIndex = findIndex(selected, { code: e.target.key });
+        const targetIndex = findIndex(selected, { id: e.target.key });
 
         const reordered = reorder(
             selected,
@@ -133,6 +133,51 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
     
         setSelected(reordered);
     }
+
+    const onInsert = async (e: any) => {
+        const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
+
+        const item = { ...value };
+
+        // @ts-ignore
+        const targetIndex = findIndex(available, { id: e.target.key });
+
+        let newItemIndex = (e.target.dropPosition === 'before') ? targetIndex : targetIndex + 1;
+
+        if (newItemIndex < 0) {
+            newItemIndex = 0;
+        }
+        
+        available.splice(newItemIndex, 0, item);
+
+        setAvailable([...available]);
+
+        const sourceIndex = findIndex(selected, { id: item.id });
+
+        if (sourceIndex >= 0) {
+            selected.splice(sourceIndex, 1);
+
+            setSelected([...selected]);
+        }
+    };
+
+    const onRootDrop = async (e: any) => {
+        const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
+
+        const item = { ...value };
+        
+        selected.splice(0, 0, item);
+
+        setSelected([...selected]);
+
+        const sourceIndex = findIndex(available, { id: item.id });
+
+        if (sourceIndex >= 0) {
+            available.splice(sourceIndex, 1);
+
+            setAvailable([...available]);
+        }
+    };
     
     return (
         <Modal
@@ -148,31 +193,33 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                 Configurazione Tabella "{name}"
             </ModalTitle>
             <ModalBody>
-                <div className="grid grid-cols-2 gap-4" style={{ minHeight: '50vh' }}>
-                    <div>
-                        <span className="text-lg">Colonne disponibili</span>
-                        <WidgetList
-                            selectionMode="single"
-                            items={available}
-                            itemKeyName="id"
-                            onReorder={onReorderAvailable}
-                            WidgetItemComponent={WidgetItem}
-                        >
-                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                        </WidgetList>
-                    </div>
-                    <div>
-                        <span className="text-lg">Colonne selezionate</span>
-                        <WidgetList
-                            selectionMode="single"
-                            items={selected}
-                            itemKeyName="id"
-                            onReorder={onReorderSelected}
-                            WidgetItemComponent={WidgetItem}
-                        >
-                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                        </WidgetList>
-                    </div>
+                <div className="grid grid-cols-2 content-start gap-x-4 gap-y-1 h-full" style={{ minHeight: '50vh' }}>
+                    <span className="text-lg">Colonne disponibili</span>
+                    <span className="text-lg">Colonne selezionate</span>
+                    <WidgetList
+                        selectionMode="single"
+                        items={available}
+                        itemKeyName="id"
+                        acceptedDragTypes={['my-app-custom-type']}
+                        onReorder={onReorderAvailable}
+                        onInsert={onInsert}
+                        // onRootDrop={onRootDrop}
+                        WidgetItemComponent={WidgetItem}
+                    >
+                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                    </WidgetList>
+                    <WidgetList
+                        selectionMode="single"
+                        items={selected}
+                        itemKeyName="id"
+                        acceptedDragTypes={['my-app-custom-type']}
+                        onReorder={onReorderSelected}
+                        onInsert={onInsert}
+                        onRootDrop={onRootDrop}
+                        WidgetItemComponent={WidgetItem}
+                    >
+                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                    </WidgetList>
                 </div>
                 <div className="mt-2">
                     <button 

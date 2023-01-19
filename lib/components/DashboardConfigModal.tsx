@@ -244,12 +244,12 @@ export function WidgetList(props: WidgetListProps) {
                 // console.log(state.collection);
                 const item = state.collection.getItem(key);
 
-                // console.log(item);
+                console.log(item);
     
                 return {
                     ...item.value,
                     'text/plain': item.textValue,
-                    'custom-app-type-bidirectional': JSON.stringify(item)
+                    'my-app-custom-type': JSON.stringify(item)
                 };
             })
         })
@@ -263,10 +263,11 @@ export function WidgetList(props: WidgetListProps) {
 
     return (
         <ul
-            className='relative mt-1'
+            className='relative bg-slate-200 px-2 pt-2'
             ref={ref}
             {...mergeProps(listBoxProps, collectionProps)} 
         >
+            <DropIndicator target={{ type: 'root' }} dropState={dropState} />
             {items.map((item: any) => (
                 <ReorderableWidget
                     {...props}
