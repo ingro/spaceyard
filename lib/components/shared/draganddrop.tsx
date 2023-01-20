@@ -58,10 +58,10 @@ function DropIndicator(props: any) {
             {...dropIndicatorProps}
             role="option"
             ref={ref}
-            style={{
-                width: 'calc(100% - 1rem)'
-            }}
-            className={clsx('drop-indicator absolute outline-none mt-[-1.25rem]', { // mb-[-0.25rem] mt-[-0.25rem]
+            // style={{
+            //     width: 'calc(100% - 1rem)'
+            // }}
+            className={clsx('drop-indicator absolute w-full outline-none mt-[-1.25rem]', { // mb-[-0.25rem] mt-[-0.25rem]
                 // 'bg-transparent': !isDropTarget,
                 // 'bg-blue-500 drop-target': isDropTarget
             })}
@@ -216,33 +216,37 @@ export function OrderableList(props: OrderableListProps) {
 
     return (
         <ul
-            className={clsx('relative', props.listClassName, isDropTarget && 'border-2 border-blue-500')}
+            className={clsx(props.listClassName, {
+                'border-2 border-blue-500': isDropTarget
+            })}
             ref={ref}
             {...mergeProps(listBoxProps, collectionProps)} 
         >
-            <DropIndicator target={{ type: 'root' }} dropState={dropState} />
-            {items.map((item: any) => (
-                <ReorderableItem
-                    {...props}
-                    key={item[itemKeyName]}
-                    item={item}
-                    state={state}
-                    dragState={dragState}
-                    dropState={dropState}
-                    ItemComponent={ItemComponent}
-                />
-            ))}
-            <DragPreview ref={preview}>
-                {(items) => {
-                    const item = items[0];
+            <span className="relative">
+                <DropIndicator target={{ type: 'root' }} dropState={dropState} />
+                {items.map((item: any) => (
+                    <ReorderableItem
+                        {...props}
+                        key={item[itemKeyName]}
+                        item={item}
+                        state={state}
+                        dragState={dragState}
+                        dropState={dropState}
+                        ItemComponent={ItemComponent}
+                    />
+                ))}
+                <DragPreview ref={preview}>
+                    {(items) => {
+                        const item = items[0];
 
-                    const parsed = JSON.parse(item['my-app-custom-type']);
+                        const parsed = JSON.parse(item['my-app-custom-type']);
 
-                    return (
-                        <ItemComponent item={parsed.value} isDragPreview={true} />
-                    );
-                }}
-            </DragPreview>
+                        return (
+                            <ItemComponent item={parsed.value} isDragPreview={true} />
+                        );
+                    }}
+                </DragPreview>
+            </span>
         </ul>
     )
 }
