@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Item } from '@react-stately/collections';
 import { FiCheck, FiRotateCcw } from "react-icons/fi";
 import findIndex from 'lodash/findIndex';
@@ -8,8 +8,8 @@ import clsx from 'clsx';
 
 import { Modal, ModalBody, ModalFooter, ModalTitle } from "./Modal";
 import { CancelModalButton } from "./Buttons";
+import { createOnReorderFn, OrderableList } from './shared/draganddrop';
 import DefaultErrorFallback from "./DefaultErrorFallback";
-import { OrderableList, createOnReorderFn } from "./DashboardConfigModal";
 
 function getInitialAvailableColumns(available: any, selected: Array<any>) {
     return difference(Object.keys(available), selected).map(columnKey => {
@@ -204,35 +204,39 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                 Configurazione Tabella "{name}"
             </ModalTitle>
             <ModalBody>
-                <div className="grid grid-cols-2 content-start gap-x-4 gap-y-1 h-full" style={{ minHeight: '50vh' }}>
-                    <span className="text-lg">Colonne disponibili</span>
-                    <span className="text-lg">Colonne selezionate</span>
-                    <OrderableList
-                        selectionMode="single"
-                        items={available}
-                        itemKeyName="id"
-                        listClassName="bg-slate-200 px-3 pt-2"
-                        acceptedDragTypes={['my-app-custom-type']}
-                        onReorder={onReorderAvailable}
-                        onInsert={onInsert}
-                        onRootDrop={onRootDrop}
-                        ItemComponent={ColumnItem}
-                    >
-                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </OrderableList>
-                    <OrderableList
-                        selectionMode="single"
-                        items={selected}
-                        itemKeyName="id"
-                        listClassName="bg-slate-200 px-3 pt-2"
-                        acceptedDragTypes={['my-app-custom-type']}
-                        onReorder={onReorderSelected}
-                        onInsert={onInsert}
-                        onRootDrop={onRootDrop}
-                        ItemComponent={ColumnItem}
-                    >
-                        {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </OrderableList>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 h-full" style={{ minHeight: '50vh' }}>
+                    <div className="flex flex-col">
+                        <span className="text-lg">Colonne disponibili</span>
+                        <OrderableList
+                            selectionMode="single"
+                            items={available}
+                            itemKeyName="id"
+                            listClassName="bg-slate-200 px-2 pt-2 grow"
+                            acceptedDragTypes={['my-app-custom-type']}
+                            onReorder={onReorderAvailable}
+                            onInsert={onInsert}
+                            onRootDrop={onRootDrop}
+                            ItemComponent={ColumnItem}
+                        >
+                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                        </OrderableList>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-lg">Colonne selezionate</span>
+                        <OrderableList
+                            selectionMode="single"
+                            items={selected}
+                            itemKeyName="id"
+                            listClassName="bg-slate-200 px-2 pt-2 grow"
+                            acceptedDragTypes={['my-app-custom-type']}
+                            onReorder={onReorderSelected}
+                            onInsert={onInsert}
+                            onRootDrop={onRootDrop}
+                            ItemComponent={ColumnItem}
+                        >
+                            {(item: any) => <Item key={item.id}>{item.label}</Item>}
+                        </OrderableList>
+                    </div>
                 </div>
                 <div className="mt-2">
                     <button 
