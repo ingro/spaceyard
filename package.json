@@ -133,7 +133,6 @@
     "query-string": "^8.0.0",
     "react": "^16.13.0 || 17.x || 18.x",
     "react-aria": "^3.0.0",
-    "react-beautiful-dnd": "^13.0.0",
     "react-calendar": "^4.0.0",
     "react-focus-lock": "^2.9.0",
     "react-hook-form": "^7.0.0",
