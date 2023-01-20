@@ -1,4 +1,4 @@
-import { useState, useRef, ReactNode } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { useListState } from '@react-stately/list';
 import { Item } from '@react-stately/collections';
@@ -75,14 +75,17 @@ function DropIndicator(props: any) {
             {...dropIndicatorProps}
             role="option"
             ref={ref}
-            className={clsx('drop-indicator absolute w-full outline-none mt-[-1.25rem]', { // mb-[-0.25rem] mt-[-0.25rem]
+            style={{
+                width: 'calc(100% - 1.5rem)'
+            }}
+            className={clsx('drop-indicator absolute outline-none mt-[-1.25rem]', { // mb-[-0.25rem] mt-[-0.25rem]
                 // 'bg-transparent': !isDropTarget,
                 // 'bg-blue-500 drop-target': isDropTarget
             })}
         >
             <span className="border-2 border-blue-500 absolute grow-0 rounded-full h-4 w-4 bg-white top-2 left-[-1rem]" />
             <span className="border-t border-2 border-blue-500 w-full inline-block grow" />
-            <span className="border-2 border-blue-500 absolute grow-0 rounded-full h-4 w-4 bg-white top-2 right-[-1rem]" />
+            <span className="border-2 border-blue-500 absolute grow-0 rounded-full h-4 w-4 bg-white top-2" />
         </li>
     );
 }
@@ -126,7 +129,7 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
     );
 }
 
-function ReorderableWidget({ item, itemKeyName, state, dragState, dropState, WidgetItemComponent, ...rest }: any) {
+function ReorderableItem({ item, itemKeyName, state, dragState, dropState, ItemComponent, ...rest }: any) {
     const ref = useRef(null);
 
     const { optionProps, isSelected, isDisabled } = useOption(
@@ -163,7 +166,7 @@ function ReorderableWidget({ item, itemKeyName, state, dragState, dropState, Wid
                 //     'drop-target': isDropTarget
                 // })}
             >
-                <WidgetItemComponent 
+                <ItemComponent 
                     item={item} 
                     {...rest}
                     // updateWidgetActive={updateWidgetActive} 
@@ -182,19 +185,23 @@ function ReorderableWidget({ item, itemKeyName, state, dragState, dropState, Wid
     );
 }
 
-type WidgetListProps = {
+type OrderableListProps = {
+    acceptedDragTypes?: Array<string>;
     children: any;
     getItems?: any;
-    items: Array<any>;
+    ItemComponent: any;
     itemKeyName: string;
+    items: Array<any>;
+    listClassName?: string;
+    onInsert?: (e: any) => void;
     onReorder: (e: any) => void;
+    onRootDrop?: (e: any) => void;
     selectionMode?: "single";
-    WidgetItemComponent: any;
     [x: string | number | symbol]: unknown;
 }
 
-export function WidgetList(props: WidgetListProps) {
-    const { items, itemKeyName, WidgetItemComponent, getItems } = props;
+export function OrderableList(props: OrderableListProps) {
+    const { items, itemKeyName, ItemComponent, getItems } = props;
     const preview = useRef(null);
 
     const state = useListState(props);
@@ -244,10 +251,10 @@ export function WidgetList(props: WidgetListProps) {
                 // console.log(state.collection);
                 const item = state.collection.getItem(key);
 
-                console.log(item);
+                // console.log(item);
     
                 return {
-                    ...item.value,
+                    // ...item.value,
                     'text/plain': item.textValue,
                     'my-app-custom-type': JSON.stringify(item)
                 };
@@ -263,30 +270,30 @@ export function WidgetList(props: WidgetListProps) {
 
     return (
         <ul
-            className='relative bg-slate-200 px-2 pt-2'
+            className={clsx('relative', props.listClassName)}
             ref={ref}
             {...mergeProps(listBoxProps, collectionProps)} 
         >
             <DropIndicator target={{ type: 'root' }} dropState={dropState} />
             {items.map((item: any) => (
-                <ReorderableWidget
+                <ReorderableItem
                     {...props}
                     key={item[itemKeyName]}
                     item={item}
                     state={state}
                     dragState={dragState}
                     dropState={dropState}
-                    WidgetItemComponent={WidgetItemComponent}
+                    ItemComponent={ItemComponent}
                 />
             ))}
             <DragPreview ref={preview}>
                 {(items) => {
                     const item = items[0];
 
-                    // console.log(item);
+                    const parsed = JSON.parse(item['my-app-custom-type']);
 
                     return (
-                        <WidgetItemComponent item={item} isDragPreview={true} />
+                        <ItemComponent item={parsed.value} isDragPreview={true} />
                     );
                 }}
             </DragPreview>
@@ -294,7 +301,7 @@ export function WidgetList(props: WidgetListProps) {
     )
 }
 
-export function reorder(list: Array<any>, startIndex: number, endIndex: number) {
+function reorder(list: Array<any>, startIndex: number, endIndex: number) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -302,14 +309,8 @@ export function reorder(list: Array<any>, startIndex: number, endIndex: number) 
     return result;
 }
 
-export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
-    const [items, setItems] = useState(getInitialState(widgetConfig, widgetsList));
-
-    const onReorder = (e: any) => {
-        // console.log(items);
-        // console.log(e.target);
-        // console.log(Array.from(e.keys));
-
+export function createOnReorderFn(listArray: Array<any>, setListArray: any, key: string) {
+    return function onReorder(e: any) {
         const sourceCode = Array.from(e.keys)[0];
 
         if (sourceCode === e.target.key) {
@@ -317,26 +318,26 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
         }
 
         // @ts-ignore
-        const sourceIndex = findIndex(items, { code: sourceCode });
-        let targetIndex = findIndex(items, { code: e.target.key });
-
-        // if (e.target.dropPosition === 'before' && targetIndex > 0) {
-        //     targetIndex = targetIndex - 1;
-        // } else if (e.target.dropPosition === 'after') {
-        //     // targetIndex = targetIndex + 1;
-        // }
-
-        // console.log(sourceIndex);
-        // console.log(targetIndex);
+        const sourceIndex = findIndex(listArray, { [key]: sourceCode });
+        // @ts-ignore
+        const targetIndex = findIndex(listArray, { [key]: e.target.key });
 
         const reordered = reorder(
-            items,
+            listArray,
             sourceIndex,
             targetIndex
         );
     
-        setItems(reordered);
+        setListArray(reordered);
     }
+}
+
+export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, onClose, ErrorFallback = DefaultErrorFallback }: any) {
+    const [items, setItems] = useState(getInitialState(widgetConfig, widgetsList));
+
+    const onReorder = useMemo(() => {
+        return createOnReorderFn(items, setItems, 'code');
+    }, [items, setItems]);
 
     function updateWidgetSize(code: string, size: DashboardWidgedSizes) {
         const widget = find(items, { code });
@@ -375,18 +376,18 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
             </ModalTitle>
             <ModalBody>
                 <div style={{ minHeight: '50vh' }}>
-                    <WidgetList
+                    <OrderableList
                         selectionMode="single"
-                        // selectionBehavior="replace"
                         items={items}
                         itemKeyName="code"
+                        listClassName='bg-slate-200 px-3 pt-3 pb-1'
                         onReorder={onReorder}
                         updateWidgetActive={updateWidgetActive}
                         updateWidgetSize={updateWidgetSize}
-                        WidgetItemComponent={WidgetItem}
+                        ItemComponent={WidgetItem}
                     >
                         {(item: any) => <Item key={item.code}>{item.name}</Item>}
-                    </WidgetList>
+                    </OrderableList>
                 </div>
             </ModalBody>
             <ModalFooter>

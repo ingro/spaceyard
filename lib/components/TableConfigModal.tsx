@@ -3,12 +3,13 @@ import { Item } from '@react-stately/collections';
 import { FiCheck, FiRotateCcw } from "react-icons/fi";
 import findIndex from 'lodash/findIndex';
 import difference from 'lodash/difference';
+import uniq from 'lodash/uniq';
 import clsx from 'clsx';
 
 import { Modal, ModalBody, ModalFooter, ModalTitle } from "./Modal";
 import { CancelModalButton } from "./Buttons";
 import DefaultErrorFallback from "./DefaultErrorFallback";
-import { reorder, WidgetList } from "./DashboardConfigModal";
+import { OrderableList, createOnReorderFn } from "./DashboardConfigModal";
 
 function getInitialAvailableColumns(available: any, selected: Array<any>) {
     return difference(Object.keys(available), selected).map(columnKey => {
@@ -46,7 +47,19 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
     });
 }
 
-function WidgetItem({ item, isDragPreview }: any) {
+function getHiddenColumnKeys(available: any) {
+    return Object.keys(available).reduce((hidden: Array<string>, columnKey: string) => {
+        const column = available[columnKey];
+
+        if (column.hidden) {
+            hidden.push(columnKey);
+        }
+
+        return hidden;
+    }, []);
+}
+
+function ColumnItem({ item, isDragPreview }: any) {
     return (
         <span
             className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border', {
@@ -89,75 +102,58 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         }, {});
     }, [columnConfig]);
 
-    const [available, setAvailable] = useState(getInitialAvailableColumns(availableColumns, currentColumns));
-    const [selected, setSelected] = useState(getInitialSelectedColumns(availableColumns, currentColumns));
+    const stateAvailable = useState(getInitialAvailableColumns(availableColumns, currentColumns));
+    const stateSelected = useState(getInitialSelectedColumns(availableColumns, currentColumns));
 
-    const onReorderAvailable = (e: any) => {
-        const sourceCode = Array.from(e.keys)[0];
+    const [available, setAvailable] = stateAvailable;
+    const [selected, setSelected] = stateSelected;
 
-        if (sourceCode === e.target.key) {
-            return;
-        }
+    const onReorderAvailable = useMemo(() => {
+        return createOnReorderFn(available, setAvailable, 'id');
+    }, [available, setAvailable]);
 
-        // @ts-ignore
-        const sourceIndex = findIndex(available, { id: sourceCode });
-        // @ts-ignore
-        const targetIndex = findIndex(available, { id: e.target.key });
-
-        const reordered = reorder(
-            available,
-            sourceIndex,
-            targetIndex
-        );
-    
-        setAvailable(reordered);
-    }
-
-    const onReorderSelected = (e: any) => {
-        const sourceCode = Array.from(e.keys)[0];
-
-        if (sourceCode === e.target.key) {
-            return;
-        }
-
-        // @ts-ignore
-        const sourceIndex = findIndex(selected, { id: sourceCode });
-        // @ts-ignore
-        const targetIndex = findIndex(selected, { id: e.target.key });
-
-        const reordered = reorder(
-            selected,
-            sourceIndex,
-            targetIndex
-        );
-    
-        setSelected(reordered);
-    }
+    const onReorderSelected  = useMemo(() => {
+        return createOnReorderFn(selected, setSelected, 'id');
+    }, [selected, setSelected]);
 
     const onInsert = async (e: any) => {
         const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
 
         const item = { ...value };
 
-        // @ts-ignore
-        const targetIndex = findIndex(available, { id: e.target.key });
+        let destState = null;
+        let sourceState = null;
+
+        let targetIndex = findIndex(available, { id: e.target.key });
+
+        if (targetIndex === -1) {
+            sourceState = stateAvailable;
+            destState = stateSelected;
+            targetIndex = findIndex(selected, { id: e.target.key });
+        } else {
+            sourceState = stateSelected;
+            destState = stateAvailable;
+        }
 
         let newItemIndex = (e.target.dropPosition === 'before') ? targetIndex : targetIndex + 1;
 
         if (newItemIndex < 0) {
             newItemIndex = 0;
         }
+
+        const [sourceArray, setSourceArray] = sourceState;
+        const [destArray, setDestArray] = destState;
         
-        available.splice(newItemIndex, 0, item);
+        destArray.splice(newItemIndex, 0, item);
 
-        setAvailable([...available]);
+        setDestArray([...destArray]);
 
-        const sourceIndex = findIndex(selected, { id: item.id });
+        const sourceIndex = findIndex(sourceArray, { id: item.id });
 
         if (sourceIndex >= 0) {
-            selected.splice(sourceIndex, 1);
+            sourceArray.splice(sourceIndex, 1);
 
-            setSelected([...selected]);
+            setSourceArray([...sourceArray]);
         }
     };
 
@@ -165,17 +161,32 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
         const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
 
         const item = { ...value };
+
+        let destState = null;
+        let sourceState = null;
+
+        let sourceIndex = findIndex(available, { id: item.id });
+
+        if (sourceIndex === -1) {
+            sourceState = stateSelected;
+            destState = stateAvailable;
+            sourceIndex = findIndex(selected, { id: item.id });
+        } else {
+            sourceState = stateAvailable;
+            destState = stateSelected;
+        }
+
+        const [sourceArray, setSourceArray] = sourceState;
+        const [destArray, setDestArray] = destState;
         
-        selected.splice(0, 0, item);
+        destArray.splice(0, 0, item);
 
-        setSelected([...selected]);
-
-        const sourceIndex = findIndex(available, { id: item.id });
+        setDestArray([...destArray]);
 
         if (sourceIndex >= 0) {
-            available.splice(sourceIndex, 1);
+            sourceArray.splice(sourceIndex, 1);
 
-            setAvailable([...available]);
+            setSourceArray([...sourceArray]);
         }
     };
     
@@ -196,36 +207,38 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                 <div className="grid grid-cols-2 content-start gap-x-4 gap-y-1 h-full" style={{ minHeight: '50vh' }}>
                     <span className="text-lg">Colonne disponibili</span>
                     <span className="text-lg">Colonne selezionate</span>
-                    <WidgetList
+                    <OrderableList
                         selectionMode="single"
                         items={available}
                         itemKeyName="id"
+                        listClassName="bg-slate-200 px-3 pt-2"
                         acceptedDragTypes={['my-app-custom-type']}
                         onReorder={onReorderAvailable}
                         onInsert={onInsert}
-                        // onRootDrop={onRootDrop}
-                        WidgetItemComponent={WidgetItem}
+                        onRootDrop={onRootDrop}
+                        ItemComponent={ColumnItem}
                     >
                         {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </WidgetList>
-                    <WidgetList
+                    </OrderableList>
+                    <OrderableList
                         selectionMode="single"
                         items={selected}
                         itemKeyName="id"
+                        listClassName="bg-slate-200 px-3 pt-2"
                         acceptedDragTypes={['my-app-custom-type']}
                         onReorder={onReorderSelected}
                         onInsert={onInsert}
                         onRootDrop={onRootDrop}
-                        WidgetItemComponent={WidgetItem}
+                        ItemComponent={ColumnItem}
                     >
                         {(item: any) => <Item key={item.id}>{item.label}</Item>}
-                    </WidgetList>
+                    </OrderableList>
                 </div>
                 <div className="mt-2">
                     <button 
                         className="btn btn-link"
                         onClick={() => {
-                            // updateSelectedColumns(Object.keys(availableColumns));
+                            updateSelectedColumns(Object.keys(availableColumns));
                             onClose();
                         }}
                     >
@@ -238,11 +251,11 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                 <button 
                     className="btn btn-lg btn-info ml-1"
                     onClick={() => {
-                        // updateSelectedColumns(uniq([
-                        //     ...selected.map((column: any) => column.id),
-                        //     ...getHiddenColumnKeys(availableColumns)
-                        // ]));
-                        // onClose();
+                        updateSelectedColumns(uniq([
+                            ...selected.map((column: any) => column.id),
+                            ...getHiddenColumnKeys(availableColumns)
+                        ]));
+                        onClose();
                     }}
                 >
                     <FiCheck /> Conferma
