@@ -64,7 +64,7 @@ function ColumnItem({ item, isDragPreview }: any) {
         <span
             className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border bg-blue-200', {
                 'border-gray-400 px-4': !isDragPreview,
-                'px-12 font-semibold border-blue-500': isDragPreview,
+                'px-6 w-[300px] font-semibold border-blue-500': isDragPreview,
             })}
         >
             <span>

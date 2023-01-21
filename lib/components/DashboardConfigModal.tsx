@@ -57,12 +57,12 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
                 'bg-green-200': item.active,
                 'bg-blue-200': !item.active,
                 'border-gray-400 px-4': !isDragPreview,
-                'px-12 font-semibold': isDragPreview,
+                'px-6 font-semibold w-[300px] h-14': isDragPreview, // 300 px é la larghezza massima oltre la quale il brower "sfuma" l'anteprima dell'oggetto draggato
                 'border-blue-500': isDragPreview && !item.active,
                 'border-green-500': isDragPreview && item.active,
             })}
         >
-            <span className="grow">
+            <span className="grow break-all">
                 {item.name}
             </span>
             {isDragPreview === false && (

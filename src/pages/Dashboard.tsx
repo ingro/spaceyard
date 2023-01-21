@@ -9,7 +9,7 @@ const storage = createAppStorage('spaceyard');
 
 const widgetsList = {
     xyzWidget: {
-        name: 'XYZ',
+        name: 'XYZXYZXYZXYZXYZXYZXYZXYZXYZXYZXYZ',
         minHeight: 400,
         extras: []
     },
@@ -59,11 +59,11 @@ const widgetsList = {
         ]
     },
     wasdWidget: { 
-        name: 'WASD',
+        name: 'WASDWASDWASDWASDWASDWASDWASDWASDWASDWASD',
         extras: []
     },
     qwertyWidget: {
-        name: 'QWERTY',
+        name: 'QWERTY QWERTY QWERTY QWERTY QWERTY QWERTY',
         extras: []
     }
 };
