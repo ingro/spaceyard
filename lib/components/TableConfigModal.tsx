@@ -62,16 +62,12 @@ function getHiddenColumnKeys(available: any) {
 function ColumnItem({ item, isDragPreview }: any) {
     return (
         <span
-            className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border', {
-                'bg-green-200': item.active,
-                'bg-blue-200': !item.active,
+            className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border bg-blue-200', {
                 'border-gray-400 px-4': !isDragPreview,
-                'border-blue-500 px-12 font-semibold': isDragPreview
-                // 'focus-visible': isFocusVisible,
-                // 'drop-target': isDropTarget
+                'px-12 font-semibold border-blue-500': isDragPreview,
             })}
         >
-            <span className="grow">
+            <span>
                 {item.label}
             </span>
         </span>
@@ -211,7 +207,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             selectionMode="single"
                             items={available}
                             itemKeyName="id"
-                            listClassName="bg-slate-200 px-2 pt-2 grow"
+                            listClassName="bg-gray-200 px-2 pt-2 grow"
                             acceptedDragTypes={['my-app-custom-type']}
                             onReorder={onReorderAvailable}
                             onInsert={onInsert}
@@ -227,7 +223,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             selectionMode="single"
                             items={selected}
                             itemKeyName="id"
-                            listClassName="bg-slate-200 px-2 pt-2 grow"
+                            listClassName="bg-gray-200 px-2 pt-2 grow"
                             acceptedDragTypes={['my-app-custom-type']}
                             onReorder={onReorderSelected}
                             onInsert={onInsert}

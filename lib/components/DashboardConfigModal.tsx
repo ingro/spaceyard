@@ -57,9 +57,9 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
                 'bg-green-200': item.active,
                 'bg-blue-200': !item.active,
                 'border-gray-400 px-4': !isDragPreview,
-                'border-blue-500 px-12 font-semibold': isDragPreview
-                // 'focus-visible': isFocusVisible,
-                // 'drop-target': isDropTarget
+                'px-12 font-semibold': isDragPreview,
+                'border-blue-500': isDragPreview && !item.active,
+                'border-green-500': isDragPreview && item.active,
             })}
         >
             <span className="grow">
@@ -137,7 +137,7 @@ export function DashboardConfigModal({ widgetConfig, widgetsList, updateConfig, 
                         selectionMode="single"
                         items={items}
                         itemKeyName="code"
-                        listClassName='bg-slate-200 px-2 pt-2 pb-1'
+                        listClassName='bg-gray-200 px-2 pt-2 pb-1'
                         onReorder={onReorder}
                         updateWidgetActive={updateWidgetActive}
                         updateWidgetSize={updateWidgetSize}
