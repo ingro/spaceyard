@@ -62,7 +62,7 @@ function WidgetItem({ item, isDragPreview = false, updateWidgetActive = () => {}
                 'border-green-500': isDragPreview && item.active,
             })}
         >
-            <span className="grow break-all">
+            <span className="grow break-words overflow-hidden text-ellipsis">
                 {item.name}
             </span>
             {isDragPreview === false && (
