@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { Item } from '@react-stately/collections';
 import difference from 'lodash/difference';
