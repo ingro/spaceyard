@@ -1,71 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Prompt, useHistory } from 'react-router';
+import React, { useEffect } from 'react';
+import { unstable_useBlocker as useBlocker } from 'react-router-dom';
 
 import { useAppContext } from '../hooks/useAppContext';
-import { useDisclosure } from '../hooks/useDisclosure';
 import { ConfirmDialog } from './ConfirmDialog';
+// import { useDisclosure } from '../hooks/useDisclosure';
 
 type RouteLeavingGuardProps = {
     when?: boolean | undefined;
     title?: string;
     text: string;
-    shouldBlockNavigation?: (location: Location) => boolean;
-    // navigate: (path: string) => void;
+    disableBlockNavigation?: (nextLocation: Location) => boolean;
 };
 
-// Ispirato da https://medium.com/@michaelchan_13570/using-react-router-v4-prompt-with-custom-modal-component-ca839f5faf39
-
 export function RouteLeavingGuard({
-    when,
+    when = false,
     title = 'Attenzione',
     text,
-    shouldBlockNavigation = () => true,
-    // navigate,
+    disableBlockNavigation = () => false,
 }: RouteLeavingGuardProps) {
-    const { isOpen, open, close } = useDisclosure(false);
-    const [lastLocation, setLastLocation] = useState<Location | null>(null);
-    const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+    // const { isOpen, open, close } = useDisclosure(false);
+    // const [lastLocation, setLastLocation] = useState<Location | null>(null);
+    // const [confirmedNavigation, setConfirmedNavigation] = useState(false);
     const { appRoutes } = useAppContext();
 
-    const history = useHistory();
-
-    const handleBlockedNavigation = (nextLocation: any) => {
-        // Bypasso la verifica se ho gia deciso di effettuare il logout dall'applicazione
+    function shouldBlock({ currentLocation, nextLocation, historyAction }: any): boolean {
         if (nextLocation && nextLocation.pathname === appRoutes.logout) {
-            setConfirmedNavigation(true);
-        }
-
-        if (!confirmedNavigation && shouldBlockNavigation(nextLocation)) {
-            open();
-            setLastLocation(nextLocation);
-
             return false;
         }
 
-        return true;
-    };
+        if (disableBlockNavigation(currentLocation)) {
+            return false;
+        }
+
+        return when;
+    }
+
+    // @ts-ignore
+    const blocker = useBlocker(shouldBlock);
+
+    // reset the blocker if the blocking condition disappears
+    useEffect(() => {
+        if (blocker.state === "blocked" && !when) {
+            blocker.reset();
+        }
+    }, [blocker, when]);
+
+    // const navigate = useNavigate();
+
+    // const handleBlockedNavigation = (nextLocation: any) => {
+    //     // Bypasso la verifica se ho gia deciso di effettuare il logout dall'applicazione
+    //     if (nextLocation && nextLocation.pathname === appRoutes.logout) {
+    //         setConfirmedNavigation(true);
+    //     }
+
+    //     if (!confirmedNavigation && shouldBlockNavigation(nextLocation)) {
+    //         open();
+    //         setLastLocation(nextLocation);
+
+    //         return false;
+    //     }
+
+    //     return true;
+    // };
 
     const handleConfirmNavigationClick = () => {
+        blocker.proceed?.();
         close();
-        setConfirmedNavigation(true);
+        // setConfirmedNavigation(true);
     }; 
 
-    useEffect(() => {
-        if (confirmedNavigation && lastLocation) {
-            // Navigate to the previous blocked location with your navigate function
-            // navigate(lastLocation.pathname);
-            history.push(lastLocation);
-        }
-        // eslint-disable-next-line
-    }, [confirmedNavigation, lastLocation]);
+    // useEffect(() => {
+    //     if (confirmedNavigation && lastLocation) {
+    //         // Navigate to the previous blocked location with your navigate function
+    //         // navigate(lastLocation.pathname);
+    //         navigate(lastLocation);
+    //     }
+    //     // eslint-disable-next-line
+    // }, [confirmedNavigation, lastLocation]);
 
     return (
         <>
-            <Prompt when={when} message={handleBlockedNavigation} />
-            {isOpen && (
+            {blocker.state === 'blocked' && (
                 <ConfirmDialog 
                     title={title}
-                    onCancel={close}
+                    onCancel={() => {
+                        blocker.reset?.();
+                        close();
+                    }}
                     onConfirm={handleConfirmNavigationClick}
                 >
                     {text}

@@ -1,33 +1,36 @@
 import { useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { useAppContext } from './useAppContext';
 
 export function useIsAuth() {
     const { user, appRoutes } = useAppContext();
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user === null) {
-            history.push(appRoutes.login, {
-                from: location, error: 'Sessione scaduta'
+            navigate(appRoutes.login, {
+                state :{
+                    from: location, 
+                    error: 'Sessione scaduta'
+                }
             });
         }
-    }, [user, location, history]);
+    }, [user, location, navigate]);
 
     return user;
 }
 
 export function useIsGuest(redirectPath?: string) {
     const { user, appRoutes } = useAppContext();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user) {
-            history.push(redirectPath || appRoutes.home);
+            navigate(redirectPath || appRoutes.home);
         }
-    }, [user, history, redirectPath]);
+    }, [user, navigate, redirectPath]);
 
     return user;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCombobox } from 'downshift';
 import { matchSorter } from 'match-sorter';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import clsx from 'clsx';
 
 import { highlightString } from '../utilities/formatters';
@@ -18,7 +18,7 @@ type OmniBoxInputProps = {
 export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect, onIsOpenChange, options }, forwardRef) => {
     const [optionsToDisplay, setOptionsToDisplay] = useState<Array<OmniBoxAction>>(options);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const {
         isOpen,
@@ -51,7 +51,7 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
                     if (typeof changes.selectedItem.value === 'function') {
                         changes.selectedItem.value();
                     } else {
-                        history.push(changes.selectedItem.value);
+                        navigate(changes.selectedItem.value);
                     }
                     
                     onSelect();

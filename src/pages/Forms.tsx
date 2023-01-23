@@ -17,6 +17,7 @@ import { SelectFieldController } from '../../lib/components/Select';
 import { SwitchFieldController } from '../../lib/components/Switch';
 import { DateTimePickerInputFieldController } from '../../lib/components/DateTimePickerInput';
 import { format } from 'date-fns';
+import { RouteLeavingGuard } from '../../lib/main';
 
 const options = [
     { value: 'foo', label: 'Foo' },
@@ -77,6 +78,7 @@ export default function Forms() {
 
     return (
         <div>
+            <RouteLeavingGuard when={formState.isDirty} text="foo bar"/>
             <div className="text text-purple-500 text-xl">Input liberi</div>
             <div className="w-1/4 mb-2">
                 <InputSearch 

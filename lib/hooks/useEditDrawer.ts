@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 import { useDisclosure } from "./useDisclosure";
 
@@ -14,11 +14,10 @@ export function useEditDrawer(): useEditDrawerResult {
     const [currentItemEditId, setCurrentItemEditId] = useState(null);
     const { isOpen, close, open } = useDisclosure(false);
 
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        const { location } = history;
-
         // @ts-ignore
         if (location.state?.currentItemEditId) {
             // @ts-ignore
@@ -31,10 +30,11 @@ export function useEditDrawer(): useEditDrawerResult {
     const openEditSide = useCallback((id) => {
         setCurrentItemEditId(id);
 
-        const { location } = history;
-
-        history.replace(`${location.pathname}${location.search}`, {
-            currentItemEditId: id
+        navigate('.', {
+            replace: true,
+            state: {
+                currentItemEditId: id
+            }
         });
 
         open();
@@ -42,9 +42,7 @@ export function useEditDrawer(): useEditDrawerResult {
     }, []);
 
     const closeEditSide = useCallback(() => {
-        const { location } = history;
-
-        history.replace(`${location.pathname}${location.search}`, {});
+        navigate('.', { replace: true });
         close();
     // eslint-disable-next-line
     }, [location.pathname, location.search]);

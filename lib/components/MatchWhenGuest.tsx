@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { useAppContext } from '../hooks/useAppContext';
 
@@ -11,6 +11,6 @@ export const MatchWhenGuest = (WrappedComponent: any) => {
             return <WrappedComponent {...props} />;
         }
 
-        return <Redirect to={appRoutes.home} />;
+        return <Navigate to={appRoutes.home} replace={true} />;
     }
 };

@@ -1,9 +1,13 @@
 import React, { Suspense } from 'react';
 import {
-    BrowserRouter,
-    Switch,
+    // BrowserRouter,
+    createBrowserRouter,
+    RouterProvider,
+    createRoutesFromElements,
+    // Routes,
     Route,
-    NavLink
+    NavLink,
+    Outlet
 } from 'react-router-dom';
 
 import { ToastContainer } from '../lib/components/ToastContainer';
@@ -22,7 +26,28 @@ const appStorage = createAppStorage('spaceyard');
 
 export const useLocalStorage = appStorage.useLocalStorage;
 
-export default function Root() {
+function Logout() {
+    return (
+        <div>Logging out...</div>
+    )
+}
+
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route path="/" element={<RootProper />}>
+            <Route index={true} element={<App />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/forms" element={<Forms />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/overlays" element={<Overlays />}/>
+            <Route path="/datatable" element={<DataGrid />}/>
+            <Route path="/omnibox" element={<OmniboxPage />}/>
+            <Route path="/logout" element={<Logout />}/>
+        </Route>
+    )
+);
+
+function RootProper() {
     return (
         <div className="px-2 pt-2">
             <Suspense fallback={<span>Loading...</span>}>
@@ -31,28 +56,23 @@ export default function Root() {
                     appRoutes={{
                         login: '/login',
                         logout: '/logout',
-                        home: '/home'
+                        home: '/'
                     }}
                 >
-                    <BrowserRouter>
-                        <div className='fixed w-full flex h-10 top-0 left-0 bg-slate-600 text-white items-center'>
-                            <div className='text-bold text-xl ml-2'><NavLink to="/">SPACEYARD</NavLink></div>
-                        </div>
-                        <div className='mt-12'>
-                            <Switch>
-                                <Route path="/" exact><App /></Route>
-                                <Route path="/dashboard"><Dashboard /></Route>
-                                <Route path="/forms"><Forms /></Route>
-                                <Route path="/notifications"><Notifications /></Route>
-                                <Route path="/overlays"><Overlays /></Route>
-                                <Route path="/datatable"><DataGrid /></Route>
-                                <Route path="/omnibox"><OmniboxPage /></Route>
-                            </Switch>
-                        </div>
-                        <ToastContainer />
-                    </BrowserRouter>
+                    <div className='fixed w-full flex h-10 top-0 left-0 bg-slate-600 text-white items-center'>
+                        <div className='text-bold text-xl ml-2'><NavLink to="/">SPACEYARD</NavLink></div>
+                        <NavLink className="text-red-500 ml-2" to="/logout">Logout</NavLink>
+                    </div>
+                    <div className='mt-12'>
+                        <Outlet />
+                    </div>
+                    <ToastContainer />
                 </AppProvider>
             </Suspense>
         </div>
     );
+}
+
+export default function Root() {
+    return <RouterProvider router={router}/ >;
 }

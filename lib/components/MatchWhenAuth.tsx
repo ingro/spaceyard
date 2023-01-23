@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { useAppContext } from '../hooks/useAppContext';
 
@@ -12,9 +12,13 @@ export const MatchWhenAuth = (WrappedComponent: any) => {
             return <WrappedComponent {...props} />;
         }
 
-        return <Redirect to={{
-            pathname: appRoutes.login,
-            state: { from: location, error: 'Sessione scaduta' }
-        }} />;
+        return <Navigate 
+            replace={true}
+            state={{ 
+                from: location, 
+                error: 'Sessione scaduta' 
+            }}
+            to={appRoutes.login}
+        />;
     }
 };

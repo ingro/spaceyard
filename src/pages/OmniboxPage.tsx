@@ -6,13 +6,13 @@ import { OmniBoxAction } from '../../lib/types';
 
 const actions: Array<OmniBoxAction> = [
   {
-    value: 'forms',
+    value: '/forms',
     label: 'Forms',
     Icon: FiCheck,
     key: 'forms'
   },
   {
-    value: 'dashboard',
+    value: '/dashboard',
     label: 'Dashboard',
     Icon: FiAlertTriangle,
     key: 'dashboard'
