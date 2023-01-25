@@ -6,10 +6,11 @@ import { ConfirmDialog } from './ConfirmDialog';
 // import { useDisclosure } from '../hooks/useDisclosure';
 
 type RouteLeavingGuardProps = {
+    disableBlockNavigation?: (nextLocation: Location) => boolean;
     when?: boolean | undefined;
+    resetIfBlockingConditionDisappears?: boolean;
     title?: string;
     text: string;
-    disableBlockNavigation?: (nextLocation: Location) => boolean;
 };
 
 export function RouteLeavingGuard({
@@ -17,6 +18,7 @@ export function RouteLeavingGuard({
     title = 'Attenzione',
     text,
     disableBlockNavigation = () => false,
+    resetIfBlockingConditionDisappears = true
 }: RouteLeavingGuardProps) {
     // const { isOpen, open, close } = useDisclosure(false);
     // const [lastLocation, setLastLocation] = useState<Location | null>(null);
@@ -40,10 +42,10 @@ export function RouteLeavingGuard({
 
     // reset the blocker if the blocking condition disappears
     useEffect(() => {
-        if (blocker.state === "blocked" && !when) {
+        if (blocker.state === "blocked" && !when && resetIfBlockingConditionDisappears) {
             blocker.reset();
         }
-    }, [blocker, when]);
+    }, [blocker, when, resetIfBlockingConditionDisappears]);
 
     // const navigate = useNavigate();
 

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useCombobox } from 'downshift';
 import { matchSorter } from 'match-sorter';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import clsx from 'clsx';
 
 import { highlightString } from '../utilities/formatters';
+import { useAppContext } from '../hooks/useAppContext';
 import { OmniBoxAction } from '../types';
 
 const itemToString = (item: any) => item ? item.label : '';
@@ -19,6 +20,8 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
     const [optionsToDisplay, setOptionsToDisplay] = useState<Array<OmniBoxAction>>(options);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const appCtx = useAppContext();
 
     const {
         isOpen,
@@ -49,7 +52,7 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
                 if (changes.selectedItem) {
                     // console.log(changes);
                     if (typeof changes.selectedItem.value === 'function') {
-                        changes.selectedItem.value();
+                        changes.selectedItem.value({ navigate, location, app: appCtx });
                     } else {
                         navigate(changes.selectedItem.value);
                     }
