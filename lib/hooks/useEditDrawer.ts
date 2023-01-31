@@ -30,7 +30,7 @@ export function useEditDrawer(): useEditDrawerResult {
     const openEditSide = useCallback((id) => {
         setCurrentItemEditId(id);
 
-        navigate('.', {
+        navigate(`${location.pathname}${location.search}`, {
             replace: true,
             state: {
                 currentItemEditId: id
@@ -42,7 +42,7 @@ export function useEditDrawer(): useEditDrawerResult {
     }, []);
 
     const closeEditSide = useCallback(() => {
-        navigate('.', { replace: true });
+        navigate(`${location.pathname}${location.search}`, { replace: true });
         close();
     // eslint-disable-next-line
     }, [location.pathname, location.search]);
