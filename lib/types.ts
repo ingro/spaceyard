@@ -17,7 +17,7 @@ export type AppContextType = {
 };
 
 export type OmniBoxAction = {
-    value: string | (() => void);
+    value: string | ((ctx: any) => void);
     label: string;
     Icon: React.ElementType;
     key: string;
