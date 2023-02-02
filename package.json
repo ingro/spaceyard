@@ -41,7 +41,6 @@
     "clsx": "^1.2.1",
     "d3-ease": "^3.0.1",
     "match-sorter": "^6.3.1",
-    "path-to-regexp": "^6.2.1",
     "tinykeys": "^1.4.0"
   },
   "devDependencies": {
