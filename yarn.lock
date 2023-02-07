@@ -1954,10 +1954,10 @@
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.10.tgz#e7e88942ee34e97b7bc937b0be4694194c9cd420"
   integrity sha512-JIL1DgJIlH9yuxcNGtyhsWX/PgNltz+5Gr6+8SX9fhXc/hPbEIk6wPI82nhgvp3uUb6ZfAM5mqg/x7KR7NAb+A==
 
-"@ingruz/tabulisk@^0.19.0-beta.0":
-  version "0.19.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-0.19.0-beta.0.tgz#6920aa26e6fffee409bba99e9f023b78804f39fa"
-  integrity sha512-TrR7C0Hk9PMUywiwWD0jyw+NzE5ixaUIXrjxoL4yKhRqKHv4N+Zw+FToqogZbxlfaGsKt4RApPuFIFIoJJMrpw==
+"@ingruz/tabulisk@^0.19.0-beta.2":
+  version "0.19.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-0.19.0-beta.2.tgz#992ecb917af3543793b5a8bce8d9ceec75da2185"
+  integrity sha512-ofXj/GnQYdgzVbEY04yukttWTQIoOJlvaF/YC2+EPs0DbEF4jVjOSK3jWBPYEleLyjMfFTfEhM60ARSTd1vAxw==
   dependencies:
     clsx "^1.2.1"
     immer "^9.0.16"
@@ -2882,10 +2882,10 @@
   dependencies:
     "@react-types/shared" "^3.16.0"
 
-"@remix-run/router@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.3.0.tgz#b6ee542c7f087b73b3d8215b9bf799f648be71cb"
-  integrity sha512-nwQoYb3m4DDpHTeOwpJEuDt8lWVcujhYYSFGLluC+9es2PyLjm+jjq3IeRBQbwBtPLJE/lkuHuGHr8uQLgmJRA==
+"@remix-run/router@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.3.2.tgz#58cd2bd25df2acc16c628e1b6f6150ea6c7455bc"
+  integrity sha512-t54ONhl/h75X94SWsHGQ4G/ZrCEguKSRQr7DrjTciJXW0YU1QhlwYeycvK5JgkzlxmvrK7wq1NB/PLtHxoiDcA==
 
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
@@ -6171,20 +6171,20 @@ react-remove-scroll@2.4.3:
     use-callback-ref "^1.2.3"
     use-sidecar "^1.0.1"
 
-react-router-dom@^6.7.0:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.7.0.tgz#0249f4ca4eb704562b8b0ff29caeb928c3a6ed38"
-  integrity sha512-jQtXUJyhso3kFw430+0SPCbmCmY1/kJv8iRffGHwHy3CkoomGxeYzMkmeSPYo6Egzh3FKJZRAL22yg5p2tXtfg==
+react-router-dom@^6.8.1:
+  version "6.8.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.8.1.tgz#7e136b67d9866f55999e9a8482c7008e3c575ac9"
+  integrity sha512-67EXNfkQgf34P7+PSb6VlBuaacGhkKn3kpE51+P6zYSG2kiRoumXEL6e27zTa9+PGF2MNXbgIUHTVlleLbIcHQ==
   dependencies:
-    "@remix-run/router" "1.3.0"
-    react-router "6.7.0"
+    "@remix-run/router" "1.3.2"
+    react-router "6.8.1"
 
-react-router@6.7.0, react-router@^6.7.0:
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.7.0.tgz#db262684c13b5c2970694084ae9e8531718a0681"
-  integrity sha512-KNWlG622ddq29MAM159uUsNMdbX8USruoKnwMMQcs/QWZgFUayICSn2oB7reHce1zPj6CG18kfkZIunSSRyGHg==
+react-router@6.8.1, react-router@^6.8.1:
+  version "6.8.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.8.1.tgz#e362caf93958a747c649be1b47cd505cf28ca63e"
+  integrity sha512-Jgi8BzAJQ8MkPt8ipXnR73rnD7EmZ0HFFb7jdQU24TynGW1Ooqin2KVDN9voSC+7xhqbbCd2cjGUepb6RObnyg==
   dependencies:
-    "@remix-run/router" "1.3.0"
+    "@remix-run/router" "1.3.2"
 
 react-simple-animate@^3.3.12:
   version "3.3.12"
