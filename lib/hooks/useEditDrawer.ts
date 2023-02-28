@@ -42,8 +42,10 @@ export function useEditDrawer(): useEditDrawerResult {
     }, [location.pathname, location.search]);
 
     const closeEditSide = useCallback(() => {
-        navigate(`${location.pathname}${location.search}`, { replace: true });
-        close();
+        setTimeout(() => {
+            navigate(`${location.pathname}${location.search}`, { replace: true });
+            close();
+        }, 0);
     // eslint-disable-next-line
     }, [location.pathname, location.search]);
 
