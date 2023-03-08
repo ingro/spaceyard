@@ -19,8 +19,6 @@ export function DisplayDate({ date, forceLanguage, dateFormat = 'full' }: Displa
 
     let localizedDate = 'Invalid date';
 
-    console.log(date);
-
     try {
         localizedDate = formatLocalizedDate(date, language, dateFormat);
     } catch {}
