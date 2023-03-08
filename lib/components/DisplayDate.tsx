@@ -17,9 +17,17 @@ export function DisplayDate({ date, forceLanguage, dateFormat = 'full' }: Displa
         language = forceLanguage;
     }
 
+    let localizedDate = 'Invalid date';
+
+    console.log(date);
+
+    try {
+        localizedDate = formatLocalizedDate(date, language, dateFormat);
+    } catch {}
+
     return (
         <>
-            {formatLocalizedDate(date, language, dateFormat)}
+            {localizedDate}
         </>
     );
 }

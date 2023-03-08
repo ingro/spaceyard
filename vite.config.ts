@@ -40,6 +40,7 @@ export default ({ command, mode }) => {
         entry: path.resolve(__dirname, "lib/main.ts"),
         name: "SpaceYard",
       },
+      sourcemap: true,
       rollupOptions: {
         external: [
           /@reach\/.*/,
