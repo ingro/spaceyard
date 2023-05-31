@@ -1,7 +1,7 @@
 {
   "name": "@ingruz/spaceyard",
   "description": "Collection of UI elements built with React",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "license": "MIT",
   "author": "<ingro85@gmail.com>",
   "private": false,
