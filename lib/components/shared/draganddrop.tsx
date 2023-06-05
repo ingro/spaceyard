@@ -199,7 +199,7 @@ export function OrderableList(props: OrderableListProps) {
     
                 return {
                     // ...item.value,
-                    'text/plain': item.textValue,
+                    'text/plain': item?.textValue,
                     'my-app-custom-type': JSON.stringify(item)
                 };
             })
