@@ -164,7 +164,7 @@ export const DashboardWidgetContainer = React.forwardRef<any, DashboardWidgetCon
                 />
             )}
             <div 
-                className={clsx('border border-gray-400 rounded-md relative', {
+                className={clsx('border border-gray-400 rounded-md relative flex flex-col', {
                     'lg:col-span-6 2xl:col-span-4': size === 'sm',
                     'lg:col-span-6': size === 'md',
                     'lg:col-span-8': size === 'lg',
