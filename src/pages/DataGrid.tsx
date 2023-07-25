@@ -3,7 +3,8 @@ import { DataTable, useUrlSyncedDataTableState } from '@ingruz/tabulisk';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
 import { TableConfigModal } from '../../lib/components/TableConfigModal';
-import { useColumnsSelector, useDisclosure } from '../../lib/hooks';
+import { Drawer } from '../../lib/components/Drawer';
+import { useColumnsSelector, useDisclosure, useEditDrawer } from '../../lib/hooks';
 
 const data = [
     {
@@ -20,35 +21,6 @@ const data = [
     }
 ];
 
-const columns = [
-    {
-        Header: 'Identificativo',
-        accessor: 'id',
-        id: 'id'
-    },
-    {
-        Header: 'Nome',
-        accessor: 'name',
-        id: 'name',
-        Filter: (props: any) => (
-            <TableFilterDropdown 
-                {...props}
-                filterControl="search"
-            />
-        )
-    },
-    {
-        Header: 'Eta',
-        accessor: 'age',
-        id: 'age'
-    },
-    {
-        Header: 'Città',
-        accessor: 'city',
-        id: 'city'
-    },
-];
-
 export default function DataGrid() {
     const reducer = useUrlSyncedDataTableState({
         filters: {
@@ -57,6 +29,49 @@ export default function DataGrid() {
     });
 
     const m = useDisclosure();
+
+    const { isOpenEditSide, openEditSide, closeEditSide, currentItemEditId } = useEditDrawer();
+
+    const columns = useMemo(() => {
+        return [
+            {
+                Header: 'Identificativo',
+                accessor: 'id',
+                id: 'id',
+                Cell: ({ cell }: any) => {
+                    return (
+                        <button
+                            className={`btn btn-sm`}
+                            onClick={() => openEditSide(cell.value)}
+                        >
+                            Detail
+                        </button>
+                    );
+                }
+            },
+            {
+                Header: 'Nome',
+                accessor: 'name',
+                id: 'name',
+                Filter: (props: any) => (
+                    <TableFilterDropdown 
+                        {...props}
+                        filterControl="search"
+                    />
+                )
+            },
+            {
+                Header: 'Eta',
+                accessor: 'age',
+                id: 'age'
+            },
+            {
+                Header: 'Città',
+                accessor: 'city',
+                id: 'city'
+            },
+        ];
+    }, [openEditSide]);
 
     // const selectedColumnsState = useState(columns.map(column => column.accessor));
     const selectedColumnsState = useState(['id', 'name']);
@@ -88,6 +103,13 @@ export default function DataGrid() {
                     columns={columns}
                     config={tableConfig}
                 />
+                <Drawer 
+                    isOpen={isOpenEditSide} 
+                    onClose={closeEditSide}
+                    dismissable={true}
+                >
+                    <div>DETAIL #{currentItemEditId}</div>
+                </Drawer>
             </div>
         </>
     );
