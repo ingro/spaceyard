@@ -15,3 +15,7 @@
 ## NumberInput
 
 - Stesso discorso che per `Select`, per come funziona `useNumberInput` di react-aria non posso renderizzare label e input in due componenti diversi (per lo meno per come sono strutturate adesso le cose)
+
+## TableConfigModal
+
+- Le colonne con l'attributo `protected` non dovrebbero poter essere spostate nel gruppo "Colonne disponibili" (e quindi rese non visibili)

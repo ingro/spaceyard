@@ -5,18 +5,18 @@ export function useColumnsSelector(columnsConfig: any, columnsState: any) {
 
     const hiddenColumns: any = useMemo(() => {
         const hiddenColumnsConfig = columnsConfig.filter((column: any) => {
-            if (column.columnConfig && column.columnConfig.hidden) {
+            if (column.enableHiding) {
                 return true;
             }
 
-            if (selectedColumns.includes(column.id) || selectedColumns.includes(column.accessor)) {
+            if (selectedColumns.includes(column.accessorKey)) {
                 return false;
             }
     
             return true;
         });
 
-        return hiddenColumnsConfig.map((column: any) => column.id || column.accessor);
+        return hiddenColumnsConfig.map((column: any) => column.accessorKey);
     }, [columnsConfig, selectedColumns]);
  
     return {

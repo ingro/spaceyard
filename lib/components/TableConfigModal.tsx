@@ -19,10 +19,10 @@ function getInitialAvailableColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            hidden: column.hidden || false
+            enableHiding: column.enableHiding || false
         };
     }).filter(column => {
-        return ! column.hidden;
+        return ! column.enableHiding;
     });
 }
 
@@ -34,7 +34,7 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             return false;
         }
 
-        return !column.hidden;
+        return !column.enableHiding;
     }).map(columnKey => {
         const column = available[columnKey];
 
@@ -42,7 +42,7 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            hidden: column.hidden || false
+            enableHiding: column.enableHiding || false
         };
     });
 }
@@ -51,7 +51,7 @@ function getHiddenColumnKeys(available: any) {
     return Object.keys(available).reduce((hidden: Array<string>, columnKey: string) => {
         const column = available[columnKey];
 
-        if (column.hidden) {
+        if (column.enableHiding) {
             hidden.push(columnKey);
         }
 
@@ -86,11 +86,12 @@ type TableConfigModalProps = {
 export function TableConfigModal({ onClose, name, columnConfig, currentColumns, updateSelectedColumns, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
     const availableColumns = useMemo(() => {
         return columnConfig.reduce((config: any, column: any) => {
-            const id = column.id || column.accessor;
+            const id = column.accessorKey;
 
             config[id] = {
                 id,
-                label: column.Header || id,
+                label: column.header || id,
+                enableHiding: column.enableHiding || false,
                 ...column.columnConfig
             };
 

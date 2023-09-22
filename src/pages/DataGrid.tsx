@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DataTable, useUrlSyncedDataTableState } from '@ingruz/tabulisk';
+import { TanTable, useTable } from '@ingruz/tabulisk';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
 import { TableConfigModal } from '../../lib/components/TableConfigModal';
@@ -9,24 +9,36 @@ import { useColumnsSelector, useDisclosure, useEditDrawer } from '../../lib/hook
 const data = [
     {
         id: 1,
-        name: 'Foo',
+        name: 'Topolino',
         city: 'Topolinia',
         age: 25
     },
     {
         id: 2,
-        name: 'Bar',
+        name: 'Paperino',
         city: 'Paperopoli',
         age: 32
-    }
+    },
+    {
+        id: 3,
+        name: 'Paperon De Paperoni',
+        city: 'Paperopoli',
+        age: 99
+    },
+    {
+        id: 4,
+        name: 'Pippo',
+        city: 'Topolinia',
+        age: 30
+    },
 ];
 
 export default function DataGrid() {
-    const reducer = useUrlSyncedDataTableState({
-        filters: {
-            name: ''
-        }
-    });
+    // const reducer = useUrlSyncedDataTableState({
+    //     filters: {
+    //         name: ''
+    //     }
+    // });
 
     const m = useDisclosure();
 
@@ -35,14 +47,17 @@ export default function DataGrid() {
     const columns = useMemo(() => {
         return [
             {
-                Header: 'Identificativo',
-                accessor: 'id',
-                id: 'id',
-                Cell: ({ cell }: any) => {
+                header: 'Azioni',
+                accessorKey: 'id',
+                enableSorting: false,
+                columnConfig: {
+                    protected: true
+                },
+                cell: ({ cell }: any) => {
                     return (
                         <button
                             className={`btn btn-sm`}
-                            onClick={() => openEditSide(cell.value)}
+                            onClick={() => openEditSide(cell.getValue())}
                         >
                             Detail
                         </button>
@@ -50,9 +65,8 @@ export default function DataGrid() {
                 }
             },
             {
-                Header: 'Nome',
-                accessor: 'name',
-                id: 'name',
+                header: 'Nome',
+                accessorKey: 'name',
                 Filter: (props: any) => (
                     <TableFilterDropdown 
                         {...props}
@@ -61,14 +75,12 @@ export default function DataGrid() {
                 )
             },
             {
-                Header: 'Eta',
-                accessor: 'age',
-                id: 'age'
+                header: 'Eta',
+                accessorKey: 'age'
             },
             {
-                Header: 'Città',
-                accessor: 'city',
-                id: 'city'
+                header: 'Città',
+                accessorKey: 'city'
             },
         ];
     }, [openEditSide]);
@@ -78,12 +90,24 @@ export default function DataGrid() {
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
+    console.warn(hiddenColumns);
+
     const tableConfig = useMemo(() => {
         return {
-            useReducer: reducer,
+            sorting: true,
+            paginate: true,
+            showPageSizeSelector: true,
+            enableHiding: true,
+            // useReducer: reducer,
             hiddenColumns
         };
-    }, [hiddenColumns, reducer]);
+    }, []);
+
+    const table = useTable({
+        data,
+        columns,
+        config: tableConfig
+    });
 
     return (
         <>
@@ -98,9 +122,8 @@ export default function DataGrid() {
             )}
             <div>
                 <button onClick={m.open}>Configura</button>
-                <DataTable 
-                    data={data}
-                    columns={columns}
+                <TanTable 
+                    table={table}
                     config={tableConfig}
                 />
                 <Drawer 

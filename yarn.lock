@@ -2024,14 +2024,16 @@
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.11.tgz#9ce96e7746625a89239f68ca57c4f654264c17ef"
   integrity sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==
 
-"@ingruz/tabulisk@^0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-0.19.0.tgz#d9dd2818fed38a82928067fc9819c6d7a4684e42"
-  integrity sha512-phbaljkM0suaULuMWvQwaMlGpUoHRrsChWxtF38OURFXCheeMZhbCtXGj3qyGITFwXGPjlnqpI3+WLHwB4himw==
+"@ingruz/tabulisk@^1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-alpha.1.tgz#eca4ffaec52ae306dcf3752780b2644f3a1ea497"
+  integrity sha512-5dyVnFFP7G1yywll0po+qVLcEwmJggQeQero2KklGKb+YyUCoIOBjKtnlweEt8qQCnTb79HQpfE9SkabZ8vQWw==
   dependencies:
+    "@tanstack/react-table" "^8.10.0"
     clsx "^1.2.1"
     immer "^9.0.16"
     query-string "^8.1.0"
+    react-table "^7.8.0"
 
 "@internationalized/date@^3.3.0":
   version "3.3.0"
@@ -3064,6 +3066,18 @@
     lodash.isplainobject "^4.0.6"
     lodash.merge "^4.6.2"
     postcss-selector-parser "6.0.10"
+
+"@tanstack/react-table@^8.10.0":
+  version "8.10.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.10.1.tgz#f3e7d6e3f82dd43947e8893617a3c50e9e3fa383"
+  integrity sha512-pD58vH5ahZv1qzAK9Xl87A5dydBnKiDGdyEsd5VK2bG2wGRbfbpBfH915KdUv+8XqabDQgUo8nU8qHBEQv1qvg==
+  dependencies:
+    "@tanstack/table-core" "8.10.1"
+
+"@tanstack/table-core@8.10.1":
+  version "8.10.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.10.1.tgz#04bd980fad9f3205840449c6ed16553c35ed48c9"
+  integrity sha512-dvO7wz+WjnT+7KI6ZZ+GAe9tljIFResDaV/TfOhfpeTB0ud9pILsavuM22HAXG2NsVaIG2Zax2OaVIsNt0z7Og==
 
 "@testing-library/dom@^9.0.0":
   version "9.3.1"
