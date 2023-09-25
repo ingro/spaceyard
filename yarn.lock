@@ -2024,12 +2024,12 @@
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.11.tgz#9ce96e7746625a89239f68ca57c4f654264c17ef"
   integrity sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==
 
-"@ingruz/tabulisk@^1.0.0-alpha.1":
-  version "1.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-alpha.1.tgz#eca4ffaec52ae306dcf3752780b2644f3a1ea497"
-  integrity sha512-5dyVnFFP7G1yywll0po+qVLcEwmJggQeQero2KklGKb+YyUCoIOBjKtnlweEt8qQCnTb79HQpfE9SkabZ8vQWw==
+"@ingruz/tabulisk@^1.0.0-alpha.2":
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-alpha.2.tgz#51396c0643492f86e6e2687caaf64c8f8a758be0"
+  integrity sha512-bmEztoBO60+BPQa03SLLpVyKRMRqg7O+R89m7GlNJ1RilfHeF5yzSu5wYOQhaT7uxihZmhbeQeE6Kl7DH/KNFA==
   dependencies:
-    "@tanstack/react-table" "^8.10.0"
+    "@tanstack/react-table" "^8.10.1"
     clsx "^1.2.1"
     immer "^9.0.16"
     query-string "^8.1.0"
@@ -3067,7 +3067,7 @@
     lodash.merge "^4.6.2"
     postcss-selector-parser "6.0.10"
 
-"@tanstack/react-table@^8.10.0":
+"@tanstack/react-table@^8.10.1":
   version "8.10.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.10.1.tgz#f3e7d6e3f82dd43947e8893617a3c50e9e3fa383"
   integrity sha512-pD58vH5ahZv1qzAK9Xl87A5dydBnKiDGdyEsd5VK2bG2wGRbfbpBfH915KdUv+8XqabDQgUo8nU8qHBEQv1qvg==

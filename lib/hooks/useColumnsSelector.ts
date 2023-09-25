@@ -1,11 +1,17 @@
 import { useMemo } from 'react';
 
-export function useColumnsSelector(columnsConfig: any, columnsState: any) {
+type useColumnsSelectorOut = {
+    selectedColumns: Array<string>;
+    hiddenColumns: Array<string>;
+    setSelectedColumns: any;
+}
+
+export function useColumnsSelector(columnsConfig: any, columnsState: any): useColumnsSelectorOut {
     const [selectedColumns, setSelectedColumns] = columnsState;
 
     const hiddenColumns: any = useMemo(() => {
         const hiddenColumnsConfig = columnsConfig.filter((column: any) => {
-            if (column.enableHiding) {
+            if (column.hidden) {
                 return true;
             }
 

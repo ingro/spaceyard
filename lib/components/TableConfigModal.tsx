@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Item } from '@react-stately/collections';
 import { FiCheck, FiRotateCcw } from "react-icons/fi";
+import { Table } from "@tanstack/react-table";
 import findIndex from 'lodash/findIndex';
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
@@ -19,10 +20,10 @@ function getInitialAvailableColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            enableHiding: column.enableHiding || false
+            hidden: column.hidden || false
         };
     }).filter(column => {
-        return ! column.enableHiding;
+        return ! column.hidden;
     });
 }
 
@@ -34,7 +35,7 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             return false;
         }
 
-        return !column.enableHiding;
+        return !column.hidden;
     }).map(columnKey => {
         const column = available[columnKey];
 
@@ -42,7 +43,7 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            enableHiding: column.enableHiding || false
+            hidden: column.hidden || false
         };
     });
 }
@@ -51,7 +52,7 @@ function getHiddenColumnKeys(available: any) {
     return Object.keys(available).reduce((hidden: Array<string>, columnKey: string) => {
         const column = available[columnKey];
 
-        if (column.enableHiding) {
+        if (column.hidden) {
             hidden.push(columnKey);
         }
 
@@ -78,12 +79,13 @@ type TableConfigModalProps = {
     columnConfig: any;
     currentColumns: Array<any>;
     name: string;
+    table: Table<any>;
     onClose: () => void;
     updateSelectedColumns: (columns: Array<any>) => void;
     ErrorFallback?: React.ComponentType;
 };
 
-export function TableConfigModal({ onClose, name, columnConfig, currentColumns, updateSelectedColumns, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
+export function TableConfigModal({ onClose, name, columnConfig, currentColumns, updateSelectedColumns, table, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
     const availableColumns = useMemo(() => {
         return columnConfig.reduce((config: any, column: any) => {
             const id = column.accessorKey;
@@ -91,7 +93,6 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
             config[id] = {
                 id,
                 label: column.header || id,
-                enableHiding: column.enableHiding || false,
                 ...column.columnConfig
             };
 
@@ -239,7 +240,19 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                     <button 
                         className="btn btn-link"
                         onClick={() => {
+                            table.setColumnVisibility(() => {
+                                return {
+                                    ...Object.keys(availableColumns).reduce((obj: any, id) => { 
+                                        obj[id] = true; 
+                                        return obj;}
+                                    , {})
+                                }
+                            });
+
+                            table.setColumnOrder(() => availableColumns);
+
                             updateSelectedColumns(Object.keys(availableColumns));
+
                             onClose();
                         }}
                     >
@@ -252,10 +265,34 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                 <button 
                     className="btn btn-lg btn-info ml-1"
                     onClick={() => {
+                        const hiddenColumns = getHiddenColumnKeys(availableColumns);
+
+                        table.setColumnVisibility(() => {
+                            const update = {
+                                ...selected.reduce((obj: any, column) => { 
+                                    obj[column.id] = true; 
+                                    return obj;}
+                                , {}),
+                                ...available.reduce((obj: any, column) => { 
+                                    obj[column.id] = false; 
+                                    return obj;}
+                                , {}),
+                                ...hiddenColumns.reduce((obj: any, id) => { 
+                                    obj[id] = false; 
+                                    return obj;}
+                                , {})
+                            };
+
+                            return update;
+                        });
+
+                        table.setColumnOrder(() => selected.map((column) => column.id));
+
                         updateSelectedColumns(uniq([
                             ...selected.map((column: any) => column.id),
-                            ...getHiddenColumnKeys(availableColumns)
+                            // ...hiddenColumns
                         ]));
+
                         onClose();
                     }}
                 >
