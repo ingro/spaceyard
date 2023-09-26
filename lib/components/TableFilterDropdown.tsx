@@ -11,17 +11,18 @@ import { useDisclosure } from '../hooks/useDisclosure';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { InputSearch } from './InputSearch';
 import { DatePickerInput } from './DatePickerInput';
+import { Column } from '@tanstack/react-table';
 
-function renderFilterControl(filterControl: string, filterKey: string, filterProps: any, reducer: any, close: Function) {
+function renderFilterControl(filterControl: string, filterProps: any, column: Column<any>, close: Function) {
     if (filterControl === 'search') {
         return (
             <InputSearch
-                value={reducer.state.filters[filterKey]}
+                value={column.getFilterValue()}
                 onSubmit={(value: string) => {
-                    reducer.actions.setFilter(filterKey, value);
+                    column.setFilterValue(value);
                     close();
                 }}
-                onClear={() => reducer.actions.setFilter(filterKey, null)}
+                onClear={() => column.setFilterValue(null)}
                 showIcon={false}
                 {...filterProps}
             />
@@ -31,10 +32,10 @@ function renderFilterControl(filterControl: string, filterKey: string, filterPro
     if (filterControl === 'date') {
         return (
             <DatePickerInput 
-                value={reducer.state.filters.date}
+                value={column.getFilterValue()}
                 asString={true}
                 onChange={(date: any) => {
-                    reducer.actions.setFilter('date', date);
+                    column.setFilterValue(date)
                     close();
                 }}
                 {...filterProps}
@@ -47,30 +48,33 @@ function renderFilterControl(filterControl: string, filterKey: string, filterPro
 
 type TableFilterDropdownProps = {
     children: any;
-    column: any;
+    column: Column<any>;
     filterControl?: string;
-    filterKey: string;
     filterProps: any;
-    reducer: any;
+    // filterKey: string;
+    // reducer: any;
 };
 
 export function TableFilterDropdown(props: TableFilterDropdownProps) {
     const { 
-        column: { filterValue, id/*preFilteredRows,  setFilter*/ }, 
+        column, 
         children,
         // properFilterValue, 
         filterControl = null, 
         filterProps = {},
-        reducer
+        // reducer
     } = props;
 
     // console.log(props);
 
-    let { filterKey } = props;
+    /*let { filterKey } = props;
 
     if (! filterKey) {
         filterKey = id;
-    }
+    }*/
+
+    const filterKey = column.id;
+    // const filterValue = column.getFilterValue();
 
     const { toggle, isOpen, close, open } = useDisclosure();
     const [isHover, setIsHover] = useState(false);
@@ -131,7 +135,7 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
         }
     }, [isOpen, isHover]);
 
-    const computedFilterValue = filterValue || reducer?.state?.filters[filterKey];
+    // const computedFilterValue = filterValue || reducer?.state?.filters[filterKey];
 
     // const AnimatedContainer = animated.div;
 
@@ -148,14 +152,17 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
     //     }
     // });
 
+    const isFiltered = column.getIsFiltered();
+
     return (
         <>
-            {computedFilterValue && (
+            {isFiltered && (
                 <div 
                     className="flex h-full items-center cursor-pointer ml-auto hover:text-blue-500"
                     onClick={(e) => {
                         e.stopPropagation();
-                        reducer.actions.setFilter(filterKey, null)
+                        column.setFilterValue(null);
+                        // reducer.actions.setFilter(filterKey, null)
                     }}
                     title="Remove filter"
                 >
@@ -164,8 +171,8 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
             )}
             <div 
                 className={clsx('flex h-full items-center hover:text-blue-500 cursor-pointer', { 
-                    'text-blue-500': computedFilterValue,
-                    'ml-auto': ! computedFilterValue
+                    'text-blue-500': isFiltered,
+                    'ml-auto': ! isFiltered
                 })} 
                 ref={toggleRef}
                 onMouseEnter={() => setIsHover(true)}
@@ -204,8 +211,8 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
                 {isOpen && (
                     <MoveFocusInside>
                         {filterControl 
-                            ? renderFilterControl(filterControl, filterKey, filterProps, reducer, close)
-                            : children({ close })
+                            ? renderFilterControl(filterControl, filterProps, column, close)
+                            : children({ close, column })
                         }
                     </MoveFocusInside>
                 )}

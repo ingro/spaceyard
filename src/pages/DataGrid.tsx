@@ -15,42 +15,48 @@ const data = [
         name: 'Topolino',
         city: 'Topolinia',
         age: 25,
-        gender: 'M'
+        gender: 'M',
+        last_access: '2023-09-01'
     },
     {
         id: 2,
         name: 'Paperino',
         city: 'Paperopoli',
         age: 32,
-        gender: 'M'
+        gender: 'M',
+        last_access: '2023-09-05'
     },
     {
         id: 3,
         name: 'Paperina',
         city: 'Paperopoli',
         age: 29,
-        gender: 'F'
+        gender: 'F',
+        last_access: '2023-09-01'
     },
     {
         id: 4,
         name: 'Paperon De Paperoni',
         city: 'Paperopoli',
         age: 99,
-        gender: 'M'
+        gender: 'M',
+        last_access: '2023-09-05'
     },
     {
         id: 5,
         name: 'Pippo',
         city: 'Topolinia',
         age: 30,
-        gender: 'M'
+        gender: 'M',
+        last_access: '2023-09-01'
     },
     {
         id: 6,
         name: 'Minnie',
         city: 'Topolinia',
         age: 22,
-        gender: 'F'
+        gender: 'F',
+        last_access: '2023-09-05'
     }
 ];
 
@@ -68,11 +74,11 @@ export default function DataGrid() {
                 columnConfig: {
                     protected: true
                 },
-                cell: ({ cell }: any) => {
+                cell: ({ row }: any) => {
                     return (
                         <button
                             className={`btn btn-sm`}
-                            onClick={() => openEditSide(cell.getValue())}
+                            onClick={() => openEditSide(row.original.id)}
                         >
                             Detail
                         </button>
@@ -86,12 +92,17 @@ export default function DataGrid() {
             {
                 header: 'Nome',
                 accessorKey: 'name',
-                filterEl: (props: any) => (
-                    <TableFilterDropdown 
-                        {...props}
-                        filterControl="search"
-                    />
-                )
+                filterEl: (props: any) => {
+                    // console.warn(props);
+
+                    return (
+                        <TableFilterDropdown 
+                            {...props}
+                            filterControl="search"
+                            filterProps={{ placeholder: 'Filter by name' }}
+                        />
+                    );
+                }
             },
             {
                 header: 'Eta',
@@ -100,6 +111,16 @@ export default function DataGrid() {
             {
                 header: 'Città',
                 accessorKey: 'city'
+            },
+            {
+                header: 'Ultimo accesso',
+                accessorKey: 'last_access',
+                filterEl: (props: any) => (
+                    <TableFilterDropdown
+                        {...props}
+                        filterControl='date'
+                    />
+                )
             },
             {
                 accessorKey: 'gender',
@@ -111,7 +132,7 @@ export default function DataGrid() {
     }, [openEditSide]);
 
     // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const selectedColumnsState = useState(['actions', 'id', 'name']);
+    const selectedColumnsState = useState(['actions', 'id', 'name', 'last_access']);
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
