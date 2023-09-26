@@ -86,7 +86,7 @@ export default function DataGrid() {
             {
                 header: 'Nome',
                 accessorKey: 'name',
-                Filter: (props: any) => (
+                filterEl: (props: any) => (
                     <TableFilterDropdown 
                         {...props}
                         filterControl="search"
@@ -111,7 +111,7 @@ export default function DataGrid() {
     }, [openEditSide]);
 
     // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const selectedColumnsState = useState(['id', 'name', 'actions']);
+    const selectedColumnsState = useState(['actions', 'id', 'name']);
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 

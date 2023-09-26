@@ -1,0 +1,1 @@
+export const DRAG_AND_DROP_CUSTOM_TYPE = 'spaceyard-drag-and-drop-item';

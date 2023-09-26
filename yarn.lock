@@ -2024,10 +2024,10 @@
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.11.tgz#9ce96e7746625a89239f68ca57c4f654264c17ef"
   integrity sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==
 
-"@ingruz/tabulisk@^1.0.0-alpha.2":
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-alpha.2.tgz#51396c0643492f86e6e2687caaf64c8f8a758be0"
-  integrity sha512-bmEztoBO60+BPQa03SLLpVyKRMRqg7O+R89m7GlNJ1RilfHeF5yzSu5wYOQhaT7uxihZmhbeQeE6Kl7DH/KNFA==
+"@ingruz/tabulisk@^1.0.0-alpha.3":
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-alpha.3.tgz#87e741a192619883fd219658c5bf20cb5cad2372"
+  integrity sha512-9OcfiPrDmoa18/2iXMQAMdXAtmsOHQgzJZqGetmJ912m0P/MveydVzHwMOO6POP0MENO9rOkOjHuq/cS8gnrtg==
   dependencies:
     "@tanstack/react-table" "^8.10.1"
     clsx "^1.2.1"

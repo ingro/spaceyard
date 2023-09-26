@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useListState } from '@react-stately/list';
 import { useDroppableCollectionState, useDraggableCollectionState } from '@react-stately/dnd';
 import { useListBox, useOption } from '@react-aria/listbox';
@@ -7,6 +7,8 @@ import { ListKeyboardDelegate } from '@react-aria/selection';
 import { mergeProps } from '@react-aria/utils'
 import findIndex from 'lodash/findIndex';
 import clsx from 'clsx';
+
+import { DRAG_AND_DROP_CUSTOM_TYPE } from '../../utilities/constants';
 
 function reorder(list: Array<any>, startIndex: number, endIndex: number) {
     const result = Array.from(list);
@@ -111,7 +113,8 @@ function ReorderableItem({ item, itemKeyName, state, dragState, dropState, ItemC
                 // })}
             >
                 <ItemComponent 
-                    item={item} 
+                    item={item}
+                    isDisabled={isDisabled}
                     {...rest}
                     // updateWidgetActive={updateWidgetActive} 
                     // updateWidgetSize={updateWidgetSize}
@@ -148,7 +151,9 @@ export function OrderableList(props: OrderableListProps) {
     const { items, itemKeyName, ItemComponent, getItems } = props;
     const preview = useRef(null);
 
-    const state = useListState(props);
+    // console.log(props);
+
+    const state = useListState({ ...props, disabledKeys: props.items.filter((i) => i.protected).map((i) => i.id) });
     const ref = useRef(null);
 
     const { listBoxProps } = useListBox(
@@ -200,7 +205,7 @@ export function OrderableList(props: OrderableListProps) {
                 return {
                     // ...item.value,
                     'text/plain': item?.textValue,
-                    'my-app-custom-type': JSON.stringify(item)
+                    [DRAG_AND_DROP_CUSTOM_TYPE]: JSON.stringify(item)
                 };
             })
         })
@@ -239,7 +244,7 @@ export function OrderableList(props: OrderableListProps) {
                     {(items) => {
                         const item = items[0];
 
-                        const parsed = JSON.parse(item['my-app-custom-type']);
+                        const parsed = JSON.parse(item[DRAG_AND_DROP_CUSTOM_TYPE]);
 
                         return (
                             <ItemComponent item={parsed.value} isDragPreview={true} />

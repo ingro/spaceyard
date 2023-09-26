@@ -11,6 +11,7 @@ import { Modal, ModalBody, ModalFooter, ModalTitle } from "./Modal";
 import { CancelModalButton } from "./Buttons";
 import { createOnReorderFn, OrderableList } from './shared/draganddrop';
 import DefaultErrorFallback from "./DefaultErrorFallback";
+import { DRAG_AND_DROP_CUSTOM_TYPE } from "../utilities/constants";
 
 function getInitialAvailableColumns(available: any, selected: Array<any>) {
     return difference(Object.keys(available), selected).map(columnKey => {
@@ -60,12 +61,14 @@ function getHiddenColumnKeys(available: any) {
     }, []);
 }
 
-function ColumnItem({ item, isDragPreview }: any) {
+function ColumnItem({ item, isDragPreview = false, isDisabled = false }: any) {
     return (
         <span
-            className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border bg-blue-200', {
+            className={clsx('option py-2 mb-2 outline-none rounded-sm flex items-center border', {
                 'border-gray-400 px-4': !isDragPreview,
                 'px-6 w-[300px] font-semibold border-blue-500': isDragPreview,
+                'bg-blue-200 cursor-move': !isDisabled,
+                'bg-gray-400 cursor-not-allowed': isDisabled
             })}
         >
             <span>
@@ -115,7 +118,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
     }, [selected, setSelected]);
 
     const onInsert = async (e: any) => {
-        const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
+        const { value } = JSON.parse(await e.items[0].getText(DRAG_AND_DROP_CUSTOM_TYPE));
 
         const item = { ...value };
 
@@ -156,7 +159,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
     };
 
     const onRootDrop = async (e: any) => {
-        const { value } = JSON.parse(await e.items[0].getText('my-app-custom-type'));
+        const { value } = JSON.parse(await e.items[0].getText(DRAG_AND_DROP_CUSTOM_TYPE));
 
         const item = { ...value };
 
@@ -210,7 +213,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             items={available}
                             itemKeyName="id"
                             listClassName="bg-gray-200 px-2 pt-2 grow"
-                            acceptedDragTypes={['my-app-custom-type']}
+                            acceptedDragTypes={[DRAG_AND_DROP_CUSTOM_TYPE]}
                             onReorder={onReorderAvailable}
                             onInsert={onInsert}
                             onRootDrop={onRootDrop}
@@ -226,7 +229,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             items={selected}
                             itemKeyName="id"
                             listClassName="bg-gray-200 px-2 pt-2 grow"
-                            acceptedDragTypes={['my-app-custom-type']}
+                            acceptedDragTypes={[DRAG_AND_DROP_CUSTOM_TYPE]}
                             onReorder={onReorderSelected}
                             onInsert={onInsert}
                             onRootDrop={onRootDrop}

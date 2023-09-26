@@ -18,4 +18,4 @@
 
 ## TableConfigModal
 
-- Le colonne con l'attributo `protected` non dovrebbero poter essere spostate nel gruppo "Colonne disponibili" (e quindi rese non visibili)
+- Le colonne con l'attributo `protected` al momento non possono essere spostate nè all'interno dello stesso gruppo nè al di fuori. Però altre colonne possono occupare la loro posizione, alterandola. Si potrebbe valutare di impedire ad altre colonne di occupare la loro posizione (idealmente dovrebbero trovarsi all'inizio o alla fine delle colonne) o prevedere che possano essere spostate all'interno del loro gruppo per cambiare direttamente la loro posizione. Altra soluzione potrebbe essere di non mostrarle nella modale di configurazione ma riportarle sempre tra quelle selezionate, aspettare di implementare il pinning per valutare una soluzione comune?
