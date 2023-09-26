@@ -1,15 +1,37 @@
 import { useMemo, useState } from 'react';
-import { TanTable, useTable, useUrlSyncedDataTableStateV8 } from '@ingruz/tabulisk';
+import { CreateEditableTableCell, TanTable, useTable, useUrlSyncedDataTableStateV8 } from '@ingruz/tabulisk';
 import find from 'lodash/find';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
 import { TableConfigModal } from '../../lib/components/TableConfigModal';
+import { ActiveFiltersList } from '../../lib/components/ActiveFiltersList';
 import { Drawer } from '../../lib/components/Drawer';
+import { Select } from '../../lib/components/Select';
 import { useColumnsSelector, useDisclosure, useEditDrawer } from '../../lib/hooks';
-import { Select } from '../../lib/main';
+import { updateFilterValue } from '../../lib/utilities/filters';
 // import useUrlSyncedDataTableState from '../utils/useUrlSyncedDataTableState';
 
-const data = [
+const updateDataAsync = (data: any, setData: any, id: any, columnId: string, value: string) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const record = find(data, { id });
+
+            if (record) {
+                // @ts-ignore
+                record[columnId] = value;
+
+                setData([].concat(...data));
+    
+                resolve({
+                    ...record,
+                    [columnId]: value,
+                });
+            }
+        }, 2000);
+    });
+};
+
+const baseData: Array<any> = [
     {
         id: 1,
         name: 'Topolino',
@@ -61,6 +83,7 @@ const data = [
 ];
 
 export default function DataGrid() {
+    const [data, setData] = useState(baseData);
     const m = useDisclosure();
 
     const { isOpenEditSide, openEditSide, closeEditSide, currentItemEditId } = useEditDrawer();
@@ -110,7 +133,8 @@ export default function DataGrid() {
             },
             {
                 header: 'Città',
-                accessorKey: 'city'
+                accessorKey: 'city',
+                cell: CreateEditableTableCell('id', 'disabled:bg-gray-600')
             },
             {
                 header: 'Ultimo accesso',
@@ -132,7 +156,7 @@ export default function DataGrid() {
     }, [openEditSide]);
 
     // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const selectedColumnsState = useState(['actions', 'id', 'name', 'last_access']);
+    const selectedColumnsState = useState(['actions', 'id', 'name', 'last_access', 'city']);
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
@@ -150,7 +174,12 @@ export default function DataGrid() {
             sorting: true,
             paginate: true,
             showPageSizeSelector: true,
-            enableHiding: true
+            enableHiding: true,
+            meta: {
+                updateData(id: any, columnId: string, value: any) {
+                    return updateDataAsync(data, setData, id, columnId, value);
+                }
+            }
         };
     }, []);
 
@@ -164,23 +193,6 @@ export default function DataGrid() {
 
     function getFilterValueForId(id: string, defaultValue: any): any {
         return find(table.getState().columnFilters, { id })?.value || defaultValue;
-    }
-
-    function updateFilterValue(id: string, value: any): any {
-        return (filters: any) => {
-            const newArray = [].concat(...filters);
-            const index = newArray.findIndex((obj: any) => obj.id === id);
-
-            if (index !== -1) {
-                // @ts-ignore
-                newArray[index].value = value;
-            } else {
-                // @ts-ignore
-                return newArray.concat({ id, value });
-            }
-
-            return newArray;
-        }
     }
 
     return (
@@ -214,6 +226,11 @@ export default function DataGrid() {
                     <div>
                         <button onClick={m.open}>Configura</button>
                     </div>
+                </div>
+                <div>
+                    <ActiveFiltersList 
+                        table={table}
+                    />
                 </div>
                 <TanTable 
                     table={table}
