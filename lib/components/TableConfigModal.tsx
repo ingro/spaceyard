@@ -9,8 +9,8 @@ import clsx from 'clsx';
 
 import { Modal, ModalBody, ModalFooter, ModalTitle } from "./Modal";
 import { CancelModalButton } from "./Buttons";
-import { createOnReorderFn, OrderableList } from './shared/draganddrop';
 import DefaultErrorFallback from "./DefaultErrorFallback";
+import { createOnReorderFn, OrderableList } from './shared/draganddrop';
 import { DRAG_AND_DROP_CUSTOM_TYPE } from "../utilities/constants";
 
 function getInitialAvailableColumns(available: any, selected: Array<any>) {
@@ -21,10 +21,11 @@ function getInitialAvailableColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            hidden: column.hidden || false
+            hidden: column.hidden || false,
+            virtual: column.virtual || false
         };
     }).filter(column => {
-        return ! column.hidden;
+        return column.hidden === false;
     });
 }
 
@@ -44,7 +45,8 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             id: columnKey,
             label: column.label,
             protected: column.protected || false,
-            hidden: column.hidden || false
+            hidden: column.hidden || false,
+            virtual: column.virtual || false
         };
     });
 }
@@ -53,7 +55,7 @@ function getHiddenColumnKeys(available: any) {
     return Object.keys(available).reduce((hidden: Array<string>, columnKey: string) => {
         const column = available[columnKey];
 
-        if (column.hidden) {
+        if (column.hidden || column.virtual) {
             hidden.push(columnKey);
         }
 
@@ -91,12 +93,12 @@ type TableConfigModalProps = {
 export function TableConfigModal({ onClose, name, columnConfig, currentColumns, updateSelectedColumns, table, ErrorFallback = DefaultErrorFallback }: TableConfigModalProps) {
     const availableColumns = useMemo(() => {
         return columnConfig.reduce((config: any, column: any) => {
-            const id = column.accessorKey;
+            const id = column.accessorKey || column.id;
 
             config[id] = {
                 id,
                 label: column.header || id,
-                ...column.columnConfig
+                ...column.meta
             };
 
             return config;
@@ -243,6 +245,7 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                     <button 
                         className="btn btn-link"
                         onClick={() => {
+                            // FIXME: gestione colonne virtual, al momento ritornano tutte...
                             table.setColumnVisibility(() => {
                                 return {
                                     ...Object.keys(availableColumns).reduce((obj: any, id) => { 
@@ -252,7 +255,20 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                                 }
                             });
 
-                            table.setColumnOrder(() => availableColumns);
+                            const additionalColumns: Array<string> = [];
+
+                            if (Boolean(table.options.enableRowSelection)) {
+                                additionalColumns.push('select');
+                            }
+
+                            if (table.options.enableExpanding) {
+                                additionalColumns.push('expand');
+                            }
+
+                            console.log(availableColumns);
+
+                            // @ts-ignore
+                            table.setColumnOrder(() => [].concat(...additionalColumns).concat(Object.keys(availableColumns)));
 
                             updateSelectedColumns(Object.keys(availableColumns));
 
@@ -289,7 +305,18 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             return update;
                         });
 
-                        table.setColumnOrder(() => selected.map((column) => column.id));
+                        const additionalColumns: Array<string> = [];
+
+                        if (Boolean(table.options.enableRowSelection)) {
+                            additionalColumns.push('select');
+                        }
+
+                        if (table.options.enableExpanding) {
+                            additionalColumns.push('expand');
+                        }
+
+                        // @ts-ignore
+                        table.setColumnOrder(() => [].concat(...additionalColumns).concat(selected.map((column) => column.id)));
 
                         updateSelectedColumns(uniq([
                             ...selected.map((column: any) => column.id),

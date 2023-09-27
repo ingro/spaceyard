@@ -11,18 +11,24 @@ export function useColumnsSelector(columnsConfig: any, columnsState: any): useCo
 
     const hiddenColumns: any = useMemo(() => {
         const hiddenColumnsConfig = columnsConfig.filter((column: any) => {
-            if (column.hidden) {
+            if (column.meta?.protected) {
+                return false;
+            }
+
+            if (column.meta?.hidden) {
                 return true;
             }
 
-            if (selectedColumns.includes(column.accessorKey)) {
+            const columnAccessor = column.accessorKey || column.id;
+
+            if (selectedColumns.includes(columnAccessor)) {
                 return false;
             }
     
             return true;
         });
 
-        return hiddenColumnsConfig.map((column: any) => column.accessorKey);
+        return hiddenColumnsConfig.map((column: any) => column.accessorKey || column.id);
     }, [columnsConfig, selectedColumns]);
  
     return {

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { CreateEditableTableCell, TanTable, useTable, useUrlSyncedDataTableStateV8 } from '@ingruz/tabulisk';
+import { createColumnHelper } from '@tanstack/react-table';
 import find from 'lodash/find';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
@@ -10,6 +11,15 @@ import { Select } from '../../lib/components/Select';
 import { useColumnsSelector, useDisclosure, useEditDrawer } from '../../lib/hooks';
 import { updateFilterValue } from '../../lib/utilities/filters';
 // import useUrlSyncedDataTableState from '../utils/useUrlSyncedDataTableState';
+
+type Character = {
+    id: number;
+    name: string;
+    city: string;
+    age: number;
+    gender: 'F' | 'M';
+    last_access: string;
+}
 
 const updateDataAsync = (data: any, setData: any, id: any, columnId: string, value: string) => {
     return new Promise((resolve) => {
@@ -31,7 +41,7 @@ const updateDataAsync = (data: any, setData: any, id: any, columnId: string, val
     });
 };
 
-const baseData: Array<any> = [
+const baseData: Array<Character> = [
     {
         id: 1,
         name: 'Topolino',
@@ -88,13 +98,14 @@ export default function DataGrid() {
 
     const { isOpenEditSide, openEditSide, closeEditSide, currentItemEditId } = useEditDrawer();
 
+    const columnHelper = createColumnHelper<Character>();
+
     const columns = useMemo(() => {
         return [
-            {
+            columnHelper.display({
+                id: 'actions',
                 header: 'Azioni',
-                accessorKey: 'actions',
-                enableSorting: false,
-                columnConfig: {
+                meta: {
                     protected: true
                 },
                 cell: ({ row }: any) => {
@@ -107,56 +118,61 @@ export default function DataGrid() {
                         </button>
                     );
                 }
-            },
-            {
-                header: 'ID',
-                accessorKey: 'id'
-            },
-            {
+            }),
+            columnHelper.accessor('id', {
+                header: 'ID'
+            }),
+            columnHelper.accessor('name', {
                 header: 'Nome',
-                accessorKey: 'name',
-                filterEl: (props: any) => {
-                    // console.warn(props);
-
-                    return (
-                        <TableFilterDropdown 
-                            {...props}
-                            filterControl="search"
-                            filterProps={{ placeholder: 'Filter by name' }}
-                        />
-                    );
+                meta: {
+                    filterEl: (props: any) => {
+                        // console.warn(props);
+    
+                        return (
+                            <TableFilterDropdown 
+                                {...props}
+                                filterControl="search"
+                                filterProps={{ placeholder: 'Filter by name' }}
+                            />
+                        );
+                    }
                 }
-            },
-            {
-                header: 'Eta',
-                accessorKey: 'age'
-            },
-            {
+            }),
+            columnHelper.accessor('age', {
+                header: 'Età'
+            }),
+            columnHelper.accessor('city', {
                 header: 'Città',
-                accessorKey: 'city',
+                // @ts-ignore
                 cell: CreateEditableTableCell('id', 'disabled:bg-gray-600')
-            },
-            {
+            }),
+            columnHelper.accessor('last_access', {
                 header: 'Ultimo accesso',
-                accessorKey: 'last_access',
-                filterEl: (props: any) => (
-                    <TableFilterDropdown
-                        {...props}
-                        filterControl='date'
-                    />
-                )
-            },
-            {
-                accessorKey: 'gender',
-                columnConfig: {
-                    hidden: true
+                meta: {
+                    filterEl: (props: any) => (
+                        <TableFilterDropdown
+                            {...props}
+                            filterControl='date'
+                        />
+                    )
                 }
-            }
+            }),
+            columnHelper.accessor('gender', {
+                meta: {
+                    virtual: true
+                }
+            })
         ];
     }, [openEditSide]);
 
+    // console.log(columns);
+
     // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const selectedColumnsState = useState(['actions', 'id', 'name', 'last_access', 'city']);
+    const preSelectedColumns = ['actions', 'id', 'name', 'last_access', 'city'];
+
+    // Non è molto elegante ma se utilizzo la selezione righe o l'espansione allora devo prependere le colonne a quelle selezionate
+    /* @ts-ignore */
+    const selectedColumnsState = useState([].concat(['select']).concat(...preSelectedColumns));
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
@@ -175,6 +191,7 @@ export default function DataGrid() {
             paginate: true,
             showPageSizeSelector: true,
             enableHiding: true,
+            enableRowSelection: true,
             meta: {
                 updateData(id: any, columnId: string, value: any) {
                     return updateDataAsync(data, setData, id, columnId, value);
@@ -194,6 +211,8 @@ export default function DataGrid() {
     function getFilterValueForId(id: string, defaultValue: any): any {
         return find(table.getState().columnFilters, { id })?.value || defaultValue;
     }
+
+    console.log(table);
 
     return (
         <>
