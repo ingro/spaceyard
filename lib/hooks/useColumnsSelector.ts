@@ -15,7 +15,7 @@ export function useColumnsSelector(columnsConfig: any, columnsState: any): useCo
                 return false;
             }
 
-            if (column.meta?.hidden) {
+            if (column.meta?.hidden || column.meta?.virtual) {
                 return true;
             }
 
@@ -30,7 +30,7 @@ export function useColumnsSelector(columnsConfig: any, columnsState: any): useCo
 
         return hiddenColumnsConfig.map((column: any) => column.accessorKey || column.id);
     }, [columnsConfig, selectedColumns]);
- 
+
     return {
         selectedColumns,
         hiddenColumns,

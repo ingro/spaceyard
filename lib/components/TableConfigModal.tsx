@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Item } from '@react-stately/collections';
-import { FiCheck, FiRotateCcw } from "react-icons/fi";
 import { Table } from "@tanstack/react-table";
+import { FiCheck, FiRotateCcw } from "react-icons/fi";
 import findIndex from 'lodash/findIndex';
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
@@ -25,7 +25,7 @@ function getInitialAvailableColumns(available: any, selected: Array<any>) {
             virtual: column.virtual || false
         };
     }).filter(column => {
-        return column.hidden === false;
+        return column.virtual === false;
     });
 }
 
@@ -37,7 +37,7 @@ function getInitialSelectedColumns(available: any, selected: Array<any>) {
             return false;
         }
 
-        return !column.hidden;
+        return column.virtual !== true;
     }).map(columnKey => {
         const column = available[columnKey];
 
@@ -245,11 +245,27 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                     <button 
                         className="btn btn-link"
                         onClick={() => {
+                            const defaultVisibleColumns = Object.entries(availableColumns).reduce((obj, [key, column]) => {
+                                // @ts-ignore
+                                if (column.hidden !== true && column.virtual !== true) {
+                                    // @ts-ignore
+                                    obj.push(key);
+                                }
+
+                                return obj;
+                            }, []);
+
+                            const hiddenColumns = getHiddenColumnKeys(availableColumns);
+
                             // FIXME: gestione colonne virtual, al momento ritornano tutte...
                             table.setColumnVisibility(() => {
                                 return {
-                                    ...Object.keys(availableColumns).reduce((obj: any, id) => { 
+                                    ...Object.keys(defaultVisibleColumns).reduce((obj: any, id) => { 
                                         obj[id] = true; 
+                                        return obj;}
+                                    , {}),
+                                    ...hiddenColumns.reduce((obj: any, id) => { 
+                                        obj[id] = false; 
                                         return obj;}
                                     , {})
                                 }
@@ -265,12 +281,12 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                                 additionalColumns.push('expand');
                             }
 
-                            console.log(availableColumns);
+                            // console.log(defaultVisibleColumns);
 
                             // @ts-ignore
-                            table.setColumnOrder(() => [].concat(...additionalColumns).concat(Object.keys(availableColumns)));
+                            table.setColumnOrder(() => [].concat(...additionalColumns).concat(defaultVisibleColumns));
 
-                            updateSelectedColumns(Object.keys(availableColumns));
+                            updateSelectedColumns(defaultVisibleColumns);
 
                             onClose();
                         }}
@@ -288,16 +304,16 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
 
                         table.setColumnVisibility(() => {
                             const update = {
+                                ...hiddenColumns.reduce((obj: any, id) => { 
+                                    obj[id] = false; 
+                                    return obj;}
+                                , {}),
                                 ...selected.reduce((obj: any, column) => { 
                                     obj[column.id] = true; 
                                     return obj;}
                                 , {}),
                                 ...available.reduce((obj: any, column) => { 
                                     obj[column.id] = false; 
-                                    return obj;}
-                                , {}),
-                                ...hiddenColumns.reduce((obj: any, id) => { 
-                                    obj[id] = false; 
                                     return obj;}
                                 , {})
                             };

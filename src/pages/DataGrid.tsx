@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { CreateEditableTableCell, TanTable, useTable, useUrlSyncedDataTableStateV8 } from '@ingruz/tabulisk';
 import { createColumnHelper } from '@tanstack/react-table';
 import find from 'lodash/find';
+import intersection from 'lodash/intersection';
 
 import { TableFilterDropdown } from '../../lib/components/TableFilterDropdown';
 import { TableConfigModal } from '../../lib/components/TableConfigModal';
@@ -139,7 +140,10 @@ export default function DataGrid() {
                 }
             }),
             columnHelper.accessor('age', {
-                header: 'Età'
+                header: 'Età',
+                meta: {
+                    hidden: true
+                }
             }),
             columnHelper.accessor('city', {
                 header: 'Città',
@@ -168,11 +172,11 @@ export default function DataGrid() {
     // console.log(columns);
 
     // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const preSelectedColumns = ['actions', 'id', 'name', 'last_access', 'city'];
+    const preSelectedColumns = ['actions', 'id', 'name', 'city', 'last_access'];
 
     // Non è molto elegante ma se utilizzo la selezione righe o l'espansione allora devo prependere le colonne a quelle selezionate
     /* @ts-ignore */
-    const selectedColumnsState = useState([].concat(['select']).concat(...preSelectedColumns));
+    const selectedColumnsState = useState([].concat(['select', 'expand']).concat(...preSelectedColumns));
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
@@ -190,8 +194,10 @@ export default function DataGrid() {
             sorting: true,
             paginate: true,
             showPageSizeSelector: true,
+            enableExpanding: true,
             enableHiding: true,
             enableRowSelection: true,
+            renderExpandedRow: ({ row }: any) => (<div><h1>{row.original.name}</h1></div>),
             meta: {
                 updateData(id: any, columnId: string, value: any) {
                     return updateDataAsync(data, setData, id, columnId, value);
@@ -212,7 +218,7 @@ export default function DataGrid() {
         return find(table.getState().columnFilters, { id })?.value || defaultValue;
     }
 
-    console.log(table);
+    // console.log(table);
 
     return (
         <>
@@ -244,6 +250,18 @@ export default function DataGrid() {
                     </div>
                     <div>
                         <button onClick={m.open}>Configura</button>
+                    </div>
+                    <div>
+                    <button onClick={() => {
+                        // @ts-ignore
+                        const currentPaginationRows = table.getPaginationRowModel().flatRows.map(r => r.original.id);
+                        // @ts-ignore
+                        const selectedRows = Object.values(table.getFilteredSelectedRowModel().rowsById).map(r => r.original.id);
+
+                        alert(intersection(selectedRows, currentPaginationRows));
+                    }}>
+                        Get current selected rows
+                    </button>
                     </div>
                 </div>
                 <div>
