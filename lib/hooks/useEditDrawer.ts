@@ -30,7 +30,7 @@ export function useEditDrawer(): useEditDrawerResult {
     const openEditSide = useCallback((id: any) => {
         setCurrentItemEditId(id);
 
-        navigate(`${window.location.pathname}${window.location.search}`, {
+        navigate(`${location.pathname}${location.search}`, {
             replace: true,
             state: {
                 currentItemEditId: id
@@ -38,14 +38,14 @@ export function useEditDrawer(): useEditDrawerResult {
         });
 
         open();
-    }, []);
+    }, [location.pathname, location.search]);
 
     const closeEditSide = useCallback(() => {
         setTimeout(() => {
-            navigate(`${window.location.pathname}${window.location.search}`, { replace: true });
+            navigate(`${location.pathname}${location.search}`, { replace: true });
             close();
         }, 0);
-    }, []);
+    }, [location.pathname, location.search]);
 
     return {
         isOpenEditSide: isOpen,
