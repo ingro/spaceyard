@@ -41,10 +41,10 @@
   "dependencies": {
     "@use-it/event-listener": "^0.1.7",
     "basil.js": "^0.4.11",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "d3-ease": "^3.0.1",
     "match-sorter": "^6.3.1",
-    "tinykeys": "^1.4.0"
+    "tinykeys": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
@@ -83,7 +83,7 @@
     "@types/i18next": "^13.0.0",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^14.14.41",
+    "@types/node": "18.11.9",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "@types/react-router": "^5.1.20",
@@ -103,7 +103,7 @@
     "react": "^18.2.0",
     "react-calendar": "^4.7.0",
     "react-dom": "^18.2.0",
-    "react-error-boundary": "^3.1.4",
+    "react-error-boundary": "^4.0.12",
     "react-focus-lock": "^2.9.2",
     "react-hook-form": "^7.49.2",
     "react-i18next": "^14.0.0",
