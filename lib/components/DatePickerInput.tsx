@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Calendar from 'react-calendar';
 import { Control, useController } from "react-hook-form";
-import parse from "date-fns/parse";
-import format from "date-fns/format";
+import { parse, format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { FiX, FiCalendar } from "react-icons/fi";
 import pick from "lodash/pick";

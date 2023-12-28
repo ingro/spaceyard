@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { unstable_useBlocker as useBlocker } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useBlocker } from 'react-router-dom';
 
 import { useAppContext } from '../hooks/useAppContext';
 import { ConfirmDialog } from './ConfirmDialog';
