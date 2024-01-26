@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToastContainer as RcToastContainer, cssTransition, toast } from "react-toastify";
+import { ToastContainer as RcToastContainer, cssTransition } from "react-toastify";
 import clsx from 'clsx';
 
 const slideTransition = cssTransition({
@@ -50,7 +50,6 @@ export function ToastContainer({ autoClose = 10000, closeOnClick = true, closeBu
             position="bottom-center"
             hideProgressBar={true}
             transition={slideTransition}
-            icon={true}
             autoClose={autoClose}
             closeOnClick={closeOnClick}
             closeButton={closeButton}
