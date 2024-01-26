@@ -130,7 +130,7 @@
     "@ingruz/tabulisk": "^0.19.0",
     "@reach/dialog": "^0.16.0 || ^0.17.0 || ^0.18.0",
     "date-fns": "^3.0.0",
-    "downshift": "^7.0.0",
+    "downshift": "^7.0.0 || ^8.0.0",
     "query-string": "^8.0.0",
     "react": "^16.13.0 || 17.x || 18.x",
     "react-aria": "^3.0.0",
