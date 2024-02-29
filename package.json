@@ -35,6 +35,7 @@
     "serve": "vite preview",
     "clean": "rimraf dist/**/*",
     "prepublishOnly": "yarn build",
+    "release": "release-it",
     "test": "jest --runInBand",
     "test:watch": "jest --watch --runInBand"
   },
@@ -115,6 +116,7 @@
     "react-spring": "^9.7.2",
     "react-table": "^7.8.0",
     "react-toastify": "^9.1.3",
+    "release-it": "^17.1.1",
     "rimraf": "^3.0.2",
     "stylelint": "^14.16.1",
     "stylelint-config-recommended": "^9.0.0",
