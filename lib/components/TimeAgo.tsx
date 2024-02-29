@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
-import { differenceInMilliseconds } from 'date-fns';
+import { formatDistanceToNow, differenceInMilliseconds } from 'date-fns';
 
 import { formatLocalizedDate } from "../utilities/formatters";
 // import { useDateLocale } from '../hooks/useDateLocale';

@@ -18,6 +18,7 @@ export function TableFiltersDrawer({ children, onClose, isOpen }: TableFiltersDr
             dismissable={true}
             className="drawer-dialog-filters"
         >
+            {/* @ts-ignore */}
             <MoveFocusInside>
                 <div className="space-y-2">
                     <span className="text-xl">Filtri avanzati</span>

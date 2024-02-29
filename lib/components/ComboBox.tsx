@@ -49,7 +49,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
     onBlur = () => {},
     options, 
     initialIsOpen = false,
-    id = null,
+    id,
     // defaultHighlightedIndex = 0,
     placeholder = 'Cerca...',
     itemToString = defaultItemToStringFn,
@@ -238,7 +238,7 @@ export const ComboBox = React.forwardRef<any, ComboBoxProps>(({
                 className={clsx('form-select', {
                     'form-element-has-value': selectedItem
                 })}
-                placeholder={selectedItem ? null : placeholder}
+                placeholder={selectedItem ? undefined : placeholder}
                 type="text"
                 {...inputProps}
                 // FIXME: di default Downshift per il Combobox al blur dell'input seleziona l'oggetto correntemente evidenziato,

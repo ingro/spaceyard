@@ -8,6 +8,7 @@ import { FieldWrapper, FieldWrapperProps } from './FieldWrapper';
 
 type InputProps = {
     autoComplete?: string;
+    children?: any;
     className?: string;
     defaultValue?: string | number;
     disabled?: boolean;

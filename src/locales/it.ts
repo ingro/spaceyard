@@ -1,3 +1,3 @@
-import locale from 'date-fns/locale/it/index.js';
+import { it } from 'date-fns/locale';
 
-export default locale;
+export default it;

@@ -112,6 +112,7 @@ export const OmniBoxInput = React.forwardRef<any, OmniBoxInputProps>(({ onSelect
                         key={`${item}${index}`}
                         {...getItemProps({ item, index })}
                     >
+                        {/* @ts-ignore */}
                         <span className="flex mr-4"><item.Icon/></span>
                         <span
                             className="flex highlighted-text"

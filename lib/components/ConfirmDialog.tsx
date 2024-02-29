@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiCheck } from 'react-icons/fi';
+import { IconType } from 'react-icons';
 
 import { Modal, ModalTitle, ModalBody, ModalFooter } from './Modal';
 import { CancelModalButton } from './Buttons';
@@ -9,7 +10,7 @@ type ConfirmDialogProps = {
     onCancel: () => void;
     onConfirm: () => void;
     children: any;
-    Icon?: React.ElementType;
+    Icon?: IconType;
 };
 
 export function ConfirmDialog({ title, onCancel, onConfirm, children, Icon = FiCheck }: ConfirmDialogProps) {

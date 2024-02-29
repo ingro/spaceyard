@@ -209,12 +209,15 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
                 }}
             >
                 {isOpen && (
-                    <MoveFocusInside>
-                        {filterControl 
-                            ? renderFilterControl(filterControl, filterProps, column, close)
-                            : children({ close, column })
-                        }
-                    </MoveFocusInside>
+                    <>
+                        {/* @ts-ignore */}
+                        <MoveFocusInside>
+                            {filterControl 
+                                ? renderFilterControl(filterControl, filterProps, column, close)
+                                : children({ close, column })
+                            }
+                        </MoveFocusInside>
+                    </>
                 )}
             </div>
         </>

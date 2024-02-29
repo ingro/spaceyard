@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToastContainer as RcToastContainer, cssTransition, toast } from "react-toastify";
+import { ToastContainer as RcToastContainer, cssTransition } from "react-toastify";
 import clsx from 'clsx';
 
 const slideTransition = cssTransition({
@@ -14,15 +14,15 @@ function getTypeClass(type: string, typeClasses: any) {
     }
 
     switch (type) {
-        case toast.TYPE.INFO:
+        case 'info':
             return 'bg-info';
-        case toast.TYPE.SUCCESS:
+        case 'success':
             return 'bg-success';
-        case toast.TYPE.WARNING:
+        case 'warning':
             return 'bg-warning';
-        case toast.TYPE.ERROR:
+        case 'error':
             return 'bg-danger';
-        case toast.TYPE.DEFAULT:
+        case 'default':
         default:
             return 'bg-white text-slate-700';
     }
@@ -40,7 +40,7 @@ export function ToastContainer({ autoClose = 10000, closeOnClick = true, closeBu
         <RcToastContainer
             className={({ position }: any) => {
                 return clsx('z-100 fixed p-0 md:p-2 m-0 text-white w-full md:w-96', {
-                    'bottom-0 md:pb-1 transform -translate-x-1/2 left-1/2': position === toast.POSITION.BOTTOM_CENTER
+                    'bottom-0 md:pb-1 transform -translate-x-1/2 left-1/2': position === 'bottom-center'
                 });
             }}
             toastClassName={({ type }: any) => {
@@ -50,7 +50,6 @@ export function ToastContainer({ autoClose = 10000, closeOnClick = true, closeBu
             position="bottom-center"
             hideProgressBar={true}
             transition={slideTransition}
-            icon={true}
             autoClose={autoClose}
             closeOnClick={closeOnClick}
             closeButton={closeButton}

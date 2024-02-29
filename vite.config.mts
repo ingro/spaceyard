@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // import importDynamicModule from 'vite-plugin-dynamic-import-module';
 // import typescript2 from "rollup-plugin-typescript2";
 // import keysTransformer from 'ts-transformer-keys/transformer';
-const path = require("path");
+import path from 'node:path';
 
 // https://vitejs.dev/config/
 export default ({ command, mode }) => {

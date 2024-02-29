@@ -281,12 +281,15 @@ export const ComboBoxMultiple = React.forwardRef<any, ComboBoxMultipleProps>(({
                     <input 
                         className="text-base m-0 p-0 appearance-none border-none bg-transparent focus:ring-0 focus:outline-none placeholder-gray-400"
                         // className="form-select"
-                        placeholder={selectedItems.length > 0 ? null : placeholder}
+                        placeholder={selectedItems.length > 0 ? undefined : placeholder}
                         type="text"
                         {...inputProps}
                         style={{ width: showValue ? 2 + (inputValue.length * 9) + 'px' : 'auto'}}
                         ref={(node: any) => {
-                            inputProps.ref(node);
+                            if (inputProps.ref) {
+                                // @ts-ignore
+                                inputProps.ref(node);
+                            }
 
                             // @ts-ignore
                             inputRef.current = node;

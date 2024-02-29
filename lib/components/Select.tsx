@@ -86,7 +86,7 @@ export function Select({
             ref={setReferenceElement}
         >
             <div 
-                tabIndex={0}
+                // tabIndex={0}
                 className={clsx('form-select cursor-default flex w-full group', {
                     'form-select-open': isOpen,
                     'form-element-has-value': selectValue
