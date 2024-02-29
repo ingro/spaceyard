@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { CreateEditableTableCell, TanTable, useTable, useUrlSyncedDataTableStateV8 } from '@ingruz/tabulisk';
+import { CreateEditableTableCell, DataTable, useTable, useUrlSyncedDataTableState } from '@ingruz/tabulisk';
 import { createColumnHelper } from '@tanstack/react-table';
 import find from 'lodash/find';
 import intersection from 'lodash/intersection';
@@ -106,9 +106,9 @@ export default function DataGrid() {
             columnHelper.display({
                 id: 'actions',
                 header: 'Azioni',
-                meta: {
+                /*meta: {
                     protected: true
-                },
+                },*/
                 cell: ({ row }: any) => {
                     return (
                         <button
@@ -141,9 +141,9 @@ export default function DataGrid() {
             }),
             columnHelper.accessor('age', {
                 header: 'Età',
-                meta: {
+                /*meta: {
                     hidden: true
-                }
+                }*/
             }),
             columnHelper.accessor('city', {
                 header: 'Città',
@@ -162,9 +162,9 @@ export default function DataGrid() {
                 }
             }),
             columnHelper.accessor('gender', {
-                meta: {
+                /*meta: {
                     virtual: true
-                }
+                }*/
             })
         ];
     }, [openEditSide]);
@@ -212,7 +212,7 @@ export default function DataGrid() {
         config: tableConfig
     });
 
-    useUrlSyncedDataTableStateV8(table, defaultState, notQsDefaultState);
+    useUrlSyncedDataTableState(table, defaultState, notQsDefaultState);
 
     function getFilterValueForId(id: string, defaultValue: any): any {
         return find(table.getState().columnFilters, { id })?.value || defaultValue;
@@ -269,7 +269,7 @@ export default function DataGrid() {
                         table={table}
                     />
                 </div>
-                <TanTable 
+                <DataTable 
                     table={table}
                     config={tableConfig}
                 />
