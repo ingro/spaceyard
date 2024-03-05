@@ -183,6 +183,7 @@ export default function DataGrid() {
 
     // console.log(columns);
 
+    // @ts-ignore
     const selectedColumnsState = useState(columns.map(column => column.id || column.accessorKey));
     // const preSelectedColumns = ['tabulisk_select', 'tabulisk_expand', 'actions', 'id', 'name', 'city', 'last_access', 'gender_name'];
 
