@@ -18,7 +18,8 @@ type Character = {
     name: string;
     city: string;
     age: number;
-    gender: 'F' | 'M';
+    gender_id: 'F' | 'M';
+    gender_name: 'Female' | 'Male';
     last_access: string;
 }
 
@@ -48,7 +49,8 @@ const baseData: Array<Character> = [
         name: 'Topolino',
         city: 'Topolinia',
         age: 25,
-        gender: 'M',
+        gender_id: 'M',
+        gender_name: 'Male',
         last_access: '2023-09-01'
     },
     {
@@ -56,7 +58,8 @@ const baseData: Array<Character> = [
         name: 'Paperino',
         city: 'Paperopoli',
         age: 32,
-        gender: 'M',
+        gender_id: 'M',
+        gender_name: 'Male',
         last_access: '2023-09-05'
     },
     {
@@ -64,7 +67,8 @@ const baseData: Array<Character> = [
         name: 'Paperina',
         city: 'Paperopoli',
         age: 29,
-        gender: 'F',
+        gender_id: 'F',
+        gender_name: 'Female',
         last_access: '2023-09-01'
     },
     {
@@ -72,7 +76,8 @@ const baseData: Array<Character> = [
         name: 'Paperon De Paperoni',
         city: 'Paperopoli',
         age: 99,
-        gender: 'M',
+        gender_id: 'M',
+        gender_name: 'Male',
         last_access: '2023-09-05'
     },
     {
@@ -80,7 +85,8 @@ const baseData: Array<Character> = [
         name: 'Pippo',
         city: 'Topolinia',
         age: 30,
-        gender: 'M',
+        gender_id: 'M',
+        gender_name: 'Male',
         last_access: '2023-09-01'
     },
     {
@@ -88,10 +94,13 @@ const baseData: Array<Character> = [
         name: 'Minnie',
         city: 'Topolinia',
         age: 22,
-        gender: 'F',
+        gender_id: 'F',
+        gender_name: 'Female',
         last_access: '2023-09-05'
     }
 ];
+
+const defaultState = {};
 
 export default function DataGrid() {
     const [data, setData] = useState(baseData);
@@ -161,39 +170,43 @@ export default function DataGrid() {
                     )
                 }
             }),
-            columnHelper.accessor('gender', {
-                /*meta: {
+            columnHelper.accessor('gender_name', {
+                header: 'Genere',
+            }),
+            columnHelper.accessor('gender_id', {
+                meta: {
                     virtual: true
-                }*/
+                }
             })
         ];
     }, [openEditSide]);
 
     // console.log(columns);
 
-    // const selectedColumnsState = useState(columns.map(column => column.accessorKey));
-    const preSelectedColumns = ['actions', 'id', 'name', 'city', 'last_access'];
+    const selectedColumnsState = useState(columns.map(column => column.id || column.accessorKey));
+    // const preSelectedColumns = ['tabulisk_select', 'tabulisk_expand', 'actions', 'id', 'name', 'city', 'last_access', 'gender_name'];
 
-    // Non è molto elegante ma se utilizzo la selezione righe o l'espansione allora devo prependere le colonne a quelle selezionate
-    /* @ts-ignore */
-    const selectedColumnsState = useState([].concat(['select', 'expand']).concat(...preSelectedColumns));
+    // const selectedColumnsState = useState([]);
 
     const { selectedColumns, hiddenColumns, setSelectedColumns } = useColumnsSelector(columns, selectedColumnsState);
 
-    const defaultState = {};
-    const notQsDefaultState = {
-        columnOrder: selectedColumns,
-        columnVisibility: hiddenColumns.reduce((obj: any, id) => { 
-            obj[id] = false; 
-            return obj;}
-        , {})
-    }
+    const notQsDefaultState = useMemo(() =>{
+        return {
+            columnOrder: selectedColumns,
+            columnVisibility: hiddenColumns.reduce((obj: any, id) => { 
+                obj[id] = false; 
+                return obj;}
+            , {})
+        }
+    }, [selectedColumns, hiddenColumns]);
 
     const tableConfig = useMemo(() => {
         return {
-            sorting: true,
-            paginate: true,
-            showPageSizeSelector: true,
+            // manualSorting: true,
+            // paginate: true,
+            // showPageSizeSelector: true,
+            // manualFiltering: false,
+            // manualSorting: false,
             enableExpanding: true,
             enableHiding: true,
             enableRowSelection: true,
@@ -211,6 +224,9 @@ export default function DataGrid() {
         columns,
         config: tableConfig
     });
+
+    console.warn(tableConfig);
+    console.warn(table.getState());
 
     useUrlSyncedDataTableState(table, defaultState, notQsDefaultState);
 
@@ -241,9 +257,9 @@ export default function DataGrid() {
                                 { value: 'F', label: 'Female'},
                                 { value: 'M', label: 'Male'},
                             ]}
-                            value={getFilterValueForId('gender', null)}
+                            value={getFilterValueForId('gender_id', null)}
                             onChange={(e: any) => {
-                                table.setColumnFilters(updateFilterValue('gender', e?.value || null));
+                                table.setColumnFilters(updateFilterValue('gender_id', e?.value || null));
                             }}
                             showClearBtn={true}
                         />

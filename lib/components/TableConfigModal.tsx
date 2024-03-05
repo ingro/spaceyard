@@ -274,11 +274,11 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                             const additionalColumns: Array<string> = [];
 
                             if (Boolean(table.options.enableRowSelection)) {
-                                additionalColumns.push('select');
+                                additionalColumns.push('tabulisk__select');
                             }
 
                             if (table.options.enableExpanding) {
-                                additionalColumns.push('expand');
+                                additionalColumns.push('tabulisk__expand');
                             }
 
                             // console.log(defaultVisibleColumns);
@@ -324,11 +324,11 @@ export function TableConfigModal({ onClose, name, columnConfig, currentColumns, 
                         const additionalColumns: Array<string> = [];
 
                         if (Boolean(table.options.enableRowSelection)) {
-                            additionalColumns.push('select');
+                            additionalColumns.push('tabulisk__select');
                         }
 
                         if (table.options.enableExpanding) {
-                            additionalColumns.push('expand');
+                            additionalColumns.push('tabulisk__expand');
                         }
 
                         // @ts-ignore
