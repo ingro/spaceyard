@@ -11,7 +11,7 @@ import { useDisclosure } from '../hooks/useDisclosure';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { InputSearch } from './InputSearch';
 import { DatePickerInput } from './DatePickerInput';
-import { Column } from '@tanstack/react-table';
+import { Column, Table } from '@tanstack/react-table';
 
 function renderFilterControl(filterControl: string, filterProps: any, column: Column<any>, close: Function) {
     if (filterControl === 'search') {
@@ -47,6 +47,7 @@ function renderFilterControl(filterControl: string, filterProps: any, column: Co
 }
 
 type TableFilterDropdownProps = {
+    table: Table<any>;
     children: any;
     column: Column<any>;
     filterControl?: string;
@@ -56,7 +57,8 @@ type TableFilterDropdownProps = {
 };
 
 export function TableFilterDropdown(props: TableFilterDropdownProps) {
-    const { 
+    const {
+        table,
         column, 
         children,
         // properFilterValue, 
