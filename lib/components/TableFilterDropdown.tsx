@@ -4,6 +4,7 @@ import { MoveFocusInside } from 'react-focus-lock';
 // import { useLocalHotkey, useDisclosure, useOnClickOutside, InputSearch, DatePickerInput } from '@ingruz/spaceyard';
 import { TiFilter } from "react-icons/ti";
 import { FiX } from 'react-icons/fi';
+import { Column, Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { useLocalHotkey } from '../hooks/hotkeyHooks';
@@ -11,9 +12,16 @@ import { useDisclosure } from '../hooks/useDisclosure';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { InputSearch } from './InputSearch';
 import { DatePickerInput } from './DatePickerInput';
-import { Column, Table } from '@tanstack/react-table';
+import { Select } from './Select';
 
-function renderFilterControl(filterControl: string, filterProps: any, column: Column<any>, close: Function) {
+type renderFilterControlProps = {
+    filterControl: 'search' | 'date' | 'select';
+    filterProps: any;
+    column: Column<any>;
+    close: Function;
+};
+
+function renderFilterControl({ filterControl, filterProps, column, close }: renderFilterControlProps) {
     if (filterControl === 'search') {
         return (
             <InputSearch
@@ -43,6 +51,19 @@ function renderFilterControl(filterControl: string, filterProps: any, column: Co
         )
     }
 
+    if (filterControl === 'select') {
+        return (
+            <Select 
+                value={column.getFilterValue()}
+                onChange={(option: any) => {
+                    column.setFilterValue(option?.value || null);
+                    close();
+                }}
+                {...filterProps}
+            />
+        );
+    }
+
     return null;
 }
 
@@ -50,10 +71,9 @@ type TableFilterDropdownProps = {
     table: Table<any>;
     children: any;
     column: Column<any>;
-    filterControl?: string;
+    filterControl?: 'search' | 'date' | 'select';
     filterProps: any;
-    // filterKey: string;
-    // reducer: any;
+    filterKey: string;
 };
 
 export function TableFilterDropdown(props: TableFilterDropdownProps) {
@@ -61,22 +81,21 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
         table,
         column, 
         children,
-        // properFilterValue, 
         filterControl = null, 
-        filterProps = {},
-        // reducer
+        filterProps = {}
     } = props;
 
     // console.log(props);
 
-    /*let { filterKey } = props;
+    let { filterKey } = props;
+
+    let filterColumn = column;
 
     if (! filterKey) {
-        filterKey = id;
-    }*/
-
-    const filterKey = column.id;
-    // const filterValue = column.getFilterValue();
+        filterKey = column.id;
+    } else {
+        filterColumn = table.getColumn(filterKey) || column;
+    }
 
     const { toggle, isOpen, close, open } = useDisclosure();
     const [isHover, setIsHover] = useState(false);
@@ -154,7 +173,7 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
     //     }
     // });
 
-    const isFiltered = column.getIsFiltered();
+    const isFiltered = filterColumn?.getIsFiltered() || false;
 
     return (
         <>
@@ -163,8 +182,7 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
                     className="flex h-full items-center cursor-pointer ml-auto hover:text-blue-500"
                     onClick={(e) => {
                         e.stopPropagation();
-                        column.setFilterValue(null);
-                        // reducer.actions.setFilter(filterKey, null)
+                        filterColumn?.setFilterValue(null);
                     }}
                     title="Remove filter"
                 >
@@ -212,11 +230,10 @@ export function TableFilterDropdown(props: TableFilterDropdownProps) {
             >
                 {isOpen && (
                     <>
-                        {/* @ts-ignore */}
                         <MoveFocusInside>
                             {filterControl 
-                                ? renderFilterControl(filterControl, filterProps, column, close)
-                                : children({ close, column })
+                                ? renderFilterControl({ filterControl, filterProps, column: filterColumn, close })
+                                : children({ close, column: filterColumn })
                             }
                         </MoveFocusInside>
                     </>

@@ -174,23 +174,17 @@ export default function DataGrid() {
                 header: 'Genere',
                 meta: {
                     filterEl: (props: any) => {
-                        const column = props.table.getColumn('gender_id');
-
-                        // FIXME: gestire il caso in cui il filtro viene applicato su una colonna diversa da quella attuale
+                        const filterProps = {
+                            options: [{ value: 'F', label: 'Female'}, { value: 'M', label: 'Male'}]
+                        };
 
                         return (
-                            <TableFilterDropdown {...props} filterKey="gender_id">
-                                {({ close }: any) => (
-                                    <Select
-                                        value={column.getFilterValue()}
-                                        options={[{ value: 'F', label: 'Female'}, { value: 'M', label: 'Male'}]}
-                                        onChange={(option: any) => {
-                                            column.setFilterValue(option ? option.value : null);
-                                            close();
-                                        }}
-                                    />
-                                )}
-                            </TableFilterDropdown>
+                            <TableFilterDropdown 
+                                {...props} 
+                                filterKey="gender_id" 
+                                filterControl='select' 
+                                filterProps={filterProps} 
+                            />
                         );
                     }
                 }
@@ -248,8 +242,8 @@ export default function DataGrid() {
         config: tableConfig
     });
 
-    console.warn(tableConfig);
-    console.warn(table.getState());
+    // console.warn(tableConfig);
+    // console.warn(table.getState());
 
     useUrlSyncedDataTableState(table, defaultState, notQsDefaultState);
 
