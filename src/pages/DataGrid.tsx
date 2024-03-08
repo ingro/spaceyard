@@ -10,7 +10,6 @@ import { ActiveFiltersList } from '../../lib/components/ActiveFiltersList';
 import { Drawer } from '../../lib/components/Drawer';
 import { Select } from '../../lib/components/Select';
 import { useColumnsSelector, useDisclosure, useEditDrawer } from '../../lib/hooks';
-import { updateFilterValue } from '../../lib/utilities/filters';
 // import useUrlSyncedDataTableState from '../utils/useUrlSyncedDataTableState';
 
 type Character = {
@@ -247,9 +246,9 @@ export default function DataGrid() {
 
     useUrlSyncedDataTableState(table, defaultState, notQsDefaultState);
 
-    function getFilterValueForId(id: string, defaultValue: any): any {
+    /*function getFilterValueForId(id: string, defaultValue: any): any {
         return find(table.getState().columnFilters, { id })?.value || defaultValue;
-    }
+    }*/
 
     // console.log(table);
 
@@ -274,9 +273,9 @@ export default function DataGrid() {
                                 { value: 'F', label: 'Female'},
                                 { value: 'M', label: 'Male'},
                             ]}
-                            value={getFilterValueForId('gender_id', null)}
+                            value={table.getColumn('gender_id')?.getFilterValue() || null}
                             onChange={(e: any) => {
-                                table.setColumnFilters(updateFilterValue('gender_id', e?.value || null));
+                                table.getColumn('gender_id')?.setFilterValue(e?.value || null);
                             }}
                             showClearBtn={true}
                         />

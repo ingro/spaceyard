@@ -54,7 +54,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@hookform/devtools": "^4.3.1",
     "@hookform/resolvers": "^3.3.4",
-    "@ingruz/tabulisk": "^1.0.0-beta.6",
+    "@ingruz/tabulisk": "^1.0.0-beta.9",
     "@popperjs/core": "^2.11.8",
     "@reach/dialog": "^0.18.0",
     "@react-aria/button": "^3.9.1",
@@ -130,7 +130,7 @@
     "zustand": "^4.5.0"
   },
   "peerDependencies": {
-    "@ingruz/tabulisk": "^0.19.0",
+    "@ingruz/tabulisk": "^1.0.0",
     "@reach/dialog": "^0.16.0 || ^0.17.0 || ^0.18.0",
     "@tanstack/react-table": "^8.10.0",
     "date-fns": "^3.0.0",

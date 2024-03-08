@@ -1368,10 +1368,10 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@ingruz/tabulisk@^1.0.0-beta.6":
-  version "1.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-beta.6.tgz#3d1fbfc8effd7804bb6d808b823313fa577e8d90"
-  integrity sha512-FN1u23ZRcFfMvSy55w6fRY7k7egS8lqF1BWm+S56rY/nKXDRW+uGuU3plkBkGBz/L4qN1HyGcuGBafukhL4Lfw==
+"@ingruz/tabulisk@^1.0.0-beta.9":
+  version "1.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@ingruz/tabulisk/-/tabulisk-1.0.0-beta.9.tgz#69a955b5b9d75f93fb48a5c4a158d485dcc7446d"
+  integrity sha512-ZjDfUd6HvUnI6UQ2o/J8kPniW6m2kLLHtukON+sHhVSSqwGWc5GW4UOq7jC/Y3zx8SrFGB0wXOWdwB3ToOY3gw==
   dependencies:
     "@tanstack/react-table" "^8.13.0"
     clsx "^1.2.1"

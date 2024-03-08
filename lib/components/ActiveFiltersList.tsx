@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { FiChevronsRight, FiX } from "react-icons/fi";
 import { TFunction } from "i18next";
 import { Table } from "@tanstack/react-table";
-import { updateFilterValue } from "../utilities/filters";
 
 type ActiveFilterElement = [string, any];
 
@@ -104,7 +103,7 @@ export function ActiveFiltersList({ table, filterToString = () => null }: Active
                             {'"'}
                         </span>
                         <span className="hover:bg-primary-lighter py-0.5 pr-1 rounded-r-xl">
-                            <FiX className="cursor-pointer h-4 w-5" onClick={() => table.setColumnFilters(updateFilterValue(key, null))} />
+                            <FiX className="cursor-pointer h-4 w-5" onClick={() => table.getColumn(key)?.setFilterValue(null)} />
                         </span>
                     </div>
                 );
