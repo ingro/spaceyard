@@ -117,7 +117,7 @@ export default function DataGrid() {
                 /*meta: {
                     protected: true
                 },*/
-                cell: ({ row }: any) => {
+                cell: ({ row }) => {
                     return (
                         <button
                             className={`btn btn-sm`}
@@ -182,7 +182,7 @@ export default function DataGrid() {
                                 {...props} 
                                 filterKey="gender_id" 
                                 filterControl='select' 
-                                filterProps={filterProps} 
+                                filterProps={filterProps}
                             />
                         );
                     }

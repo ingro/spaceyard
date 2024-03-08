@@ -67,9 +67,14 @@ function renderFilterControl({ filterControl, filterProps, column, close }: rend
     return null;
 }
 
+type TableFilterDropdownChildrenProps = {
+    close: Function;
+    column: Column<any>;
+};
+
 type TableFilterDropdownProps = {
     table: Table<any>;
-    children: any;
+    children: ({ close, column }: TableFilterDropdownChildrenProps) => React.ReactNode;
     column: Column<any>;
     filterControl?: 'search' | 'date' | 'select';
     filterProps: any;
