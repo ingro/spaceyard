@@ -29,7 +29,7 @@ function getActiveFilters(filters: Array<FilterEl>): Array<ActiveFilterElement> 
     let active: Array<any> = [];
 
     filters.forEach((filter) => {
-        if (filter.value !== '') {
+        if (filter.value !== null && filter.value !== '' && filter.value !== false) {
             active.push([filter.id, filter.value]);
         }
     });
